@@ -9,13 +9,7 @@ const styles = StyleSheet.create({
     },
     font: {
       color: '#1ed760',
-    },
-    statusBar: {
-      backgroundColor: '#fff',
-      flex: 0.03,
-      alignItems: 'center',
-      justifyContent: 'center',
-      height:10,
+      fontSize: 46,
     },
 });
 
