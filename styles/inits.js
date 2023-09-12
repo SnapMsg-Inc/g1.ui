@@ -15,16 +15,6 @@ const styles = StyleSheet.create({
       flex: 2,
       backgroundColor: colorBackground,
     },
-    containerLogo: {
-      flex: 1.6,
-      backgroundColor: colorBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    fontLogo: {
-      color: colorApp,
-      fontSize: 46,
-    },
     font: {
       color: colorWhite,
       fontSize: 40,

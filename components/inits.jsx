@@ -1,19 +1,21 @@
-import React from "react";
 import { View, Text, TouchableHighlight, StatusBar, SafeAreaView } from "react-native"
 import styles from "../styles/inits";
 import ButtonFederate from "./buttons/buttonFederate";
+import SignIn from "./signIn";
+import Logo from "./logo";
 
-function Inits() {
+function Inits({navigation}) {
+
+    const onPressSignIn = () => {
+        navigation.navigate('SignIn');
+    };
+
     return (
-        <>         
-            <View style={styles.containerLogo}>
-                <Text style={styles.fontLogo}>SnapMsg</Text>
-            </View>
+        <>       
+            <Logo/>  
             <View style={styles.container}>
                 <Text style={styles.font}>
-                    Welcome back! 
-                    Log in to see
-                    the latest
+                    Welcome back! Log in to see the latest
                 </Text>
             </View>
             <View style={styles.containerBtn}>
@@ -34,7 +36,7 @@ function Inits() {
                 <Text style={styles.fontSugestion}>
                     Have an account already?
                 </Text>
-                <TouchableHighlight>
+                <TouchableHighlight onPress={onPressSignIn}>
                     <View style={styles.btnSignIn}>
                         <Text style={styles.fontSignIn}>
                             Sign in
