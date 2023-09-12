@@ -5,21 +5,21 @@ const colorApp = '#1ed760'
 const colorWhite = '#fff'
 const colorGray = '#535353'
 
-const styles = StyleSheet.create({
+const stylesInit = StyleSheet.create({
     container: {
       flex: 1,
+      flexDirection: 'column',
       backgroundColor: colorBackground,
-      alignItems:'center',
+      justifyContent: 'space-between',
     },
     containerBtn: {
-      flex: 2,
-      backgroundColor: colorBackground,
+      justifyContent: 'center',
+      alignContent: 'center',
     },
     font: {
       color: colorWhite,
-      fontSize: 40,
-      justifyContent: 'flex-start',
-      marginHorizontal: 40,
+      fontSize: 42,
+      marginHorizontal: 30,
     },
     btn :{
       backgroundColor: colorWhite,
@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
       color: colorWhite,
       marginHorizontal: 30,
       marginBottom: 3,
-      marginTop: 20
+      marginTop: 60
     }
   });
   
-export default styles
+export default stylesInit

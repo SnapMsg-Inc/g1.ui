@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Button, Text, View } from "react-native";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import stylesCancel from "../../styles/buttons/buttonCancel";
 
 const CancelButton = ({navigation})  => {
     const onPressCancel = () => {
@@ -7,9 +9,9 @@ const CancelButton = ({navigation})  => {
     }
 
     return (
-        <TouchableOpacity onPress={onPressCancel}>
-            <Text style={{color: 'black'}}>Cancel</Text>
-        </TouchableOpacity>
+        <TouchableHighlight onPress={onPressCancel} style={stylesCancel.container}>
+            <Text style={stylesCancel.font}>Cancel</Text>
+        </TouchableHighlight>
     )
 }
 
