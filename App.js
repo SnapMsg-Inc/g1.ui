@@ -17,10 +17,11 @@ export default function App() {
             barStyle={"light-content"}
         />
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Inits">
-                <Stack.Screen name="Inits" component={Inits} options={{ headerShown: false }}/>
-                <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
-                <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
+            <Stack.Navigator    initialRouteName="Inits" 
+                                screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Inits" component={Inits}/>
+                <Stack.Screen name="SignIn" component={SignIn}/>
+                <Stack.Screen name="SignUp" component={SignUp}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>

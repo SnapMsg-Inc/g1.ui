@@ -9,9 +9,13 @@ const stylesAccept = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 5,
         borderRadius: 10,
+        marginHorizontal: 30,
+        marginVertical: 20,
+        alignItems: 'center',
     },
     font: {
-        color: colorApp
+        color: colorApp,
+        fontSize: 18,
     }
 })
 

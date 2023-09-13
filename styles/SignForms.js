@@ -1,47 +1,51 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const colorBackground = '#000'
 const colorApp = '#1ed760'
 const colorText = '#535353'
 
 const stylesForms = StyleSheet.create({
+    scrollContainer:{
+        flex:1,
+        backgroundColor: colorBackground,
+    },
     container: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: "column",
         backgroundColor: colorBackground,
-        alignContent: 'center',
-    }, 
-    header:{
-        alignContent: 'flex-start',
-        justifyContent: 'space-around',
-        flexDirection: 'column',
-        marginHorizontal: 5,
     },
-    form: {
+    header: {
+        flex: 1,
+    },
+    body: {
+        flex: 5,
+        marginTop: 10,
+        marginBottom: 40,
+    },
+    footer: {
+        flex: 2,
+        marginTop: 80,
+        alignItems: 'flex-end',
+    },
+    footerLogin:{
+        marginTop: 220,
+        flexDirection:'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    text:{
         marginHorizontal: 30,
+        color: colorText,
+        alignContent: 'center',
     },
     textTittle: {
         color: colorApp,
+        marginHorizontal: 30,
         fontSize: 32,
-        marginBottom: 20,
-        marginTop: 20,
-        marginHorizontal: 25,
-    },
-    text: {
-        color: colorText,
-    },
-    bottomForm: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginHorizontal: 30,
-        bottom: -280,
-    },
-    bottomSignUp: {
-        alignItems: 'flex-end',
-        marginHorizontal: 30,
-        bottom: -150
+        marginTop: 15,
+        marginBottom: 15,
     }
+    
 })
 
 export default stylesForms

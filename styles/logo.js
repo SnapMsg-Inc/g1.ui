@@ -9,7 +9,7 @@ const stylesLogo = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 40
+        marginTop: 20
       },
       fontLogo: {
         color: colorApp,

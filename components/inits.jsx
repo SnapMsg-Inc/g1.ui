@@ -14,9 +14,11 @@ function Inits({navigation}) {
     };
 
     return (
-        <View style={stylesInits.container}>       
-            <Logo/>
-            <View style={stylesInits.containerBtn}>
+        <View style={stylesInits.container}>
+            <View style={stylesInits.header}>
+                <Logo/>
+            </View>       
+            <View style={stylesInits.body}>
                 <Text style={stylesInits.font}>
                     Welcome back! Log in to see the latest
                 </Text>
@@ -35,7 +37,7 @@ function Inits({navigation}) {
                     </View>
                 </TouchableHighlight>
             </View>  
-            <View style={stylesInits.containerBottom}>
+            <View style={stylesInits.footer}>
                 <Text style={stylesInits.fontSugestion}>
                     Have an account already?
                 </Text>

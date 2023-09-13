@@ -8,7 +8,7 @@ const stylesCancel = StyleSheet.create({
     },
     font: {
         color: '#535353',
-        fontSize: 16,
+        fontSize: 18,
     }
 })
 

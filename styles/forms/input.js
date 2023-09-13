@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const colorText = '#535353'
+export const colorText = '#535353'
 
 const styleInput = StyleSheet.create({
     input: {
@@ -8,9 +8,11 @@ const styleInput = StyleSheet.create({
         color: colorText,
         borderBottomColor: colorText,
         borderBottomWidth: 1,
-        marginBottom: 40,
+        marginBottom: 20,
+        marginTop: 20,
         justifyContent: 'flex-start',
-        position: 'relative'
+        marginHorizontal: 30,
+        fontSize: 18,
     }
 })
 

@@ -1,16 +1,15 @@
-import { TextInput } from "react-native";
-import styleInput from "../../styles/forms/input";
+import { TextInput, View } from "react-native";
+import styleInput,{ colorText }  from "../../styles/forms/input";
 
-function Input({holder, secure, state, value}) {
+const Input = props => {
     return (
-        <TextInput
-            placeholderTextColor='#535353'
-            style={styleInput.input}
-            placeholder={holder}
-            onChangeText={state}
-            value={value}
-            secureTextEntry={secure}
-        />
+        <View>
+            <TextInput 
+                {...props}
+                style={styleInput.input}
+                placeholderTextColor={colorText}
+            />
+        </View>
     )
 }
 
