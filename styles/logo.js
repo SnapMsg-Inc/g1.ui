@@ -5,11 +5,10 @@ const colorApp = '#1ed760'
 
 const stylesLogo = StyleSheet.create({
     containerLogo: {
-        backgroundColor: colorBackground,
+        backgroundColor: 'transparent',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 20
       },
       fontLogo: {
         color: colorApp,

@@ -1,8 +1,8 @@
 import { View, Text, TouchableHighlight, StatusBar, SafeAreaView } from "react-native"
-import stylesInits from "../styles/inits";
-import ButtonFederate from "./buttons/buttonFederate";
+import stylesInits from "../../styles/inits";
+import ButtonFederate from "../buttons/buttonFederate";
 import SignIn from "./signIn";
-import Logo from "./logo";
+import Logo from "../logo";
 
 function Inits({navigation}) {
 
@@ -20,7 +20,9 @@ function Inits({navigation}) {
             </View>       
             <View style={stylesInits.body}>
                 <Text style={stylesInits.font}>
-                    Welcome back! Log in to see the latest
+                    {"Welcome back!\n"}
+                    {"Log in to see\n"}
+                    {"the latest"}
                 </Text>
                 <ButtonFederate name="Google"/>
                 <ButtonFederate name="Github"/>
@@ -29,7 +31,8 @@ function Inits({navigation}) {
                     <Text style={stylesInits.text}>or</Text>
                     <View style={stylesInits.dash} />
                 </View>
-                <TouchableHighlight onPress={onPressSignUp}>
+                <TouchableHighlight style={stylesInits.touchable} 
+                                    onPress={onPressSignUp}>
                     <View style={stylesInits.btnSignUp}>
                         <Text style={stylesInits.fontSignUp}>
                             Sign up
@@ -41,7 +44,8 @@ function Inits({navigation}) {
                 <Text style={stylesInits.fontSugestion}>
                     Have an account already?
                 </Text>
-                <TouchableHighlight onPress={onPressSignIn}>
+                <TouchableHighlight style={stylesInits.touchable}
+                                    onPress={onPressSignIn}>
                     <View style={stylesInits.btnSignIn}>
                         <Text style={stylesInits.fontSignIn}>
                             Sign in

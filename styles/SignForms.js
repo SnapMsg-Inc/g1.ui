@@ -5,30 +5,26 @@ const colorApp = '#1ed760'
 const colorText = '#535353'
 
 const stylesForms = StyleSheet.create({
-    scrollContainer:{
-        flex:1,
-        backgroundColor: colorBackground,
-    },
     container: {
         flex: 1,
         flexDirection: "column",
         backgroundColor: colorBackground,
     },
     header: {
-        flex: 1,
+        paddingBottom: 10,
+        flexDirection:'column',
+        paddingVertical:10,
+        paddingBottom: 20,
     },
     body: {
-        flex: 5,
-        marginTop: 10,
-        marginBottom: 40,
+        flex:1,
+        alignItems: 'stretch',
+        alignContent: 'flex-start',
     },
     footer: {
-        flex: 2,
-        marginTop: 80,
         alignItems: 'flex-end',
     },
     footerLogin:{
-        marginTop: 220,
         flexDirection:'row',
         alignItems: 'center',
         justifyContent: 'space-between',

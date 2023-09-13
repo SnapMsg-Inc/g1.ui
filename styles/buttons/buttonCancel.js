@@ -2,9 +2,8 @@ import { StyleSheet } from "react-native";
 
 const stylesCancel = StyleSheet.create({
     container: {
-        backgroundColor: 'black',
+        backgroundColor: 'transparent',
         paddingLeft: 10,
-        paddingTop: 10,
     },
     font: {
         color: '#535353',

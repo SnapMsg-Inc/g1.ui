@@ -10,13 +10,15 @@ const stylesInit = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colorBackground,
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
     },
     header: {
-        flex: 1,
+        padding: 20,
+        justifyContent: 'center',
+        alignItems:'center',
     },
     body: {
-        flex: 4,
+        paddingVertical: 20,
         justifyContent: 'center',
         alignContent: 'center',
     },
@@ -24,6 +26,7 @@ const stylesInit = StyleSheet.create({
         color: colorWhite,
         fontSize: 42,
         marginHorizontal: 30,
+        marginBottom: 10,
     },
     btn :{
         backgroundColor: colorWhite,
@@ -60,6 +63,9 @@ const stylesInit = StyleSheet.create({
         marginHorizontal: 10,
         color: colorGray,
     },
+    touchable: {
+        paddingVertical: 10,
+    },
     btnSignUp: {
         backgroundColor: colorApp,
         alignItems:'center',
@@ -71,7 +77,7 @@ const stylesInit = StyleSheet.create({
         marginBottom: 20,
     },
     fontSignUp: {
-        fontSize: 24,
+        fontSize: 26,
         fontFamily: 'Roboto',
         justifyContent: 'flex-end',
         color: colorWhite
@@ -89,19 +95,19 @@ const stylesInit = StyleSheet.create({
         borderColor: colorApp,
     },
     fontSignIn: {
-        fontSize: 24,
+        fontSize: 26,
         fontFamily: 'Roboto',
         justifyContent: 'flex-end',
         color: colorApp
     },
     fontSugestion: {
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'Roboto',
         marginHorizontal: 10,
         color: colorWhite,
         marginHorizontal: 30,
         marginBottom: 3,
-        marginTop: 60,
+        marginTop: 20,
         paddingBottom: 5,
     },
     footer: {
