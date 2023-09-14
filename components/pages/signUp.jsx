@@ -14,8 +14,10 @@ function SignUp({navigation}) {
     const [accept, setAccept] = useState(false)
 
     const handleSignUp = (isAccepted) => {
-          setAccept(isAccepted)
-          {!accept ? alert('error') : navigation.navigate('Preferences')}
+        setAccept(isAccepted)
+        if (accept) {
+            navigation.navigate('Preferences')
+        }
     };  
 
     return (
@@ -28,32 +30,43 @@ function SignUp({navigation}) {
                 <Text style={stylesForms.textTittle} >
                     Create your account
                 </Text>
-                <Input
-                    placeholder="Nick"
-                    onChangeText={setNick}
-                    value={nick}
-                />
-                <Input
-                    placeholder="E-mail"
-                    onChangeText={setEmail}
-                    value={email}
-                    keyboardType={'email-address'}
-                />
-                <Input
-                    placeholder="Location"
-                    onChangeText={setLocation}
-                    value={location}
-                />
-                <Input
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    onChangeText={setPassword}
-                    value={password}
-                />
+                <ScrollView>
+                    <Input
+                        placeholder="First Name"
+                        onChangeText={setNick}
+                        value={nick}
+                    />
+                    <Input
+                        placeholder="Last Name"
+                        onChangeText={setNick}
+                        value={nick}
+                    />
+                    <Input
+                        placeholder="Nick"
+                        onChangeText={setNick}
+                        value={nick}
+                    />
+                    <Input
+                        placeholder="E-mail"
+                        onChangeText={setEmail}
+                        value={email}
+                        keyboardType={'email-address'}
+                    />
+                    <Input
+                        placeholder="Location"
+                        onChangeText={setLocation}
+                        value={location}
+                    />
+                    <Input
+                        placeholder="Password"
+                        secureTextEntry={true}
+                        onChangeText={setPassword}
+                        value={password}
+                    />
+                </ScrollView>
             </View>
             <View style={stylesForms.footer}>
-                <AcceptButton accept={handleSignUp}>
-                </AcceptButton>
+                <AcceptButton accept={handleSignUp}/>
             </View>
         </View>
     )
