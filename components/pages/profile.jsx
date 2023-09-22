@@ -5,11 +5,11 @@ import {
     Text,
 } from 'react-native';
 
-export default function Feed({ navigation }) {
+export default function Profile({ navigation }) {
     return (
         <View style={styles.body}>
             <Text style={styles.text}>
-                Feed asdsa
+                Profile!
             </Text>
         </View>
     )
