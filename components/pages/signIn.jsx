@@ -13,6 +13,11 @@ function SignIn({ navigation }) {
 
     const handleSignIn = (isAccepted) => {
         setAccept(isAccepted)
+
+        // OBS: AGREGO NAVEGACION COMO SI SE HICIERA EL LOGIN CORRECTAMENTE
+        if (accept) {
+            navigation.navigate('Home')
+        }
     };
         
     return (
