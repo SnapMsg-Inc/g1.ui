@@ -43,26 +43,6 @@ const stylesInit = StyleSheet.create({
         fontFamily: 'Roboto',
         justifyContent: 'flex-end',
     },
-    lineContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colorBackground,
-        paddingHorizontal:30,
-        paddingBottom: 10,
-        marginTop:-10,
-    },
-    dash: {
-        flex: 1,
-        height: 1,
-        backgroundColor: colorGray,
-        marginHorizontal: 1,
-    },
-    text: {
-        fontSize: 16,
-        fontFamily: 'Roboto',
-        marginHorizontal: 10,
-        color: colorGray,
-    },
     touchable: {
         paddingVertical: 10,
     },
@@ -112,6 +92,11 @@ const stylesInit = StyleSheet.create({
     },
     footer: {
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    footerText: {
+        color: colorGray,
     }
 });
   

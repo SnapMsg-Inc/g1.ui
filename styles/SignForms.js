@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 
 const colorBackground = '#000'
 const colorApp = '#1ed760'
-const colorText = '#535353'
+export const colorText = '#535353'
 
 const stylesForms = StyleSheet.create({
     container: {
@@ -17,21 +17,42 @@ const stylesForms = StyleSheet.create({
         paddingBottom: 20,
     },
     body: {
-        flex:1,
         alignItems: 'stretch',
         alignContent: 'flex-start',
     },
+    bodyButtons:{
+        flexDirection: 'row',
+        alignContent: 'space-between',
+        justifyContent: 'space-between',
+        marginHorizontal: 30,
+        marginVertical: 30,
+    },
     footer: {
-        alignItems: 'flex-end',
+        justifyContent: 'space-between',
     },
     footerLogin:{
         flexDirection:'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
+    footerOption:{
+        alignContent: 'space-between',
+        justifyContent: 'space-between',
+        paddingBottom: 30,
+    },  
+    footerText: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingTop: 30,
+    },
     text:{
-        marginHorizontal: 30,
         color: colorText,
+        alignContent: 'center',
+        paddingRight: 5,
+    },
+    textSign:{
+        color: colorApp,
         alignContent: 'center',
     },
     textTittle: {

@@ -19,7 +19,7 @@ return (
         </View>
         <View style={stylesPreferences.body}>
             <Text style={stylesPreferences.textTitle}>
-                {"What do yo want to see?"}
+                {"What do you want to see?"}
             </Text>
             <Text style={stylesPreferences.text}>
                 {"Select at least 3 interests to personalize your "}

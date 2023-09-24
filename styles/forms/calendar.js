@@ -2,10 +2,9 @@ import { StyleSheet } from "react-native";
 
 export const colorText = '#535353'
 
-const styleInput = StyleSheet.create({
-    input: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
+const stylesCalendar = StyleSheet.create({
+    container: {
+        marginHorizontal: 30,
         color: colorText,
         borderBottomColor: colorText,
         borderBottomWidth: 1,
@@ -14,13 +13,16 @@ const styleInput = StyleSheet.create({
         justifyContent: 'space-between',
         marginHorizontal: 30,
         paddingHorizontal: 3,
+        flexDirection: 'row'
     },
-    textInput: {
+    text: {
         fontSize: 20,
-        flex: 1, 
         paddingVertical: 0,
         color: colorText,
+    },
+    calendar: {
+        backgroundColor: 'black', // Color de fondo
     }
 })
 
-export default styleInput
+export default stylesCalendar
