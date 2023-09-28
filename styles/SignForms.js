@@ -44,16 +44,24 @@ const stylesForms = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        paddingTop: 30,
+        paddingTop: 25,
     },
     text:{
         color: colorText,
-        alignContent: 'center',
         paddingRight: 5,
     },
     textSign:{
         color: colorApp,
         alignContent: 'center',
+    },
+    textSugestion: {
+        color: colorText,
+        marginHorizontal: 30,
+        fontSize: 16,
+    },
+    containerTextSugestion: {
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
     },
     textTittle: {
         color: colorApp,

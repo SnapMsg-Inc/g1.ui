@@ -13,7 +13,7 @@ const stylesAccept = StyleSheet.create({
     },
     font: {
         color: colorApp,
-        fontSize: 20,
+        fontSize: 22,
     }
 })
 

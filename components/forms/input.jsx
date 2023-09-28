@@ -8,11 +8,15 @@ export default function Input({
         keyboardType,
         fieldButtonLabel,
         fieldButtonFunction,
+        data,
+        setData
     }) {
 
     return (
         <View style={styleInput.input}>
             <TextInput
+                value={data}
+                onChangeText={setData}
                 placeholder={label}
                 placeholderTextColor={colorText}
                 keyboardType={keyboardType}
@@ -20,9 +24,6 @@ export default function Input({
                 secureTextEntry={inputType}
             />
             {icon}
-            <TouchableOpacity onPress={fieldButtonFunction}>
-                <Text style={{color: '#AD40AF', fontWeight: '700'}}>{fieldButtonLabel}</Text>
-            </TouchableOpacity>
         </View>
     );
 }

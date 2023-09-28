@@ -13,11 +13,11 @@ import Logo from "../logo";
 import Separate from "../forms/separate";
 import stylesForms, { colorText } from "../../styles/SignForms";
 import Calendar from "../forms/calendar";
+import CreateAccount from "../connectivity/authorization";
 
 function SignUp({navigation}) {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
-    const [location, setLocation] = useState('')
     const [nick, setNick] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -25,16 +25,21 @@ function SignUp({navigation}) {
     const [visible, setVisible] = useState(false)
     const [visibleConfirm, setVisibleConfirm] = useState(false)
     const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
-    const [dobLabel, setDobLabel] = useState('Date of Birth');
 
-    const handleSignUp = (isAccepted) => {
-        setAccept(isAccepted)
-        if (accept) {
-            navigation.navigate('Preferences')
-        }
+    const handleSignUp = () => {
+        setAccept(true)
+        if (fullName === '' | email === '' | nick === '' |
+            password === '' | date === '' | confirmPassword === '')
+            alert('Please fill out all required fields.')
+            // console.log(date.toISOString().substring(0,10))
+            // console.log(email)
+        else if (password != confirmPassword)
+            alert('Password and confirmation do not match.\nPlease try again.')
+        else
+            CreateAccount(fullName,nick,date,email,password)
+            // navigation.navigate('Preferences')
     }; 
-    
+
     return (
         <View style={stylesForms.container}>
             <View style={stylesForms.header}>
@@ -53,6 +58,8 @@ function SignUp({navigation}) {
                             size={20} 
                         />
                     }
+                    data={fullName}
+                    setData={setFullName}
                 />
                 <Input
                     label={'Nick'}
@@ -63,8 +70,10 @@ function SignUp({navigation}) {
                             size={20} 
                         />
                     }
+                    data={nick}
+                    setData={setNick}
                 />
-                <Calendar/>
+                <Calendar data={date} setData={setDate}/>
                 <Input
                     label={'Email'}
                     icon={
@@ -75,6 +84,8 @@ function SignUp({navigation}) {
                         />
                     }
                     keyboardType="email-address"
+                    data={email}
+                    setData={setEmail}
                 />
                 <Input
                     label="Password"
@@ -87,6 +98,8 @@ function SignUp({navigation}) {
                         />
                     }
                     inputType={!visible}
+                    data={password}
+                    setData={setPassword}
                 />
                 <Input
                     label="Confirm Password"
@@ -99,6 +112,8 @@ function SignUp({navigation}) {
                         />
                     }
                     inputType={!visibleConfirm}
+                    data={confirmPassword}
+                    setData={setConfirmPassword}
                 />
                 <View style={stylesForms.bodyButtons}>
                     <CancelButton navigation={navigation}/>
@@ -114,7 +129,7 @@ function SignUp({navigation}) {
                     <Text style={stylesForms.text}>
                         Already have an account?
                     </Text>
-                    <TouchableHighlight>
+                    <TouchableHighlight onPress={() => {navigation.navigate('SignIn')}}>
                         <Text style={stylesForms.textSign}> Sign In</Text>
                     </TouchableHighlight>
                 </View>

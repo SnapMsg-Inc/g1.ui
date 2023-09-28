@@ -12,7 +12,7 @@ const stylesCancel = StyleSheet.create({
     },
     font: {
         color: 'white',
-        fontSize: 20,
+        fontSize: 22,
     }
 })
 

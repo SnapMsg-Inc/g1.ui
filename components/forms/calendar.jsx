@@ -4,8 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import stylesCalendar, { colorText } from '../../styles/forms/calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Calendar() {
-    const [date, setDate] = useState(new Date(1598051730000));
+export default function Calendar({data, setData}) {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [hasSelectedDate, setHasSelectedDate] = useState(false);
@@ -13,7 +12,7 @@ export default function Calendar() {
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setShow(false);
-        setDate(currentDate);
+        setData(currentDate);
         setHasSelectedDate(true);
     };
 
@@ -37,12 +36,12 @@ export default function Calendar() {
       <View style={stylesCalendar.container}>
         <TouchableHighlight onPress={onPressTouchable}>
           <Text style={stylesCalendar.text}>
-            {hasSelectedDate ? formatDate(date) : 'Selecciona una fecha'}
+            {hasSelectedDate ? formatDate(data) : 'Date of Birth'}
           </Text>
         </TouchableHighlight>
         {show && (
-            <RNDateTimePicker
-                value={date}
+            <DateTimePicker
+                value={data}
                 mode={mode}
                 onChange={onChange}
             />
