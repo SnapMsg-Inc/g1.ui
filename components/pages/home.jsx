@@ -12,8 +12,10 @@ import Discover from "./discover";
 import Notifications from "./notifications"
 import Messages from "./messages";
 import CustomDrawer from '../customDrawer';
+import ProfileTabs from '../profileTabs';
 
 const Drawer = createDrawerNavigator();
+const iconColor = '#1ED760';
 
 export default function Home() {
     return (
@@ -25,7 +27,6 @@ export default function Home() {
               drawerInactiveTintColor: '#ffffff',
               drawerLabelStyle: {
                 marginLeft: -25,
-                fontFamily: 'Roboto-Medium',
                 fontSize: 15,
               },
             }}
@@ -34,17 +35,18 @@ export default function Home() {
             name="Profile"
             component={Profile}
             options={{              
-                drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="user" color={'#1ED760'} size={size} />
+                drawerIcon: ({size}) => (
+                  <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
+                headerShown:false,           
               }}
             />
             <Drawer.Screen
             name="Feed"
             component={Feed}
             options={{
-              drawerIcon: ({color, size}) => (
-                <Octicons name="home" size={size} color={'#1ED760'} />
+              drawerIcon: ({size}) => (
+                <Octicons name="home" size={size} color={iconColor} />
               ),
             }}
             />
@@ -52,8 +54,8 @@ export default function Home() {
             name="Discover"
             component={Discover}
             options={{
-              drawerIcon: ({color, size}) => (
-                <Octicons name="search" size={size} color={'#1ED760'} />
+              drawerIcon: ({size}) => (
+                <Octicons name="search" size={size} color={iconColor} />
               ),
               }}
             />
@@ -61,8 +63,8 @@ export default function Home() {
             name="Notifications"
             component={Notifications}
             options={{
-                drawerIcon: ({ color, size }) => (
-                  <Octicons name="bell" color={'#1ED760'} size={size} />
+                drawerIcon: ({size }) => (
+                  <Octicons name="bell" color={iconColor} size={size} />
                 ),
               }}
             />
@@ -70,8 +72,8 @@ export default function Home() {
             name="Messages"
             component={Messages}
             options={{
-                drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="envelope" color={'#1ED760'} size={size} />
+                drawerIcon: ({size }) => (
+                  <FontAwesome5 name="envelope" color={iconColor} size={size} />
                 ),
               }}
             />

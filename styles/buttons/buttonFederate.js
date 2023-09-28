@@ -16,7 +16,6 @@ const stylesButtonFederate = StyleSheet.create({
     },
     fontBtn: {
         fontSize: 16,
-        fontFamily: 'Roboto',
     },
 })
 

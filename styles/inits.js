@@ -40,7 +40,6 @@ const stylesInit = StyleSheet.create({
     },
     fontBtn: {
         fontSize: 16,
-        fontFamily: 'Roboto',
         justifyContent: 'flex-end',
     },
     lineContainer: {
@@ -59,7 +58,6 @@ const stylesInit = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontFamily: 'Roboto',
         marginHorizontal: 10,
         color: colorGray,
     },
@@ -78,7 +76,6 @@ const stylesInit = StyleSheet.create({
     },
     fontSignUp: {
         fontSize: 26,
-        fontFamily: 'Roboto',
         justifyContent: 'flex-end',
         color: colorWhite
     },
@@ -96,13 +93,11 @@ const stylesInit = StyleSheet.create({
     },
     fontSignIn: {
         fontSize: 26,
-        fontFamily: 'Roboto',
         justifyContent: 'flex-end',
         color: colorApp
     },
     fontSugestion: {
         fontSize: 16,
-        fontFamily: 'Roboto',
         marginHorizontal: 10,
         color: colorWhite,
         marginHorizontal: 30,

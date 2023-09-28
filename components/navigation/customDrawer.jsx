@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  ImageBackground,
   Image,
   TouchableOpacity,
   StyleSheet,
@@ -11,12 +10,11 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const CustomDrawer = props => {
-    const profileImageUri = 'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
+    const profileImageUri = 
+    'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
     const username = '@username';
     const nikname = 'Nickname'
     const followersCount = 100;
@@ -45,21 +43,22 @@ const CustomDrawer = props => {
 
             <DrawerItemList {...props} />
             
-            <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>    
-                <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Ionicons name="exit-outline" color={'#ff0000'} size={22} />
-                        <Text
-                        style={{
-                            fontSize: 15,
-                            fontFamily: 'Roboto-Medium',
-                            marginLeft: 5,
-                            color: '#ff0000',
-                        }}>
-                        Sign Out
-                        </Text>
-                    </View>
+            <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
+              <View style={styles.signOutButton}>
+                <TouchableOpacity onPress={() => {}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name="exit-outline" color={'#ff0000'} size={22} />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        marginLeft: 5,
+                        color: '#ff0000',
+                      }}>
+                      Sign Out
+                    </Text>
+                  </View>
                 </TouchableOpacity>
+              </View>
             </View>
         </DrawerContentScrollView>
     </View>
@@ -103,6 +102,10 @@ const styles = StyleSheet.create({
     followingCount: {
       color: 'white',
       fontWeight: 'bold',
+    },
+    signOutButton: {
+      width: '50%',
+      paddingVertical: 15,
     },
   });
 
