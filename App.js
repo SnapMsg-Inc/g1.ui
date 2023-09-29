@@ -21,8 +21,6 @@ const firebaseConfig = {
 
 export default function App() {
     initializeApp(firebaseConfig);
-    
-    console.log('inicializando firebase')
 
     return (
         <SafeAreaView style={styles.container}>

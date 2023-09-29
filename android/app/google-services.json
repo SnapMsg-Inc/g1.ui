@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "835956360594",
+    "project_id": "snap-msg",
+    "storage_bucket": "snap-msg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835956360594:android:7b79aacfb4e9e3e44d6d4b",
+        "android_client_info": {
+          "package_name": "com.SnapMsg.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835956360594-nvfvvq4fbg3hcnnsrefgsnn3u0pbdquh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.SnapMsg.app",
+            "certificate_hash": "340c773350b4c4b9ec7b3ec02aed189eddc8fe2f"
+          }
+        },
+        {
+          "client_id": "835956360594-o5bpctpj6p7te8dked4nqqi8eu5auifs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.SnapMsg.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "835956360594-7msbe422kdle04b7kdb4uqput39giim9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxZkaTrnUP7qHn7LVdp4wlMGfanK2rgjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835956360594-7msbe422kdle04b7kdb4uqput39giim9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

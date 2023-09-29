@@ -12,23 +12,28 @@ export default async function getUser() {
 }
 
 export async function postsUser(fullName, nick, dateBirth, email, password) {
-    const user = firebase.auth().currentUser;
-    const token = await user.getIdToken();
-    await axios.post(URL,{
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+    console.log(`email: ${email}`)
+    await axios({
+        method: 'post',
+        url: URL,
         data: {
-            "fullname": fullName,
             "email": email,
-            "interests": [''], 
-            "nickname": nick,
-            "zone": ''
-        }
-    },
-        { headers: {'Authorization': `Bearer ${token}`}}
-    ).then((response) => {
-        console.log(response.data)
+            "fullname": fullName,
+            "interests": [' '], 
+            "nick": nick,
+            "zone": ' '
+        },
+        headers: { 
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        } 
+    }).then((response) => {
+        console.log(response.status)
         console.log('User create')
-        alert('User Create')
     }).catch((error) => {
+        console.log(error.message)
         console.log(error.response)
         console.log('error')
     })
