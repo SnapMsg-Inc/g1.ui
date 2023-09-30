@@ -44,7 +44,6 @@ const stylesForms = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        paddingTop: 25,
     },
     text:{
         color: colorText,

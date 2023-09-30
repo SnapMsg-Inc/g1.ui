@@ -21,7 +21,8 @@ function SignIn({ navigation }) {
         if (email === '' | password === '')
             alert('Please fill out all required fields.')
         else
-            LoginAccount(email, password)
+            navigation.navigate('Home')
+            // LoginAccount(email, password)
     };
         
     return (
