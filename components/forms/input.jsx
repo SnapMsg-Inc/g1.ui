@@ -1,16 +1,30 @@
-import { TextInput, View } from "react-native";
 import styleInput,{ colorText }  from "../../styles/forms/input";
+import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 
-const Input = props => {
+export default function Input({
+        label,
+        icon,
+        inputType,
+        keyboardType,
+        fieldButtonLabel,
+        fieldButtonFunction,
+        data,
+        setData
+    }) {
+
     return (
-        <View>
-            <TextInput 
-                {...props}
-                style={styleInput.input}
+        <View style={styleInput.input}>
+            <TextInput
+                value={data}
+                onChangeText={setData}
+                placeholder={label}
                 placeholderTextColor={colorText}
+                keyboardType={keyboardType}
+                style={styleInput.textInput}
+                secureTextEntry={inputType}
             />
+            {icon}
         </View>
-    )
+    );
 }
 
-export default Input

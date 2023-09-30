@@ -24,13 +24,6 @@ function Inits({navigation}) {
                     {"Log in to see\n"}
                     {"the latest"}
                 </Text>
-                <ButtonFederate name="Google"/>
-                <ButtonFederate name="Github"/>
-                <View style={stylesInits.lineContainer}>
-                    <View style={stylesInits.dash} />
-                    <Text style={stylesInits.text}>or</Text>
-                    <View style={stylesInits.dash} />
-                </View>
                 <TouchableHighlight style={stylesInits.touchable} 
                                     onPress={onPressSignUp}>
                     <View style={stylesInits.btnSignUp}>
@@ -39,8 +32,6 @@ function Inits({navigation}) {
                         </Text>
                     </View>
                 </TouchableHighlight>
-            </View>  
-            <View style={stylesInits.footer}>
                 <Text style={stylesInits.fontSugestion}>
                     Have an account already?
                 </Text>
@@ -52,6 +43,9 @@ function Inits({navigation}) {
                         </Text>
                     </View>
                 </TouchableHighlight>
+            </View>  
+            <View style={stylesInits.footer}>
+                <Text style={stylesInits.footerText}> SnapMsg ©</Text>
             </View>
         </View>
     )

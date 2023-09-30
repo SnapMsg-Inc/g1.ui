@@ -1,13 +1,18 @@
 import { StyleSheet } from "react-native";
 
+const colorApp = '#1ed760'
+
 const stylesCancel = StyleSheet.create({
     container: {
-        backgroundColor: 'transparent',
-        paddingLeft: 10,
+        backgroundColor: colorApp,
+        paddingHorizontal: 40,
+        paddingVertical: 8,
+        borderRadius: 10,
+        alignItems: 'center',
     },
     font: {
-        color: '#535353',
-        fontSize: 18,
+        color: 'white',
+        fontSize: 22,
     }
 })
 

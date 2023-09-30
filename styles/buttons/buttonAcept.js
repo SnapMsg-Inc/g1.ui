@@ -6,16 +6,14 @@ const colorApp = '#1ed760'
 const stylesAccept = StyleSheet.create({
     container: {
         backgroundColor: colorBackground,
-        paddingHorizontal: 15,
-        paddingVertical: 5,
+        paddingHorizontal: 40,
+        paddingVertical: 8,
         borderRadius: 10,
-        marginHorizontal: 30,
-        marginVertical: 20,
         alignItems: 'center',
     },
     font: {
         color: colorApp,
-        fontSize: 18,
+        fontSize: 22,
     }
 })
 

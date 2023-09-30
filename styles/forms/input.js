@@ -1,18 +1,38 @@
 import { StyleSheet } from "react-native";
 
 export const colorText = '#535353'
+const colorApp = '#1ed760'
 
 const styleInput = StyleSheet.create({
     input: {
+        flexDirection: 'row',
         alignItems: 'flex-start',
         color: colorText,
         borderBottomColor: colorText,
         borderBottomWidth: 1,
         marginBottom: 20,
         marginTop: 20,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         marginHorizontal: 30,
-        fontSize: 18,
+        paddingHorizontal: 3,
+    },
+    inputError: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        color: colorText,
+        borderBottomColor: colorApp,
+        borderBottomWidth: 1,
+        marginBottom: 20,
+        marginTop: 20,
+        justifyContent: 'space-between',
+        marginHorizontal: 30,
+        paddingHorizontal: 3,
+    },
+    textInput: {
+        fontSize: 20,
+        flex: 1, 
+        paddingVertical: 0,
+        color: colorText,
     }
 })
 
