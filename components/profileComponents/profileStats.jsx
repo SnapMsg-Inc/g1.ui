@@ -6,7 +6,6 @@ const ProfileStats = () => {
         <View
             style={{
                 flexDirection: 'row',
-                marginBottom: 15,
             }}
         >
             <Text

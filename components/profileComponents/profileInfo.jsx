@@ -3,6 +3,10 @@ import { View, Text } from 'react-native';
 import ProfileImage from '../profileComponents/profileImage';
 import ProfileStats from '../profileComponents/profileStats';
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
+import ProfileBanner from './profileBanner';
+
+const HEADER_HEIGHT_NARROWED = 50;
+const HEADER_HEIGHT_EXPANDED = 75;
 
 const ProfileInfo = ({scrollY}) => {
 	return (
@@ -13,7 +17,10 @@ const ProfileInfo = ({scrollY}) => {
                 backgroundColor: 'black',
             }}
         >
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            {/* Banner */}
+            <ProfileBanner scrollY={scrollY} />
+
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED}}>
                 <ProfileImage scrollY={scrollY}/>
                 {/* For self profile */}
                 <SetUpProfileButton/>

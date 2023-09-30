@@ -1,8 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { View, Text, TouchableHighlight, StatusBar, SafeAreaView } from "react-native"
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Ionicons, Octicons } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -11,8 +8,7 @@ import Feed from "./feed";
 import Discover from "./discover";
 import Notifications from "./notifications"
 import Messages from "./messages";
-import CustomDrawer from '../customDrawer';
-import ProfileTabs from '../profileTabs';
+import CustomDrawer from '../navigation/customDrawer';
 
 const Drawer = createDrawerNavigator();
 const iconColor = '#1ED760';
@@ -29,6 +25,7 @@ export default function Home() {
                 marginLeft: -25,
                 fontSize: 15,
               },
+              swipeEdgeWidth: 150,            
             }}
             >
             <Drawer.Screen

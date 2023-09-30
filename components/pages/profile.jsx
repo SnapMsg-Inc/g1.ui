@@ -1,66 +1,61 @@
 import React, { useRef } from 'react';
-import {
-  Animated,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import ProfileTabs from '../profileComponents/profileNavigation/profileTabs';
+import { Animated, View, Text, StyleSheet } from 'react-native';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
+
 import ProfileHeader from '../profileComponents/profileHeader';
-import ProfileInfo from '../profileComponents/profileInfo';
+import PostScreen from '../profileComponents/profileNavigation/postsScreen'
+import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
+import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 
-const HEADER_HEIGHT_EXPANDED = 75;
-const HEADER_HEIGHT_NARROWED = 50;
+const tabBar = props => (
+  <MaterialTabBar
+    {...props}
+    indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
+    style={styles.tabBar}
+    activeColor='#1ed760'
+    inactiveColor='#687684' 
+    labelStyle={styles.label}
+  />
+);
 
-export default function Profile({navigation}) {
+const Profile = ({navigation}) => {
+  const username = "Nombre de Usuario";
+  const profileImage = "URL_de_la_Imagen_de_Perfil";
+
   const scrollY = useRef(new Animated.Value(0)).current;
-
   return (
-    <SafeAreaProvider>
-        <View style={styles.container}>   
-            {/*Header */}
-            <ProfileHeader scrollY={scrollY} navigation={navigation}/>
+    <Tabs.Container
+      tabContainerStyle={styles.tabContainer}
+      renderHeader={() => (
+        <ProfileHeader scrollY={scrollY} navigation={navigation}  username={username} profileImage={profileImage} />
+      )}
+      pointerEvents={'box-none'}
+      allowHeaderOverscroll
+      renderTabBar={tabBar}
+    >
+      <Tabs.Tab name="Posts">
+        <PostScreen />
+      </Tabs.Tab>
 
-            {/* Profile Info / Nav Bar */}
-            <Animated.ScrollView
-                showsVerticalScrollIndicator={false}
-                onScroll={Animated.event(
-                [
-                    {
-                    nativeEvent: {
-                        contentOffset: { y: scrollY },
-                    },
-                    },
-                ],
-                { useNativeDriver: true }
-                )}
-                style={{
-                zIndex: 3,
-                marginTop: HEADER_HEIGHT_NARROWED,
-                paddingTop: HEADER_HEIGHT_EXPANDED,
-                }}
-            >
-                <ProfileInfo scrollY={scrollY}/>
-                <ProfileTabs/>
-            </Animated.ScrollView>
-        </View>
-    </SafeAreaProvider>
+      <Tabs.Tab name="Replies">
+        <RepliesScreen />
+      </Tabs.Tab>
+
+      <Tabs.Tab name="Likes">
+        <LikesScreen />
+      </Tabs.Tab>
+    </Tabs.Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  tabBar: {
+    backgroundColor: 'black',
   },
-  text: {
-    color: 'white',
-  },
-  username: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: -3,
-  },
-  tweetsCount: {
-    fontSize: 13,
+  label: {
+    fontSize: 16,
+    textTransform: 'none', // esto no esta funcionando :(
   },
 });
+
+export default Profile;

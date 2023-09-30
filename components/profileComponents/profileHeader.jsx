@@ -1,14 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
-
+import { Animated, View, Text  } from 'react-native';
 import BackButton from '../buttons/buttonBack';
 import RefreshArrow from '../profileComponents/refreshArrow';
 import ProfileNicknameHeader from '../profileComponents/profileNicknameHeader';
-import ProfileBanner from '../profileComponents/profileBanner';
 
-export default function ProfileHeader({ scrollY , navigation}) {
+import { ScrollView } from 'react-native';
+import ProfileInfo from './profileInfo';
+
+
+export default function ProfileHeader({ scrollY , navigation, username, profileImage}) {
     return (
-       <View>
+       <Animated.View>
             {/* Back button */}
             <BackButton navigation={navigation} />
 
@@ -18,8 +20,9 @@ export default function ProfileHeader({ scrollY , navigation}) {
             {/* Name when scroll down */}
             <ProfileNicknameHeader scrollY={scrollY} />
 
-            {/* Banner */}
-            <ProfileBanner scrollY={scrollY} />
-       </View>
+            {/* Profile Info / Nav Bar */}
+            <ProfileInfo scrollY={scrollY}/>
+            
+       </Animated.View>
     );
 }

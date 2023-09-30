@@ -17,7 +17,7 @@ const ProfileBanner = ({ scrollY }) => {
 				uri: PROFILE_BANNER_URI,
 			}}
 			style={{
-				position: 'absolute',
+				position:'absolute',
 				left: 0,
 				right: 0,
 				height: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED,
