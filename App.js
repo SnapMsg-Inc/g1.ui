@@ -8,6 +8,9 @@ import SignUp from './components/pages/signUp';
 import Preferences from './components/pages/preferences';
 import Home from './components/pages/home';
 import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const firebaseConfig = {
@@ -19,9 +22,11 @@ const firebaseConfig = {
     appId: "1:835956360594:web:62491d09ca2e166c4d6d4b"
 };
 
-
 export default function App() {
-    initializeApp(firebaseConfig);
+    const firebase = initializeApp(firebaseConfig)
+    initializeAuth(firebase, {
+        persistence: getReactNativePersistence(AsyncStorage)
+    });
 
     return (
         <SafeAreaView style={styles.container}>
