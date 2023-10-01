@@ -27,17 +27,15 @@ function SignUp({navigation}) {
     const [date, setDate] = useState(new Date())
 
     const handleSignUp = () => {
-        setAccept(true)
-        if (fullName === '' | email === '' | nick === '' |
-            password === '' | date === '' | confirmPassword === '')
-            alert('Please fill out all required fields.')
-            // console.log(date.toISOString().substring(0,10))
-            // console.log(email)
-        else if (password != confirmPassword)
-            alert('Password and confirmation do not match.\nPlease try again.')
-        else
-            CreateAccount(fullName,nick,date,email,password)
-            // navigation.navigate('Preferences')
+        // setAccept(true)
+        // if (fullName === '' | email === '' | nick === '' |
+        //     password === '' | date === '' | confirmPassword === '')
+        //     alert('Please fill out all required fields.')
+        // else if (password != confirmPassword)
+        //     alert('Password and confirmation do not match.\nPlease try again.')
+        // else
+            //CreateAccount(fullName,nick,date,email,password)
+            navigation.navigate('Location')
     }; 
 
     return (

@@ -11,6 +11,7 @@ import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocationForm from './components/pages/location';
 
 const Stack = createStackNavigator();
 const firebaseConfig = {
@@ -40,6 +41,7 @@ export default function App() {
                     <Stack.Screen name="Inits" component={Inits}/>
                     <Stack.Screen name="SignIn" component={SignIn}/>
                     <Stack.Screen name="SignUp" component={SignUp}/>
+                    <Stack.Screen name='Location' component={LocationForm}/>
                     <Stack.Screen name="Preferences" component={Preferences}/>
                     <Stack.Screen name="Home" component={Home}/>
             </Stack.Navigator>
