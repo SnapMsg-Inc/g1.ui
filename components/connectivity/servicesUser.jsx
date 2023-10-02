@@ -5,11 +5,9 @@ import axios from 'axios';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 
-export default async function GetLogin(data) {
-    console.log('HAgo un get')
+export default async function GetLogin() {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    console.log(`${URL}/me`)
     await axios({
         method: 'get',
         url: `${URL}/me`, 
@@ -18,9 +16,8 @@ export default async function GetLogin(data) {
             'Content-Type': 'application/json'
         }
     }).then((response)=> {
-        console.log('\n')
         console.log(JSON.stringify(response.data, null, 2))
-        data(response.data)
+         return response.data
     }).catch((error) => {
         console.log(error)
     })
