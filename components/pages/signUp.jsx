@@ -35,7 +35,7 @@ function SignUp({navigation}) {
         //     alert('Password and confirmation do not match.\nPlease try again.')
         // else
             //CreateAccount(fullName,nick,date,email,password)
-            navigation.navigate('Location')
+            navigation.navigate('Setup')
     }; 
 
     return (

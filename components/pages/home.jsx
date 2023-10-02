@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -9,11 +9,18 @@ import Discover from "./discover";
 import Notifications from "./notifications"
 import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
+import GetLogin from '../connectivity/servicesUser';
 
 const Drawer = createDrawerNavigator();
 const iconColor = '#1ED760';
 
 export default function Home() {
+    const [data, setData] = useState(null)
+
+    useEffect(()=>{
+      GetLogin(setData)
+    },[])
+
     return (
         <Drawer.Navigator
             initialRouteName='Feed'

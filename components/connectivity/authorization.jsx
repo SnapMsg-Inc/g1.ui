@@ -4,7 +4,7 @@ import {getAuth,
         createUserWithEmailAndPassword,
         signInWithEmailAndPassword, 
         deleteUser, getIdToken } from 'firebase/auth'
-import { postsUser } from './servicesUser';
+import GetLogin, { postsUser } from './servicesUser';
         
         
 export default async function CreateAccount (fullName, 
@@ -31,19 +31,20 @@ export default async function CreateAccount (fullName,
     })
 }
     
-export async function LoginAccount (email, password) {
-        const auth = getAuth();
-        await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log('sesion iniciada')
-            // ...
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
-    }
+export async function LoginAccount (email, password, error) {
+    console.log('Login')
+    const auth = getAuth();
+    await signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        console.log('sesion iniciada') 
+        GetLogin()
+    }).catch((error) => {
+        console.log(error)
+        error(true)
+        const errorCode = error.code;
+        const errorMessage = error.message;
+    });
+}
     
     const path = 'https://api-gateway-marioax.cloud.okteto.net/users'
     

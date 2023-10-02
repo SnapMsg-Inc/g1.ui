@@ -13,16 +13,18 @@ import { LoginAccount } from '../connectivity/authorization';
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [accept, setAccept] = useState(false)
+    const [error, setError] = useState(false)
     const [visible, setVisible] = useState(false)
 
-    const handleSignIn = (isAccepted) => {
-        setAccept(isAccepted)
+    const handleSignIn = () => {
         if (email === '' | password === '')
             alert('Please fill out all required fields.')
         else
+            LoginAccount(email, password, setError)
+        if (error)
+            alert('NO login')
+        else
             navigation.navigate('Home')
-            // LoginAccount(email, password)
     };
         
     return (

@@ -21,10 +21,6 @@ return (
             <Text style={stylesPreferences.textTitle}>
                 {"What do you want to see?"}
             </Text>
-            <Text style={stylesPreferences.text}>
-                {"Select at least 3 interests to personalize your "}
-                {"SnapMsg experience. They will be visible on your profile."}
-            </Text>
             <View style={stylesPreferences.buttonsContainer}>
                 <InterestButton title="Sports" />
                 <InterestButton title="Gaming" />
