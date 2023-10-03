@@ -31,7 +31,7 @@ const stylesSetup = StyleSheet.create({
         alignContent: 'flex-start',
         color: colorApp,
         fontSize: 32,
-        marginHorizontal: 10,
+        marginHorizontal: 25,
         paddingBottom: 20,
     },
     footer: {

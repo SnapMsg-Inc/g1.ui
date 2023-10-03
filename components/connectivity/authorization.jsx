@@ -13,15 +13,11 @@ export default async function CreateAccount (fullName,
     const auth = getAuth();
     console.log(email)
     console.log(password)
-    // const [user,setUser] = useState('')
     
     await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         console.log(userCredential)
-        postsUser(fullName, nick, dateBirth, email, password).catch((error) => {
-            console.log('error gateway')
-            deleteUser(auth.currentUser)
-        })
+        postsUser(fullName, nick, dateBirth, email, password)
     }).catch((error) => {
         console.log(error.code);
         console.log(error.message);

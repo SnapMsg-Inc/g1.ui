@@ -41,11 +41,14 @@ export async function postsUser(fullName, nick, dateBirth, email, password) {
         method: 'post',
         url: URL,
         data: {
-            "email": email,
             "fullname": fullName,
-            "interests": [' '], 
+            "interests": [],
+            "zone": {"latitude": 0,
+                    "longitude": 0},
+            "pic": '',
+            "email": email,
             "nick": nick,
-            "zone": ' '
+            "birthdate": dateBirth.toISOString().substring(0,10),
         },
         headers: { 
             'Authorization' : `Bearer ${token}`,
@@ -54,5 +57,8 @@ export async function postsUser(fullName, nick, dateBirth, email, password) {
     }).then((response) => {
         console.log(response.status)
         console.log('User create')
+    }). catch((error) => {
+        console.log('error gateway: ', error)
+        deleteUser(auth.currentUser)
     })
 }
