@@ -54,47 +54,45 @@ const Profile = ({navigation}) => {
     <>
       {follow ? 
         <Tabs.Container
-        tabContainerStyle={styles.tabContainer}
-        renderHeader={() => (
-          <FollowersHeader fullname={data.fullname} follow={setFollow} setFollow={setFollow}/>
-        )}
-        pointerEvents={'box-none'}
-        allowHeaderOverscroll
-        renderTabBar={tabBar}
+          tabContainerStyle={styles.tabContainer}
+          renderHeader={() => (
+            <FollowersHeader fullname={data.fullname} follow={setFollow} setFollow={setFollow}/>
+          )}
+          pointerEvents={'box-none'}
+          allowHeaderOverscroll
+          renderTabBar={tabBar}
         >
-          <Tabs.Tab name="Followers">
+          <Tabs.Tab name="Followers" label="Followers">
             <FollowersScreen />
           </Tabs.Tab>
-          <Tabs.Tab name="Following">
+          <Tabs.Tab name="Following" label="Following">
             <FollowingScreen />
           </Tabs.Tab>
         </Tabs.Container>
       :
-      <Tabs.Container
-        tabContainerStyle={styles.tabContainer}
-        renderHeader={() => (
-          <ProfileHeader scrollY={scrollY} navigation={navigation} data={data} follow={follow} setFollow={setFollow}/>
-        )}
-        pointerEvents={'box-none'}
-        allowHeaderOverscroll
-        renderTabBar={tabBar}
-      >
-            <Tabs.Tab name="Posts">
-              <PostScreen />
-            </Tabs.Tab>
+        <Tabs.Container
+          tabContainerStyle={styles.tabContainer}
+          renderHeader={() => (
+            <ProfileHeader scrollY={scrollY} navigation={navigation} data={data} follow={follow} setFollow={setFollow}/>
+          )}
+          pointerEvents={'box-none'}
+          allowHeaderOverscroll
+          renderTabBar={tabBar}
+        >
+          <Tabs.Tab name="Posts" label="Posts">
+            <PostScreen />
+          </Tabs.Tab>
 
-          <Tabs.Tab name="Replies">
+          <Tabs.Tab name="Replies" label="Replies">
             <RepliesScreen />
           </Tabs.Tab>
 
-          <Tabs.Tab name="Likes">
+          <Tabs.Tab name="Likes" label="Likes">
             <LikesScreen />
           </Tabs.Tab>
         </Tabs.Container>
       }
     </>
-      
-    
   );
 };
 
@@ -104,7 +102,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    textTransform: 'none', // esto no esta funcionando :(
+    textTransform: 'none',
   },
 });
 
