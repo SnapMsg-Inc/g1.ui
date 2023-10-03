@@ -3,16 +3,16 @@ import { Animated, View, Text  } from 'react-native';
 import BackButton from '../buttons/buttonBack';
 import RefreshArrow from '../profileComponents/refreshArrow';
 import ProfileNicknameHeader from '../profileComponents/profileNicknameHeader';
+import { DrawerActions } from '@react-navigation/native';
 
-import { ScrollView } from 'react-native';
 import ProfileInfo from './profileInfo';
 
 
-export default function ProfileHeader({ scrollY , navigation, data, follow, setFollow}) {
+export default function ProfileHeader({ scrollY , navigation, data }) {
     return (
        <Animated.View>
             {/* Back button */}
-            <BackButton navigation={navigation} />
+            <BackButton onPress={() => { navigation.dispatch(DrawerActions.openDrawer())}} />
 
             {/* Refresh arrow */}
             {/* <RefreshArrow scrollY={scrollY} /> */}
@@ -21,7 +21,7 @@ export default function ProfileHeader({ scrollY , navigation, data, follow, setF
             <ProfileNicknameHeader scrollY={scrollY} />
 
             {/* Profile Info / Nav Bar */}
-            <ProfileInfo scrollY={scrollY} data={data}  follow={follow} setFollow={setFollow}/>
+            <ProfileInfo scrollY={scrollY} navigation={navigation} data={data}/>
             
        </Animated.View>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 
-const ProfileStats = ({navigation, data, follow, setFollow}) => {
+const ProfileStats = ({ navigation, data }) => {
 	return (
         <View
             style={{
@@ -9,8 +9,10 @@ const ProfileStats = ({navigation, data, follow, setFollow}) => {
             }}
         >
 
-            <TouchableOpacity onPress={() => {setFollow(!follow)}} style={{marginRight: 10,
-                        }} >
+            <TouchableOpacity onPress={() => {navigation.navigate('FollowingAndFollowersScreen', { screen: 'FollowingScreen' })}} 
+                style={{marginRight: 10,
+                }}
+            >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                         style={{
@@ -32,7 +34,7 @@ const ProfileStats = ({navigation, data, follow, setFollow}) => {
                 </View>
             </TouchableOpacity>
             
-            <TouchableOpacity onPress={() => {setFollow(!follow)}}>
+            <TouchableOpacity onPress={() => {navigation.navigate('FollowingAndFollowersScreen', { screen: 'FollowersScreen' })}}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                     style={{

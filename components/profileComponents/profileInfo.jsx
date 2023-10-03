@@ -8,7 +8,7 @@ import ProfileBanner from './profileBanner';
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
+const ProfileInfo = ({scrollY, navigation, data }) => {
 	return (
         <View
             style={{
@@ -68,7 +68,7 @@ const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
             </Text>
 
             {/* Profile stats */}
-            <ProfileStats data={data} follow={follow} setFollow={setFollow}/>
+            <ProfileStats navigation={navigation} data={data} />
         </View>
 	);
 };

@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, View, Text, StyleSheet } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { GetUserData } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
-import FollowersHeader from '../profileComponents/followersHeader';
-import FollowingScreen from '../profileComponents/followingScreen';
-import FollowersScreen from '../profileComponents/likesScreen';
 
 const tabBar = props => (
   <MaterialTabBar
@@ -49,31 +46,12 @@ const Profile = ({navigation}) => {
     },[])
 
   const scrollY = useRef(new Animated.Value(0)).current;
-  const [follow, setFollow] = useState(false);
+
   return (
-    <>
-      {follow ? 
-        <Tabs.Container
+    <Tabs.Container
           tabContainerStyle={styles.tabContainer}
           renderHeader={() => (
-            <FollowersHeader fullname={data.fullname} follow={setFollow} setFollow={setFollow}/>
-          )}
-          pointerEvents={'box-none'}
-          allowHeaderOverscroll
-          renderTabBar={tabBar}
-        >
-          <Tabs.Tab name="Followers" label="Followers">
-            <FollowersScreen />
-          </Tabs.Tab>
-          <Tabs.Tab name="Following" label="Following">
-            <FollowingScreen />
-          </Tabs.Tab>
-        </Tabs.Container>
-      :
-        <Tabs.Container
-          tabContainerStyle={styles.tabContainer}
-          renderHeader={() => (
-            <ProfileHeader scrollY={scrollY} navigation={navigation} data={data} follow={follow} setFollow={setFollow}/>
+            <ProfileHeader scrollY={scrollY} navigation={navigation} data={data}/>
           )}
           pointerEvents={'box-none'}
           allowHeaderOverscroll
@@ -91,8 +69,6 @@ const Profile = ({navigation}) => {
             <LikesScreen />
           </Tabs.Tab>
         </Tabs.Container>
-      }
-    </>
   );
 };
 
