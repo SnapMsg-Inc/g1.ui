@@ -56,10 +56,10 @@ const FollowingAndFollowersScreen = ({ navigation }) => {
     renderTabBar={tabBar}
     >
         <Tabs.Tab name="Followers" label="Followers">
-            <FollowersScreen />
+            <FollowersScreen navigation={navigation}/>
         </Tabs.Tab>
         <Tabs.Tab name="Following" label="Following">
-            <FollowingScreen />
+            <FollowingScreen navigation={navigation}/>
         </Tabs.Tab>
     </Tabs.Container>
   );

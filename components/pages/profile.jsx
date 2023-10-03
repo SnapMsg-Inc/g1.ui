@@ -18,7 +18,7 @@ const tabBar = props => (
   />
 );
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
     const [data, setData] = useState({
         "uid": "",
         "fullname": "",

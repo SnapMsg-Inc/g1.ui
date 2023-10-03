@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -17,21 +17,20 @@ const ProfileStack = createStackNavigator();
 
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator>
-      { /*Pantallas internas del perfil */}
-      <ProfileStack.Screen name="ProfileScreen"
-        component={Profile}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <ProfileStack.Screen name="FollowingAndFollowersScreen"
-        component={FollowingAndFollowersScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-
+	<ProfileStack.Navigator>
+		{ /*Pantallas internas del perfil */}
+		<ProfileStack.Screen name="ProfileScreen"
+		component={Profile}
+		options={{
+			headerShown: false,
+		}}
+	/>
+	<ProfileStack.Screen name="FollowingAndFollowersScreen"
+		component={FollowingAndFollowersScreen}
+		options={{
+			headerShown: false,
+		}}
+	/>
     </ProfileStack.Navigator>
   );
 }
