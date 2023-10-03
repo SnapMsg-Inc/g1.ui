@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const ProfileStats = () => {
+const ProfileStats = (data) => {
 	return (
         <View
             style={{

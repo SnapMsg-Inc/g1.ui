@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
-
+import { GetUserData } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
@@ -19,15 +19,35 @@ const tabBar = props => (
 );
 
 const Profile = ({navigation}) => {
-  const username = "Nombre de Usuario";
-  const profileImage = "URL_de_la_Imagen_de_Perfil";
+    const [data, setData] = useState({
+        "uid": "",
+        "fullname": "",
+        "interests": [],
+        "zone": "",
+        "is_admin": false,
+        "ocupation": null,
+        "pic": "",
+        "email": "",
+        "nick": "",
+        "birthdate": ""
+      })
+    useEffect(()=>{
+        const fetchDataFromApi = async () => {
+            try {
+                await GetUserData(setData, data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchDataFromApi()
+    },[])
 
   const scrollY = useRef(new Animated.Value(0)).current;
   return (
     <Tabs.Container
       tabContainerStyle={styles.tabContainer}
       renderHeader={() => (
-        <ProfileHeader scrollY={scrollY} navigation={navigation}  username={username} profileImage={profileImage} />
+        <ProfileHeader scrollY={scrollY} navigation={navigation}  data={data}/>
       )}
       pointerEvents={'box-none'}
       allowHeaderOverscroll

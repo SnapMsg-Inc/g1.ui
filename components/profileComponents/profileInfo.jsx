@@ -8,7 +8,7 @@ import ProfileBanner from './profileBanner';
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY}) => {
+const ProfileInfo = ({scrollY, data}) => {
 	return (
         <View
             style={{
@@ -26,7 +26,7 @@ const ProfileInfo = ({scrollY}) => {
                 <SetUpProfileButton/>
             </View>
         
-            <Text
+             <Text
             style={{
                 color: 'white',
                 fontSize: 24,
@@ -34,7 +34,7 @@ const ProfileInfo = ({scrollY}) => {
                 marginTop: 10,
                 }}
             >
-                Nickname
+                {data.fullname}
             </Text>
 
             <Text
@@ -45,20 +45,30 @@ const ProfileInfo = ({scrollY}) => {
                     marginBottom: 15,
                 }}
                 >
-                @username
+                {`@${data.nick}`}
             </Text>
 
+            {/* {data.ocupation !== null ? {} : 
+            (<Text
+                style={{
+                    color: 'white',
+                    marginBottom: 15, fontSize: 15 
+                }}
+            >
+                   {data.ocupation}             
+            </Text>)} */}
+            
             <Text
                 style={{
                     color: 'white',
                     marginBottom: 15, fontSize: 15 
                 }}
             >
-                Bios description here
+                {data.zone}                
             </Text>
 
             {/* Profile stats */}
-            <ProfileStats/>
+            <ProfileStats data={data}/>
         </View>
 	);
 };

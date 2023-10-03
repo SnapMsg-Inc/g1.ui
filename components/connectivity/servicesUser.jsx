@@ -1,11 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { useState } from 'react';
 import {getAuth, getIdToken } from 'firebase/auth'
 import axios from 'axios';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 
-export default async function GetLogin() {
+export async function GetUserData(state, data) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
     await axios({
@@ -15,11 +14,19 @@ export default async function GetLogin() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
-    }).then((response)=> {
-        console.log(JSON.stringify(response.data, null, 2))
-         return response.data
-    }).catch((error) => {
-        console.log(error)
+    }).then((response) => {
+        state({
+            "uid": response.data.uid,
+            "fullname": response.data.fullname,
+            "interests": response.data.interests,
+            "zone": response.data.zone,
+            "is_admin": response.data.is_admin,
+            "ocupation": response.data.ocupation,
+            "pic": response.data.pic,
+            "email": response.data.email,
+            "nick": response.data.nick,
+            "birthdate": response.data.birthdate
+        })
     })
 }
 

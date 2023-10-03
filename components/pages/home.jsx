@@ -15,21 +15,7 @@ const Drawer = createDrawerNavigator();
 const iconColor = '#1ED760';
 
 export default function Home() {
-    // const [data, setData] = useState({})
-
-    // useEffect(()=>{
-    //   const fetchDataFromApi = async () => {
-    //     try {
-    //       const response = await GetLogin();
-    //       setData(response);
-    //       console.log("esta es mi data",JSON.stringify(data, null, 2))
-    //     } catch (error) {
-    //       console.error('Error fetching data:', error);
-    //     }
-    //   }
-    //   fetchDataFromApi()
-    // },[])
-    
+        
     return (
         <Drawer.Navigator
             initialRouteName='Feed'

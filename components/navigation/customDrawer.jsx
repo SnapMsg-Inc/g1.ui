@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,26 +11,52 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { GetUserData } from '../connectivity/servicesUser';
 
 const CustomDrawer = props => {
+    const [data, setData] = useState({
+      "uid": "",
+      "fullname": "",
+      "interests": [],
+      "zone": "",
+      "is_admin": false,
+      "ocupation": null,
+      "pic": "",
+      "email": "",
+      "nick": "",
+      "birthdate": ""
+    })
+
+    useEffect(()=>{
+        const fetchDataFromApi = async () => {
+            try {
+                await GetUserData(setData, data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchDataFromApi()
+    },[]) 
+
     const profileImageUri = 
     'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
-    const username = '@username';
-    const nikname = 'Nickname'
+    // const username = '@username';
+    // const nikname = 'Nickname'
     const followersCount = 100;
     const followingCount = 50;
 
+    const pic = data.pic === '' ? profileImageUri : data.pic;
 
   return (
     <View style={{flex: 1}}>
         <DrawerContentScrollView style={styles.scrollView}>
             <View style={styles.headerContainer}>
                 <Image
-                    source={{ uri: profileImageUri }}
+                    source={{ uri: pic}}
                     style={styles.profileImage}
                 />
-                <Text style={styles.nickname}>{nikname}</Text>
-                <Text style={styles.username}>{username}</Text>
+                <Text style={styles.nickname}>{data.fullname}</Text>
+                <Text style={styles.username}>{`@${data.nick}`}</Text>
                 
                 <View style={styles.followersContainer}>
                     <Text style={{ color: '#687684' }}>
