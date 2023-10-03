@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../styles/forms/input";
 
 function SetupProfile({navigation}) {
-    const [text,setText] = useState('Waiting..')
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
     const [next, setNext] = useState(false)
@@ -60,7 +59,6 @@ function SetupProfile({navigation}) {
             latitude: coordinates.latitude,
             longitude: coordinates.longitude
         })
-        console.log(adress)
         console.log(`adress ${JSON.stringify(adress, null, 2)}`)
         setLocality(adress[0].city)
         setCountry(adress[0].country)

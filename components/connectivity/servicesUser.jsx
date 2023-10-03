@@ -44,9 +44,5 @@ export async function postsUser(fullName, nick, dateBirth, email, password) {
     }).then((response) => {
         console.log(response.status)
         console.log('User create')
-    }).catch((error) => {
-        console.log(error.message)
-        console.log(error.response)
-        console.log('error')
     })
 }

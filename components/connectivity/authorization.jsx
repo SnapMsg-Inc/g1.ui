@@ -21,43 +21,20 @@ export default async function CreateAccount (fullName,
         postsUser(fullName, nick, dateBirth, email, password).catch((error) => {
             console.log('error gateway')
             deleteUser(auth.currentUser)
-            // eliminar el usuario de firebase
-        }) // post en el gateway
+        })
     }).catch((error) => {
         console.log(error.code);
         console.log(error.message);
-        
-        // console.log(token)                             
     })
 }
     
-export async function LoginAccount (email, password, error) {
-    console.log('Login')
+export async function LoginAccount (email, password) {
     const auth = getAuth();
-    await signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        console.log('sesion iniciada') 
-        GetLogin()
-    }).catch((error) => {
-        console.log(error)
-        error(true)
-        const errorCode = error.code;
-        const errorMessage = error.message;
-    });
+    try {
+        await signInWithEmailAndPassword(auth, email, password)
+        return true
+    } catch(error) {
+        console.log(`Error with code: ${error.code} and message: ${error.message}`)
+        throw error
+    };
 }
-    
-    const path = 'https://api-gateway-marioax.cloud.okteto.net/users'
-    
-    // function postsUser() {
-        //     axios.post(path,{
-            //         data: {
-                //             email: 'ajksda',
-                //         }
-                //     },
-                //         { headers: {'Authorization': `Bearer ${token}`}}
-                //     )
-                // }
-                // let token = getIdToken(userCrendential.user, forceRefresh=True)
-                //     .then((token)=>{
-                    //         console.log(token)                             
-                    //     }) 
