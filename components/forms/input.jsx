@@ -9,7 +9,8 @@ export default function Input({
         fieldButtonLabel,
         fieldButtonFunction,
         data,
-        setData
+        setData,
+        error
     }) {
 
     return (
@@ -24,6 +25,8 @@ export default function Input({
                 secureTextEntry={inputType}
             />
             {icon}
+            {/* Renderizar el mensaje de error si está presente */}
+            {error && <Text style={{ color: 'red' }}>{error}</Text>}
         </View>
     );
 }

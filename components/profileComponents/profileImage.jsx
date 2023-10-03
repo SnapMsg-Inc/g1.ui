@@ -6,11 +6,11 @@ const PROFILE_PICTURE_URI =
   'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
 
   
-const ProfileImage = ({ scrollY }) => {
+const ProfileImage = ({ scrollY, pic }) => {
 	return (
         <Animated.Image
             source={{
-                uri: PROFILE_PICTURE_URI,
+                uri: pic? pic : PROFILE_PICTURE_URI,
             }}
             style={{
                 width: 75,
