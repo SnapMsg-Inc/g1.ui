@@ -11,6 +11,7 @@ import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SetupProfile from './components/pages/setupProfile';
 
 const Stack = createStackNavigator();
 const firebaseConfig = {
@@ -27,7 +28,7 @@ export default function App() {
     initializeAuth(firebase, {
         persistence: getReactNativePersistence(AsyncStorage)
     });
-
+    
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar
@@ -40,7 +41,7 @@ export default function App() {
                     <Stack.Screen name="Inits" component={Inits}/>
                     <Stack.Screen name="SignIn" component={SignIn}/>
                     <Stack.Screen name="SignUp" component={SignUp}/>
-                    <Stack.Screen name="Preferences" component={Preferences}/>
+                    <Stack.Screen name='Setup' component={SetupProfile}/>
                     <Stack.Screen name="Home" component={Home}/>
             </Stack.Navigator>
             </NavigationContainer>

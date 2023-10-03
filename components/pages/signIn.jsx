@@ -13,16 +13,22 @@ import { LoginAccount } from '../connectivity/authorization';
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [accept, setAccept] = useState(false)
     const [visible, setVisible] = useState(false)
 
-    const handleSignIn = (isAccepted) => {
-        setAccept(isAccepted)
-        if (email === '' | password === '')
+    const handleSignIn = async () => {
+        if (email === '' | password === '') {
             alert('Please fill out all required fields.')
-        else
-            navigation.navigate('Home')
-            // LoginAccount(email, password)
+        } else {
+            try {
+                const success = await LoginAccount(email, password)
+                if (success)
+                    navigation.navigate('Home')
+                else
+                    alert('Invalid username or password.\nPlease check your credentials and try again.')
+            } catch (error) {
+                alert('An error occurred while signing in. Please try again later.');
+            }
+        }
     };
         
     return (

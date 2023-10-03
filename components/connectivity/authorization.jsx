@@ -4,7 +4,7 @@ import {getAuth,
         createUserWithEmailAndPassword,
         signInWithEmailAndPassword, 
         deleteUser, getIdToken } from 'firebase/auth'
-import { postsUser } from './servicesUser';
+import GetLogin, { postsUser } from './servicesUser';
         
         
 export default async function CreateAccount (fullName, 
@@ -21,42 +21,20 @@ export default async function CreateAccount (fullName,
         postsUser(fullName, nick, dateBirth, email, password).catch((error) => {
             console.log('error gateway')
             deleteUser(auth.currentUser)
-            // eliminar el usuario de firebase
-        }) // post en el gateway
+        })
     }).catch((error) => {
         console.log(error.code);
         console.log(error.message);
-        
-        // console.log(token)                             
     })
 }
     
 export async function LoginAccount (email, password) {
-        const auth = getAuth();
+    const auth = getAuth();
+    try {
         await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log('sesion iniciada')
-            // ...
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
-    }
-    
-    const path = 'https://api-gateway-marioax.cloud.okteto.net/users'
-    
-    // function postsUser() {
-        //     axios.post(path,{
-            //         data: {
-                //             email: 'ajksda',
-                //         }
-                //     },
-                //         { headers: {'Authorization': `Bearer ${token}`}}
-                //     )
-                // }
-                // let token = getIdToken(userCrendential.user, forceRefresh=True)
-                //     .then((token)=>{
-                    //         console.log(token)                             
-                    //     }) 
+        return true
+    } catch(error) {
+        console.log(`Error with code: ${error.code} and message: ${error.message}`)
+        throw error
+    };
+}
