@@ -4,16 +4,12 @@ import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DrawerActions } from '@react-navigation/native';
 
-function BackButton({ navigation }) {
+function BackButton({ onPress }) {
   const insets = useSafeAreaInsets();
-
-  const onPressBackButton = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
-  };
 
   return (
     <TouchableHighlight
-      onPress={onPressBackButton}
+      onPress={onPress}
       style={{
         zIndex: 20,
         position: 'absolute',

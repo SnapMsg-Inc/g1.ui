@@ -8,7 +8,7 @@ import ProfileBanner from './profileBanner';
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY, data}) => {
+const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
 	return (
         <View
             style={{
@@ -21,7 +21,7 @@ const ProfileInfo = ({scrollY, data}) => {
             <ProfileBanner scrollY={scrollY} />
 
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED}}>
-                <ProfileImage scrollY={scrollY}/>
+                <ProfileImage scrollY={scrollY} uri={data.pic}/>
                 {/* For self profile */}
                 <SetUpProfileButton/>
             </View>
@@ -64,11 +64,11 @@ const ProfileInfo = ({scrollY, data}) => {
                     marginBottom: 15, fontSize: 15 
                 }}
             >
-                {data.zone}                
+                {data.zone.latitude}                
             </Text>
 
             {/* Profile stats */}
-            <ProfileStats data={data}/>
+            <ProfileStats data={data} follow={follow} setFollow={setFollow}/>
         </View>
 	);
 };
