@@ -7,31 +7,38 @@ import { GetUserFollowsByUid } from '../connectivity/servicesUser';
 const FollowingScreen = ({ navigation, uid }) => {
 
 	const [follows, setFollows] = useState([])
+	const [loading, setLoading] = useState(true)
 
 	useEffect(()=>{
-			const fetchDataFromApi = async () => {
-				try {
-					await GetUserFollowsByUid(setFollows, uid);
-				} catch (error) {
-					console.error('Error fetching data:', error);
-				}
+		if (follows.length) {
+			setFollows([])
+		}
+		const fetchDataFromApi = async () => {
+			try {
+				await GetUserFollowsByUid(setFollows, uid);
+				setLoading(false)
+			} catch (error) {
+				console.error('Error fetching data:', error);
 			}
-			fetchDataFromApi()
-	},[follows])
+		}
+		fetchDataFromApi()
+	},[uid])
 
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
-				{follows.map((item) => (
-					<FollowsCard
-						navigation={navigation}
-						key={item.uid}
-						uid={item.uid}
-						nick={item.nick}
-						interests={item.interests}
-						pic={item.pic}
-					/>
+				{loading ? <></> : 
+					follows.map((item) => (
+						<FollowsCard
+							navigation={navigation}
+							key={item.uid}
+							uid={item.uid}
+							nick={item.nick}
+							interests={item.interests}
+							pic={item.pic}
+						/>
 				))}
+				
 			</View>
 		</Tabs.ScrollView>
 	);
