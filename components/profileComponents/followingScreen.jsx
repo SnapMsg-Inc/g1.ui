@@ -4,20 +4,6 @@ import { Tabs } from 'react-native-collapsible-tab-view';
 import FollowsCard from './followsCard';
 import { GetUserFollowsByUid } from '../connectivity/servicesUser';
 
-// function generateFollows(limit) {
-// 	return new Array(limit).fill(0).map((_, index) => {
-// 		return {
-// 		key: index.toString(),
-// 		uid: '',
-// 		nick: 'Juan Roman Riquelme',
-// 		interests: 'Quiero la libertadores boca boca bocaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-// 		pic: 'https://tmssl.akamaized.net/images/foto/galerie/juan-roman-riquelme-boca-juniors-2000-1575894721-28108.jpg?lm=1575894731',
-// 		};
-// 	});
-// }
-
-// const MOCKED_FOLLOWS = generateFollows(8);
-
 const FollowingScreen = ({ navigation, uid }) => {
 
 	const [follows, setFollows] = useState([])

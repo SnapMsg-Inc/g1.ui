@@ -4,21 +4,6 @@ import { Tabs } from 'react-native-collapsible-tab-view';
 import FollowerCard from './followerCard';
 import { GetUserFollowersByUid } from '../connectivity/servicesUser';
 
-// function generateFollowers(limit) {
-//   return new Array(limit).fill(0).map((_, index) => {
-
-//     return {
-//       key: index.toString(),
-//       uid: 'Pnkf6hPVAKb86sBbWVlklQGjQ2k2',
-//       nick: 'Pedro Messi',
-//       interests: 'Se viene boooooooooca se viene boca boca boca boca boca boca boca boca boca',
-//       pic: 'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp',
-//     };
-//   });
-// }
-
-// const MOCKED_FOLLOWERS = generateFollowers(2);
-
 const FollowersScreen = ({ navigation, uid }) => {
 
 	const [followers, setFollowers] = useState([])
