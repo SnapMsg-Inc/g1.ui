@@ -14,7 +14,7 @@ const stylesSelect = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     selectedButton: {
-        backgroundColor: colorApp, // Cambia el color cuando está seleccionado
+        backgroundColor: colorApp, 
     },
     text: {
         fontSize: 20,
@@ -22,7 +22,7 @@ const stylesSelect = StyleSheet.create({
     },
     selectedText: {
         fontSize: 20,
-        color: 'white', // Cambia el color del texto cuando está seleccionado
+        color: 'white',
     },
 })
 

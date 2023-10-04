@@ -1,44 +1,29 @@
-import { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import AcceptButton from '../buttons/buttonAcept';
+import { Text, View } from 'react-native';
 import InterestButton from '../buttons/buttonSelect';
-import Logo from '../logo';
-import stylesPreferences from '../../styles/forms/preferences';
+import stylesSetup from '../../styles/forms/setup';
+import { useState } from 'react';
 
-function Preferences({navigation}) {
-    const [accept, setAccept] = useState(false)
+function Preferences({list, setList}) {
 
-    const handlePreferences = (isAccepted) => {
-        setAccept(isAccepted)
-    };  
-
-return (
-    <View style={stylesPreferences.container}>
-        <View style={stylesPreferences.header}>
-            <Logo/>
-        </View>
-        <View style={stylesPreferences.body}>
-            <Text style={stylesPreferences.textTitle}>
+    return (
+        <View style={stylesSetup.bodyInterests}>
+            <Text style={stylesSetup.textTitle}>
                 {"What do you want to see?"}
             </Text>
-            <View style={stylesPreferences.buttonsContainer}>
-                <InterestButton title="Sports" />
-                <InterestButton title="Gaming" />
-                <InterestButton title="Travel" />
-                <InterestButton title="Technology" />
-                <InterestButton title="Entertainment" />
-                <InterestButton title="Music" />
-                <InterestButton title="Arts & culture" />
-                <InterestButton title="Fitness" />
-                <InterestButton title="Outdoors" />
-                <InterestButton title="Bussines & finance" />
+            <View style={stylesSetup.buttonsContainer}>
+                <InterestButton title="Sports" list={list} setList={setList}/>
+                <InterestButton title="Gaming" list={list} setList={setList}/>
+                <InterestButton title="Travel" list={list} setList={setList}/>
+                <InterestButton title="Technology" list={list} setList={setList}/>
+                <InterestButton title="Entertainment" list={list} setList={setList}/>
+                <InterestButton title="Music" list={list} setList={setList}/>
+                <InterestButton title="Fitness" list={list} setList={setList}/>
+                <InterestButton title="Arts & culture" list={list} setList={setList}/>
+                <InterestButton title="Outdoors" list={list} setList={setList}/>
+                <InterestButton title="Bussines & finance" list={list} setList={setList}/>
             </View>
         </View>
-        <View style={stylesPreferences.footer}>
-            <AcceptButton accept={handlePreferences}/>
-        </View>
-    </View>
-);
+    );
 };
 
 export default Preferences;

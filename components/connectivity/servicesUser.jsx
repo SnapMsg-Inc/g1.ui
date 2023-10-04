@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import {getAuth, getIdToken } from 'firebase/auth'
+import { getAuth, getIdToken, deleteUser } from 'firebase/auth'
 import axios from 'axios';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
@@ -103,7 +103,30 @@ export async function GetUserFollowsByUid(setState, uid) {
     });
 }
 
-export async function postsUser(fullName, nick, dateBirth, email, password) {
+export async function postUserFederate(data) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+    console.log(`Estoy en postUser ${JSON.stringify(data, null, 2)}`)
+    try {
+        await axios({
+            method: 'post',
+            url: URL,
+            data: data,
+            headers: { 
+                'Authorization' : `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            } 
+        })
+        return true
+    } catch(error) {
+        console.log(error.status)
+        console.log('error gateway: ', error)
+        deleteUser(auth.currentUser)
+    }
+}
+
+export async function postsUser(fullName, nick, dateBirth, email) {
+
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
     console.log(`email: ${email}`)
@@ -111,11 +134,14 @@ export async function postsUser(fullName, nick, dateBirth, email, password) {
         method: 'post',
         url: URL,
         data: {
-            "email": email,
             "fullname": fullName,
-            "interests": [' '], 
+            "interests": [],
+            "zone": {"latitude": 0,
+                    "longitude": 0},
+            "pic": '',
+            "email": email,
             "nick": nick,
-            "zone": ' '
+            "birthdate": dateBirth.toISOString().substring(0,10),
         },
         headers: { 
             'Authorization' : `Bearer ${token}`,
@@ -124,5 +150,27 @@ export async function postsUser(fullName, nick, dateBirth, email, password) {
     }).then((response) => {
         console.log(response.status)
         console.log('User create')
+    }). catch((error) => {
+        console.log('error gateway: ', error)
+        deleteUser(auth.currentUser)
     })
+}
+
+export async function PatchUser(data) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+    try {
+        await axios({
+            method: 'patch',
+            url: `${URL}/me`,
+            data: data,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        return true
+    } catch (error) {
+        console.log(error)
+    }
 }
