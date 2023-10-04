@@ -50,7 +50,7 @@ const Profile = ({ navigation }) => {
     },[])
 
 	const scrollY = useRef(new Animated.Value(0)).current;
-	console.log("My uid es: " + data.uid);
+
 	return (
 		<Tabs.Container
 			tabContainerStyle={styles.tabContainer}

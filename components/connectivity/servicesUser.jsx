@@ -82,8 +82,6 @@ export async function GetUserFollowersByUid(setState, uid) {
       }
     }).then((response) => {
       setState(response.data);
-      console.log("Se hizo request con uid: " + uid + '\n');
-      console.log("Se obtuvo FOLLOWERS:" + response.data);
     });
 }
 
