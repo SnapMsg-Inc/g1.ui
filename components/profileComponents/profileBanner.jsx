@@ -8,7 +8,7 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 const PROFILE_BANNER_URI =
-  'https://i.pinimg.com/736x/39/f5/70/39f570a5f25eb6a004fc857283540168.jpg';
+  'https://png.pngtree.com/background/20210717/original/pngtree-ethical-hacking-matrix-technological-background-vector-picture-image_1437965.jpg';
   
 const ProfileBanner = ({ scrollY }) => {
 	return (

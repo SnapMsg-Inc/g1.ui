@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
-import { GetUserData } from '../connectivity/servicesUser';
+import { useRoute } from '@react-navigation/native';
+
+import { GetUserByUid } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
@@ -20,35 +22,31 @@ const tabBar = props => (
 
 
 
-const Profile = ({ navigation }) => {
+const OtherProfile = ({ navigation }) => {
+	const route = useRoute();
+	const { id } = route.params;
     const [data, setData] = useState({
         "uid": "",
-        "fullname": "",
+        //"fullname": "",
         "interests": [],
-        "zone": {"latitude": 0,
-                "longitude": 0},
-        "is_admin": false,
-        "ocupation": null,
         "pic": "",
-        "email": "",
         "nick": "",
-        "birthdate": "",
         "followers": 0,
         "follows": 0,
     })
 
-    const fetchDataFromApi = async () => {
-        try {
-			await GetUserData(setData);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
-
+	
     useEffect(()=>{
+		const fetchDataFromApi = async () => {
+			try {
+				await GetUserByUid(setData, id);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		}
 		fetchDataFromApi()
     },[])
-
+	
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	return (
@@ -72,18 +70,18 @@ const Profile = ({ navigation }) => {
 			<Tabs.Tab name="Likes" label="Likes">
 				<LikesScreen />
 			</Tabs.Tab>
-			</Tabs.Container>
+		</Tabs.Container>
 	);
 };
 
 const styles = StyleSheet.create({
-	tabBar: {
-		backgroundColor: 'black',
-	},
-	label: {
-		fontSize: 16,
-		textTransform: 'none',
-	},
+  tabBar: {
+    backgroundColor: 'black',
+  },
+  label: {
+    fontSize: 16,
+    textTransform: 'none',
+  },
 });
 
-export default Profile;
+export default OtherProfile;

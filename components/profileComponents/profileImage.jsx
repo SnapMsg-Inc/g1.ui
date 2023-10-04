@@ -2,15 +2,17 @@ import React from 'react';
 import { Animated } from 'react-native';
 
 const HEADER_HEIGHT_EXPANDED = 75;
-const PROFILE_PICTURE_URI =
-  'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
-
-  
+ 
 const ProfileImage = ({ scrollY, uri}) => {
+    const profileImageUri = 
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
+
+    const pic = (uri === 'none') || (uri === '') ? profileImageUri : uri;
+
 	return (
         <Animated.Image
             source={{
-                uri: uri ? uri : PROFILE_PICTURE_URI,
+                uri: pic,
             }}
             style={{
                 width: 75,

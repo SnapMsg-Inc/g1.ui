@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableHighlight } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { DrawerActions } from '@react-navigation/native';
 
 function BackButton({ onPress }) {
   const insets = useSafeAreaInsets();

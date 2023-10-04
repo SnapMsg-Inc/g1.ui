@@ -8,7 +8,7 @@ import ProfileBanner from './profileBanner';
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
+const ProfileInfo = ({scrollY, navigation, data }) => {
 	return (
         <View
             style={{
@@ -41,7 +41,7 @@ const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
                 style={{
                     color: 'white',
                     fontSize: 15,
-                    color: '#687684',
+                    color: '#535353',
                     marginBottom: 15,
                 }}
                 >
@@ -64,11 +64,11 @@ const ProfileInfo = ({scrollY, data, follow, setFollow}) => {
                     marginBottom: 15, fontSize: 15 
                 }}
             >
-                {data.zone.latitude}                
+                {/* {data.zone.latitude}                 */}
             </Text>
 
             {/* Profile stats */}
-            <ProfileStats data={data} follow={follow} setFollow={setFollow}/>
+            <ProfileStats navigation={navigation} data={data} />
         </View>
 	);
 };

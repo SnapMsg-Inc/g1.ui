@@ -3,12 +3,12 @@ import { View, Text, StyleSheet} from 'react-native';
 
 import BackButton from '../buttons/buttonBack';
 
-export default function FollowersHeader({ fullname, follow, setFollow}) {
+export default function FollowersHeader({ navigation, fullname }) {
 
     return (
        <View style={styles.container}>
             {/* Back button */}
-            <BackButton onPress={() => {setFollow(!follow)}}/>
+            <BackButton onPress={() => {navigation.navigate('ProfileScreen')}}/>
             <Text style={styles.label}>
                 {fullname}
             </Text>
