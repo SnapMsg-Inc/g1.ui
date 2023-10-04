@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
-import { GetUserData } from '../connectivity/servicesUser';
+import { GetUserByUid } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
@@ -20,27 +20,21 @@ const tabBar = props => (
 
 
 
-const Profile = ({ navigation }) => {
-	console.log("self profile!!!!")
+const OtherProfile = ({ route, navigation }) => {
+	const { id } = route.params;
     const [data, setData] = useState({
         "uid": "",
-        "fullname": "",
+        //"fullname": "",
         "interests": [],
-        "zone": {"latitude": 0,
-                "longitude": 0},
-        "is_admin": false,
-        "ocupation": null,
         "pic": "",
-        "email": "",
         "nick": "",
-        "birthdate": "",
         "followers": 0,
         "follows": 0,
     })
 
     const fetchDataFromApi = async () => {
         try {
-			await GetUserData(setData);
+			await GetUserByUid(setData, id);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -49,7 +43,6 @@ const Profile = ({ navigation }) => {
     useEffect(()=>{
 		fetchDataFromApi()
     },[])
-
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
@@ -87,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default OtherProfile;

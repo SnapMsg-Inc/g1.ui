@@ -45,7 +45,7 @@ const CustomDrawer = props => {
     'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
 
     const pic = data.pic === '' ? profileImageUri : data.pic;
-
+	
   return (
     <View style={{flex: 1}}>
         <DrawerContentScrollView style={styles.scrollView}>
@@ -72,12 +72,12 @@ const CustomDrawer = props => {
               <View style={styles.signOutButton}>
                 <TouchableOpacity onPress={() => {}}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Ionicons name="exit-outline" color={'#ff0000'} size={22} />
+                    <Ionicons name="exit-outline" color={'#535353'} size={22} />
                     <Text
                       style={{
                         fontSize: 15,
                         marginLeft: 5,
-                        color: '#ff0000',
+                        color: '#535353',
                       }}>
                       Sign Out
                     </Text>

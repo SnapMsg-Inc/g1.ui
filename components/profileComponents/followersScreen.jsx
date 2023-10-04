@@ -8,7 +8,7 @@ function generateFollowers(limit) {
 
     return {
       key: index.toString(),
-      uid: '',
+      uid: 'Pnkf6hPVAKb86sBbWVlklQGjQ2k2',
       nick: 'Pedro Messi',
       interests: 'Se viene boooooooooca se viene boca boca boca boca boca boca boca boca boca',
       pic: 'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp',
@@ -25,11 +25,11 @@ const FollowersScreen = ({ navigation }) => {
 			{MOCKED_FOLLOWERS.map((item, index) => (
 				<FollowerCard
 					navigation={navigation}
-					key={item.key}
 					uid={item.uid}
 					nick={item.nick}
 					interests={item.interests}
 					pic={item.pic}
+					key={item.key}
 				/>
 			))}
         </View>

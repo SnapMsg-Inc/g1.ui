@@ -18,9 +18,9 @@ const FollowsCard = ({ navigation, uid, nick, interests, pic }) => {
     // Lógica para cambiar el estado de seguimiento (following o not following)
     setIsFollowing(!isFollowing);
   };
-
+  
   const handleProfilePress = () => {
-    navigation.navigate('ProfileScreen', { uid });
+    navigation.navigate('OtherProfileScreen', { id:uid });
   };
 
   return (

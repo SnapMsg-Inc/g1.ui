@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { CommonActions } from '@react-navigation/native';
 
 import Profile from "./profile";
 import Feed from "./feed";
@@ -11,26 +12,41 @@ import Notifications from "./notifications"
 import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/followingAndFollowersScreen';
-
+import OtherProfile from './otherProfile';
 
 const ProfileStack = createStackNavigator();
 
 function ProfileStackScreen() {
   return (
-	<ProfileStack.Navigator>
+	<ProfileStack.Navigator initialRouteName="ProfileScreen">
 		{ /*Pantallas internas del perfil */}
 		<ProfileStack.Screen name="ProfileScreen"
-		component={Profile}
-		options={{
-			headerShown: false,
-		}}
-	/>
-	<ProfileStack.Screen name="FollowingAndFollowersScreen"
-		component={FollowingAndFollowersScreen}
-		options={{
-			headerShown: false,
-		}}
-	/>
+			component={Profile}
+			options={{
+				headerShown: false,
+			}}
+		/>
+
+		<ProfileStack.Screen name="FollowingAndFollowersScreen"
+			component={FollowingAndFollowersScreen}
+			options={{
+				headerShown: false,
+			}}
+		/>
+
+		<ProfileStack.Screen name="OtherProfileScreen"
+			component={OtherProfile}
+			options={{
+				headerShown: false,
+			}}
+		/>
+		{/* ACA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+		{/* <ProfileStack.Screen name="SetUpProfile"
+			component={SetUpProfile}
+			options={{
+				headerShown: false,
+			}}
+		/> */}
     </ProfileStack.Navigator>
   );
 }
@@ -39,7 +55,6 @@ const Drawer = createDrawerNavigator();
 const iconColor = '#1ED760';
 
 export default function Home() {
-        
     return (
         <Drawer.Navigator
             initialRouteName='Feed'
@@ -61,8 +76,9 @@ export default function Home() {
                 drawerIcon: ({size}) => (
                   <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
-                headerShown:false,           
-              }}
+                headerShown:false,							
+				swipeEdgeWidth: 0,
+            }}
             />
             <Drawer.Screen
             name="Feed"

@@ -20,7 +20,8 @@ const FollowerCard = ({ navigation, uid, nick, interests, pic }) => {
   };
 
   const handleProfilePress = () => {
-    navigation.navigate('ProfileScreen', { uid });
+	console.log("log from follower " + uid);
+    navigation.navigate('OtherProfileScreen', { id:uid });
   };
 
   return (
