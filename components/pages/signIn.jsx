@@ -8,7 +8,7 @@ import Separate from '../forms/separate';
 import Input from '../forms/input';
 import Logo from '../logo';
 import stylesForms, { colorText } from '../../styles/SignForms';
-import { LoginAccount } from '../connectivity/authorization';
+import { LoginAccount, SignFederate } from '../connectivity/authorization';
 
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
@@ -30,6 +30,16 @@ function SignIn({ navigation }) {
             }
         }
     };
+
+    const signButtonFederate = async () => {
+        try {
+            const success = await SignFederate(false)
+            if (success)
+                setTimeout(() => {navigation.navigate('Home')}, 1000)
+        } catch (error) {
+
+        }
+    }  
         
     return (
         <View style={stylesForms.container}>
@@ -78,7 +88,7 @@ function SignIn({ navigation }) {
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>
                     <Separate/>
-                    <ButtonFederate name={'Google'}/>
+                    <ButtonFederate name={'Google'} sign={signButtonFederate}/>
                 </View>
                 <View style={stylesForms.footerText}>
                     <Text style={stylesForms.text}>

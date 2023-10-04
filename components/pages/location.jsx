@@ -3,6 +3,7 @@ import { Text, View } from "react-native"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../styles/forms/input";
 import Input from "../forms/input";
+import { useState, useEffect } from "react";
 
 function LocationSetup({country, setCountry, locality, setLocality, getPermission}) {
     return (
@@ -17,7 +18,7 @@ function LocationSetup({country, setCountry, locality, setLocality, getPermissio
                         name={'flag'} 
                         color={colorText} 
                         size={20} 
-                        onPress={() => getPermission()}
+                        onPress={getPermission}
                     />
                 }
             />
@@ -30,10 +31,11 @@ function LocationSetup({country, setCountry, locality, setLocality, getPermissio
                         name={'map-marker'} 
                         color={colorText} 
                         size={20} 
-                        onPress={() => getPermission()}
+                        onPress={getPermission}
                     />
                 }
             />
+            <Text style={stylesSetup.textSuggestion}>Press icons for autocomplete</Text>
         </View>
     )
 }

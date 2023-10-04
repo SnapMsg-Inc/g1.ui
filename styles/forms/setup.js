@@ -40,6 +40,12 @@ const stylesSetup = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'space-between'
     },
+    footerFirst: {
+        marginHorizontal: 30,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'flex-end'
+    },
     buttonBack:{
         flexDirection: 'row',
         alignItems: 'center',
@@ -50,6 +56,12 @@ const stylesSetup = StyleSheet.create({
         color: colorText,
         fontSize: 20,
         marginLeft: 5
+    },
+    textSuggestion: {
+        color: colorText,
+        fontSize: 16,
+        marginHorizontal: 30,
+        justifyContent: 'flex-end'
     }
 })
 

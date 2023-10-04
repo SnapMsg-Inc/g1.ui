@@ -12,7 +12,7 @@ import Logo from "../logo";
 import Separate from "../forms/separate";
 import stylesForms, { colorText } from "../../styles/SignForms";
 import Calendar from "../forms/calendar";
-import CreateAccount from "../connectivity/authorization";
+import CreateAccount, { SignFederate } from "../connectivity/authorization";
 
 function SignUp({navigation}) {
     const [fullName, setFullName] = useState('')
@@ -20,10 +20,18 @@ function SignUp({navigation}) {
     const [nick, setNick] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [accept, setAccept] = useState(false)
+    const [sucess, setSucces] = useState(false)
     const [visible, setVisible] = useState(false)
     const [visibleConfirm, setVisibleConfirm] = useState(false)
     const [date, setDate] = useState(new Date())
+    const [userFederate, setUserFederate] = useState({
+        id: '',
+        name: '',
+        email: '',
+        photo: '',
+        familyName: '',
+        givenName: ''
+    })
 
     const handleSignUp = async () => {
         if (fullName === '' | email === '' | nick === '' |
@@ -35,9 +43,7 @@ function SignUp({navigation}) {
             try {
                 const success = CreateAccount(fullName,nick,date,email,password)
                 if (success)
-                    setTimeout(() => {
-                        navigation.navigate('Setup')
-                    }, 1000)
+                    setTimeout(() => {navigation.navigate('Setup')}, 1000)
                 else 
                     alert('Account creation failed.\nPlease ensure that all the information you provided is accurate and try again.')
             } catch (error) {
@@ -45,6 +51,16 @@ function SignUp({navigation}) {
                 alert('An error occurred while signing up. Please try again later.')
             }
     }; 
+
+    const signButtonFederate = async () => {
+        try {
+            const success = SignFederate(true, setUserFederate)
+            if (success)
+                setTimeout(() => {navigation.navigate('Setup')}, 1000)
+        } catch (error) {
+
+        }
+    }   
 
     return (
         <View style={stylesForms.container}>
@@ -130,7 +146,7 @@ function SignUp({navigation}) {
                 <View style={stylesForms.footer}>
                     <View style={stylesForms.footerOption}>
                         <Separate/>
-                        <ButtonFederate name={'Google'}/>
+                        <ButtonFederate name={'Google'} sign={signButtonFederate} />
                     </View>
                     <View style={stylesForms.footerText}>
                         <Text style={stylesForms.text}>
