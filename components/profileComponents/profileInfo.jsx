@@ -41,7 +41,7 @@ const ProfileInfo = ({scrollY, navigation, data }) => {
                 style={{
                     color: 'white',
                     fontSize: 15,
-                    color: '#687684',
+                    color: '#535353',
                     marginBottom: 15,
                 }}
                 >

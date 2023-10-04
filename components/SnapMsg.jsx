@@ -25,22 +25,22 @@ export default SnapMsg = ({ nickname, username, content, profilePictureUri, date
         */}
         <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.actionButton}>
-                <EvilIconsI name="comment" size={28} color='#687684' />
+                <EvilIconsI name="comment" size={28} color='#535353' />
             </TouchableOpacity>
             <Text style={styles.stats}>{comments}</Text>
 
             <TouchableOpacity style={styles.actionButton}>
-                <EvilIconsI name="retweet" size={28} color='#687684' />
+                <EvilIconsI name="retweet" size={28} color='#535353' />
             </TouchableOpacity>
             <Text style={styles.stats}>{reposts}</Text>
 
             <TouchableOpacity style={styles.actionButton}>
-                <EvilIconsI name="heart" size={28} color='#687684' />
+                <EvilIconsI name="heart" size={28} color='#535353' />
             </TouchableOpacity>
             <Text style={styles.stats}>{likes}</Text>
 
             <TouchableOpacity style={styles.actionButton}>
-                <EvilIconsI name="share-apple" size={28} color='#687684' />
+                <EvilIconsI name="share-apple" size={28} color='#535353' />
             </TouchableOpacity>
         </View>
       </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#687684',
+    borderTopColor: '#535353',
   },
   profilePicture: {
     height: 50,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   username: {
-    color: '#687684',
+    color: '#535353',
     fontWeight: 'normal',
   },
   text: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   stats: {
     fontSize: 15,
-    color: '#687684',
+    color: '#535353',
     marginRight: 35,
     marginLeft: 3,
     marginTop: 3

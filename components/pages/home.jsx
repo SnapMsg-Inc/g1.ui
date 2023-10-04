@@ -77,7 +77,7 @@ export default function Home() {
                   <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
                 headerShown:false,							
-				swipeEdgeWidth: 0,
+				        swipeEdgeWidth: 0,
             }}
             />
             <Drawer.Screen

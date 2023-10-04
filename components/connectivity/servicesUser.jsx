@@ -33,7 +33,7 @@ export async function GetUserData(state) {
     })
 }
 
-export async function GetUserByUid(state, uid) {
+export async function GetUserByUid(setState, uid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
   
@@ -55,16 +55,53 @@ export async function GetUserByUid(state, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-      state({
+      setState({
         "uid": response.data[0].uid,
         // "fullname": response.data.fullname,
-        "interests": response.data[0].interests,
-        "pic": response.data[0].pic,
         "nick": response.data[0].nick,
         "followers": response.data[0].followers,
         "follows": response.data[0].follows,
+        "interests": response.data[0].interests,
+        "pic": response.data[0].pic,
       });
-      console.log("data from SERVICE: \n " + JSON.stringify(response.data));
+    });
+}
+
+export async function GetUserFollowersByUid(setState, uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+	const urlWithQueryParams = `${URL}/${uid}/followers`
+
+    await axios({
+      method: 'get',
+      url: urlWithQueryParams,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      setState(response.data);
+      console.log("Se hizo request con uid: " + uid + '\n');
+      console.log("Se obtuvo FOLLOWERS:" + response.data);
+    });
+}
+
+export async function GetUserFollowsByUid(setState, uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+	const urlWithQueryParams = `${URL}/${uid}/follows`
+
+    await axios({
+      method: 'get',
+      url: urlWithQueryParams,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      setState(response.data);
     });
 }
 

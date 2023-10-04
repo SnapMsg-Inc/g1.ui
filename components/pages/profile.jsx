@@ -8,20 +8,19 @@ import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 
 const tabBar = props => (
-  <MaterialTabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
-    style={styles.tabBar}
-    activeColor='#1ed760'
-    inactiveColor='#687684' 
-    labelStyle={styles.label}
-  />
+	<MaterialTabBar
+		{...props}
+		indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
+		style={styles.tabBar}
+		activeColor='#1ed760'
+		inactiveColor='#535353' 
+		labelStyle={styles.label}
+	/>
 );
 
 
 
 const Profile = ({ navigation }) => {
-	console.log("self profile!!!!")
     const [data, setData] = useState({
         "uid": "",
         "fullname": "",
@@ -50,41 +49,41 @@ const Profile = ({ navigation }) => {
 		fetchDataFromApi()
     },[])
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+	const scrollY = useRef(new Animated.Value(0)).current;
+	console.log("My uid es: " + data.uid);
+	return (
+		<Tabs.Container
+			tabContainerStyle={styles.tabContainer}
+			renderHeader={() => (
+				<ProfileHeader scrollY={scrollY} navigation={navigation} data={data}/>
+			)}
+			pointerEvents={'box-none'}
+			allowHeaderOverscroll
+			renderTabBar={tabBar}
+			>
+			<Tabs.Tab name="Posts" label="Posts">
+				<PostScreen />
+			</Tabs.Tab>
 
-  return (
-    <Tabs.Container
-          tabContainerStyle={styles.tabContainer}
-          renderHeader={() => (
-            <ProfileHeader scrollY={scrollY} navigation={navigation} data={data}/>
-          )}
-          pointerEvents={'box-none'}
-          allowHeaderOverscroll
-          renderTabBar={tabBar}
-        >
-          <Tabs.Tab name="Posts" label="Posts">
-            <PostScreen />
-          </Tabs.Tab>
+			<Tabs.Tab name="Replies" label="Replies">
+				<RepliesScreen />
+			</Tabs.Tab>
 
-          <Tabs.Tab name="Replies" label="Replies">
-            <RepliesScreen />
-          </Tabs.Tab>
-
-          <Tabs.Tab name="Likes" label="Likes">
-            <LikesScreen />
-          </Tabs.Tab>
-        </Tabs.Container>
-  );
+			<Tabs.Tab name="Likes" label="Likes">
+				<LikesScreen />
+			</Tabs.Tab>
+			</Tabs.Container>
+	);
 };
 
 const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: 'black',
-  },
-  label: {
-    fontSize: 16,
-    textTransform: 'none',
-  },
+	tabBar: {
+		backgroundColor: 'black',
+	},
+	label: {
+		fontSize: 16,
+		textTransform: 'none',
+	},
 });
 
 export default Profile;

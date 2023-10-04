@@ -9,7 +9,10 @@ const ProfileStats = ({ navigation, data }) => {
             }}
         >
 
-            <TouchableOpacity onPress={() => {navigation.navigate('FollowingAndFollowersScreen', { screen: 'FollowingScreen' })}} 
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('FollowingAndFollowersScreen',
+                                    {data: data})
+                }} 
                 style={{marginRight: 10,
                 }}
             >
@@ -25,7 +28,7 @@ const ProfileStats = ({ navigation, data }) => {
                     </Text>
                     <Text
                         style={{
-                            color: '#687684',
+                            color: '#535353',
                             fontWeight: 'normal',
                         }}
                     >
@@ -34,7 +37,11 @@ const ProfileStats = ({ navigation, data }) => {
                 </View>
             </TouchableOpacity>
             
-            <TouchableOpacity onPress={() => {navigation.navigate('FollowingAndFollowersScreen', { screen: 'FollowersScreen' })}}>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('FollowingAndFollowersScreen',
+                                    {data: data})
+                }}
+            >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                     style={{
@@ -48,7 +55,7 @@ const ProfileStats = ({ navigation, data }) => {
 
                     <Text
                         style={{
-                            color: '#687684',
+                            color: '#535353',
                             fontWeight: 'normal',
                         }}
                     >

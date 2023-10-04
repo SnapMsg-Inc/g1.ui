@@ -42,7 +42,7 @@ const CustomDrawer = props => {
     },[])
 
     const profileImageUri = 
-    'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
 
     const pic = data.pic === '' ? profileImageUri : data.pic;
 	
@@ -58,9 +58,9 @@ const CustomDrawer = props => {
                 <Text style={styles.username}>{`@${data.nick}`}</Text>
                 
                 <View style={styles.followersContainer}>
-                    <Text style={{ color: '#687684' }}>
+                    <Text style={{ color: '#535353' }}>
                         <Text style={styles.followingCount}>{data.follows}</Text> Following</Text>
-                    <Text style={{ color: '#687684' }}>
+                    <Text style={{ color: '#535353' }}>
                         <Text style={styles.followersCount}>{data.followers}</Text> Followers</Text>
                 </View>
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
     },
     username: {
-      color: '#687684',
+      color: '#535353',
       fontSize: 16,
       fontWeight: 'normal',
     },
