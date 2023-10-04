@@ -6,6 +6,9 @@ import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
+import FollowersHeader from '../profileComponents/followersHeader';
+import FollowingScreen from '../profileComponents/followingScreen';
+import FollowersScreen from '../profileComponents/likesScreen';
 
 const tabBar = props => (
   <MaterialTabBar
@@ -23,13 +26,16 @@ const Profile = ({navigation}) => {
         "uid": "",
         "fullname": "",
         "interests": [],
-        "zone": "",
+        "zone": {"latitude": 0,
+                "longitude": 0},
         "is_admin": false,
         "ocupation": null,
         "pic": "",
         "email": "",
         "nick": "",
-        "birthdate": ""
+        "birthdate": "",
+        "followers": 0,
+        "follows": 0,
       })
     useEffect(()=>{
         const fetchDataFromApi = async () => {
@@ -43,28 +49,52 @@ const Profile = ({navigation}) => {
     },[])
 
   const scrollY = useRef(new Animated.Value(0)).current;
+  const [follow, setFollow] = useState(false);
   return (
-    <Tabs.Container
-      tabContainerStyle={styles.tabContainer}
-      renderHeader={() => (
-        <ProfileHeader scrollY={scrollY} navigation={navigation}  data={data}/>
-      )}
-      pointerEvents={'box-none'}
-      allowHeaderOverscroll
-      renderTabBar={tabBar}
-    >
-      <Tabs.Tab name="Posts">
-        <PostScreen />
-      </Tabs.Tab>
+    <>
+      {follow ? 
+        <Tabs.Container
+        tabContainerStyle={styles.tabContainer}
+        renderHeader={() => (
+          <FollowersHeader fullname={data.fullname} follow={setFollow} setFollow={setFollow}/>
+        )}
+        pointerEvents={'box-none'}
+        allowHeaderOverscroll
+        renderTabBar={tabBar}
+        >
+          <Tabs.Tab name="Followers">
+            <FollowersScreen />
+          </Tabs.Tab>
+          <Tabs.Tab name="Following">
+            <FollowingScreen />
+          </Tabs.Tab>
+        </Tabs.Container>
+      :
+      <Tabs.Container
+        tabContainerStyle={styles.tabContainer}
+        renderHeader={() => (
+          <ProfileHeader scrollY={scrollY} navigation={navigation} data={data} follow={follow} setFollow={setFollow}/>
+        )}
+        pointerEvents={'box-none'}
+        allowHeaderOverscroll
+        renderTabBar={tabBar}
+      >
+            <Tabs.Tab name="Posts">
+              <PostScreen />
+            </Tabs.Tab>
 
-      <Tabs.Tab name="Replies">
-        <RepliesScreen />
-      </Tabs.Tab>
+          <Tabs.Tab name="Replies">
+            <RepliesScreen />
+          </Tabs.Tab>
 
-      <Tabs.Tab name="Likes">
-        <LikesScreen />
-      </Tabs.Tab>
-    </Tabs.Container>
+          <Tabs.Tab name="Likes">
+            <LikesScreen />
+          </Tabs.Tab>
+        </Tabs.Container>
+      }
+    </>
+      
+    
   );
 };
 

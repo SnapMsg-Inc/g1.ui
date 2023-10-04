@@ -1,46 +1,59 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 
-const ProfileStats = (data) => {
+const ProfileStats = ({navigation, data, follow, setFollow}) => {
 	return (
         <View
             style={{
                 flexDirection: 'row',
             }}
         >
-            <Text
-                style={{
-                    color: 'white',
-                    fontWeight: 'bold',
-                    marginRight: 10,
-                }}
-            >
-                70{' '}
-                <Text
-                    style={{
-                        color: '#687684',
-                        fontWeight: 'normal',
-                    }}
-                >
-                    Following
-                </Text>
-            </Text>
 
-            <Text
-                style={{
-                    color: 'white', fontWeight: 'bold'
-                }}
-            >
-                106{' '}
-                <Text
+            <TouchableOpacity onPress={() => {setFollow(!follow)}} style={{marginRight: 10,
+                        }} >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            marginRight: 5,
+                        }}
+                    >
+                        {data.follows}
+                    </Text>
+                    <Text
+                        style={{
+                            color: '#687684',
+                            fontWeight: 'normal',
+                        }}
+                    >
+                        Following
+                    </Text>
+                </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => {setFollow(!follow)}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text
                     style={{
-                        color: '#687684',
-                        fontWeight: 'normal',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginRight: 5,
                     }}
-                >
-                    Followers
-                </Text>
-            </Text>
+                    >
+                        {data.followers}
+                    </Text>
+
+                    <Text
+                        style={{
+                            color: '#687684',
+                            fontWeight: 'normal',
+                        }}
+                    >
+                        Followers
+                    </Text>
+                </View>
+            </TouchableOpacity>
         </View>
 	);
 };

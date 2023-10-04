@@ -31,7 +31,7 @@ const stylesSetup = StyleSheet.create({
         alignContent: 'flex-start',
         color: colorApp,
         fontSize: 32,
-        marginHorizontal: 10,
+        marginHorizontal: 25,
         paddingBottom: 20,
     },
     footer: {
@@ -39,6 +39,12 @@ const stylesSetup = StyleSheet.create({
         flexDirection: 'row',
         alignContent: 'center',
         justifyContent: 'space-between'
+    },
+    footerFirst: {
+        marginHorizontal: 30,
+        flexDirection: 'row',
+        alignContent: 'center',
+        justifyContent: 'flex-end'
     },
     buttonBack:{
         flexDirection: 'row',
@@ -50,6 +56,12 @@ const stylesSetup = StyleSheet.create({
         color: colorText,
         fontSize: 20,
         marginLeft: 5
+    },
+    textSuggestion: {
+        color: colorText,
+        fontSize: 16,
+        marginHorizontal: 30,
+        justifyContent: 'flex-end'
     }
 })
 

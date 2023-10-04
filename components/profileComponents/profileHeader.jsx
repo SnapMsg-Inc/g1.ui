@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native';
 import ProfileInfo from './profileInfo';
 
 
-export default function ProfileHeader({ scrollY , navigation, data}) {
+export default function ProfileHeader({ scrollY , navigation, data, follow, setFollow}) {
     return (
        <Animated.View>
             {/* Back button */}
@@ -21,7 +21,7 @@ export default function ProfileHeader({ scrollY , navigation, data}) {
             <ProfileNicknameHeader scrollY={scrollY} />
 
             {/* Profile Info / Nav Bar */}
-            <ProfileInfo scrollY={scrollY} data={data}/>
+            <ProfileInfo scrollY={scrollY} data={data}  follow={follow} setFollow={setFollow}/>
             
        </Animated.View>
     );
