@@ -35,7 +35,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
                 marginTop: 10,
                 }}
             >
-                {data.fullname}
+                {data.alias}
             </Text>
 
             <Text

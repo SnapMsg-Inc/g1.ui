@@ -88,6 +88,7 @@ export default function Home() {
               drawerIcon: ({size}) => (
                 <Octicons name="home" size={size} color={iconColor} />
               ),
+              headerShown:false,
             }}
             />
             <Drawer.Screen

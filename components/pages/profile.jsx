@@ -24,6 +24,7 @@ const tabBar = props => (
 const Profile = ({ navigation }) => {
     const [data, setData] = useState({
         "uid": "",
+		"alias": "",
         "fullname": "",
         "interests": [],
         "zone": {"latitude": 0,
@@ -66,7 +67,7 @@ const Profile = ({ navigation }) => {
 			renderTabBar={tabBar}
 			>
 			<Tabs.Tab name="Posts" label="Posts">
-				<PostScreen />
+				<PostScreen data={data}/>
 			</Tabs.Tab>
 
 			<Tabs.Tab name="Replies" label="Replies">
