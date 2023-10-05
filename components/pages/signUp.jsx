@@ -52,7 +52,7 @@ function SignUp({navigation}) {
     };
     
     const isValidPassword = (password) => {
-        return password.length >= 8; // Password must be at least 8 characters
+        return password.length >= 6; // Password must be at least 8 characters
     };
 
     const Validations = () => {
@@ -160,7 +160,7 @@ function SignUp({navigation}) {
                     label={'Alias'}
                     icon={
                         <Icon   
-                            name={'user'} 
+                            name={'id-card'} 
                             color={colorText} 
                             size={20} 
                         />
@@ -173,7 +173,7 @@ function SignUp({navigation}) {
                     label={'Nick'}
                     icon={
                         <Icon   
-                            name={'id-card'} 
+                            name={'tag'} 
                             color={colorText} 
                             size={20} 
                         />

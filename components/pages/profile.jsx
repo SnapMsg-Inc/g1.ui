@@ -59,7 +59,8 @@ const Profile = ({ navigation }) => {
 				<ProfileHeader scrollY={scrollY}
 								navigation={navigation}
 								data={data}
-								headerButton={<SetUpProfileButton navigation={navigation}/>}/>
+								headerButton={<SetUpProfileButton navigation={navigation} 
+																	data={data}/>}/>
 			)}
 			pointerEvents={'box-none'}
 			allowHeaderOverscroll

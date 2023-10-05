@@ -23,7 +23,7 @@ function SignIn({ navigation }) {
     };
 
     const isValidPassword = (password) => {
-        return password.length >= 8; // Password must be at least 8 characters
+        return password.length >= 6; // Password must be at least 8 characters
     };
 
     const Validations = () => {

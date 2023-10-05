@@ -46,6 +46,11 @@ function FinishSignUp({navigation}) {
             console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
             if (!geocodeLocation.length)
                 setCoordinates({ 'latitude': 0, 'longitude': 0})
+            else {
+                setCoordinates({'latitude': geocodeLocation[0].latitude,
+                                'longitude': geocodeLocation[0].longitude})
+                console.log(coordinates)
+            }
         })
         .catch((error) => {
             console.log(error)

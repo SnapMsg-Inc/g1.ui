@@ -2,9 +2,9 @@ import { Text } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import stylesSetUpProfile from "../../styles/buttons/buttonSetUpProfile";
 
-const SetUpProfileButton = ({navigation})  => {
+const SetUpProfileButton = ({navigation, data})  => {
     const onPressSetUpProfile = () => {
-        navigation.navigate('SetUpProfile')
+        navigation.navigate('SetUpProfile', {data: data})
     }
 
     return (
