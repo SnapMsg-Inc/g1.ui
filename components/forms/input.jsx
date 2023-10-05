@@ -9,22 +9,24 @@ export default function Input({
         fieldButtonLabel,
         fieldButtonFunction,
         data,
-        setData
+        setData,
+        error
     }) {
-
-    return (
-        <View style={styleInput.input}>
-            <TextInput
-                value={data}
-                onChangeText={setData}
-                placeholder={label}
-                placeholderTextColor={colorText}
-                keyboardType={keyboardType}
-                style={styleInput.textInput}
-                secureTextEntry={inputType}
-            />
-            {icon}
-        </View>
-    );
-}
+        return (
+            <View style={styleInput.input}>
+                <TextInput
+                    value={data}
+                    onChangeText={setData}
+                    placeholder={label}
+                    placeholderTextColor={colorText}  
+                    keyboardType={keyboardType}
+                    style={styleInput.textInput}
+                    secureTextEntry={inputType}
+                />
+                {icon}
+                {/* Renderizar el mensaje de error debajo del TextInput */}
+                {error && <Text style={{ color: 'red', marginTop: 5 }}>{error}</Text>}
+            </View>
+        );
+    }
 
