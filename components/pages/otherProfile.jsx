@@ -28,7 +28,7 @@ const OtherProfile = ({ navigation }) => {
 	const { id } = route.params;
     const [data, setData] = useState({
         "uid": "",
-        //"fullname": "",
+        "alias": "",
         "interests": [],
         "pic": "",
         "nick": "",
@@ -63,7 +63,7 @@ const OtherProfile = ({ navigation }) => {
 			renderTabBar={tabBar}
 			>
 			<Tabs.Tab name="Posts" label="Posts">
-				<PostScreen />
+				<PostScreen data={data}/>
 			</Tabs.Tab>
 
 			<Tabs.Tab name="Replies" label="Replies">
