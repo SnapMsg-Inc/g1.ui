@@ -8,7 +8,7 @@ import ProfileBanner from './profileBanner';
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY, navigation, data }) => {
+const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
 	return (
         <View
             style={{
@@ -23,7 +23,7 @@ const ProfileInfo = ({scrollY, navigation, data }) => {
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED}}>
                 <ProfileImage scrollY={scrollY} uri={data.pic}/>
                 {/* For self profile */}
-                <SetUpProfileButton/>
+                {headerButton}
             </View>
         
              <Text

@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import stylesFollow from '../../styles/buttons/buttonFollow';
 
 const MAX_INTEREST_LENGTH = 40;
 
 const truncateInterest = (interest) => {
-	if (interest.length <= MAX_INTEREST_LENGTH) {
-		return interest;
+	const interests = interest.toString().replace(/,/g, ', ');
+	if (interests.length <= MAX_INTEREST_LENGTH) {
+		return interests;
 	} else {
-		return interest.slice(0, MAX_INTEREST_LENGTH) + ' ...';
+		return interests.slice(0, MAX_INTEREST_LENGTH) + ' ...';
 	}
 };
 
 const FollowsCard = ({ navigation, uid, nick, interests, pic }) => {
 	const [isFollowing, setIsFollowing] = useState(true);
 
-	const handleToggleFollow = () => {
-		// Lógica para cambiar el estado de seguimiento (following o not following)
-		setIsFollowing(!isFollowing);
-	};
-	
 	const handleProfilePress = () => {
 		navigation.navigate('OtherProfileScreen', { id:uid });
+	};
+
+    const handleToggleFollow = () => {
+		// Lógica para cambiar el estado de seguimiento (following o not following)
+		setIsFollowing(!isFollowing);
 	};
 
 	const profileImageUri = 
@@ -39,10 +41,13 @@ const FollowsCard = ({ navigation, uid, nick, interests, pic }) => {
 				</Text>
 			</View>
 			<TouchableOpacity
-				style={[styles.followButton, isFollowing ? styles.followingButton : styles.notFollowingButton]}
+				style={[stylesFollow.card,
+                        isFollowing ? stylesFollow.followingButton : stylesFollow.notFollowingButton]}
 				onPress={handleToggleFollow}
 			>
-				<Text style={isFollowing ? styles.followingButtonText : styles.followButtonText}>{isFollowing ? 'Following' : 'Follow'}</Text>
+				<Text style={isFollowing ? stylesFollow.followingButtonText : stylesFollow.followButtonText}>
+                    {isFollowing ? 'Following' : 'Follow'}
+                </Text>
 			</TouchableOpacity>
 			</View>
 		</TouchableOpacity>
@@ -74,32 +79,7 @@ const styles = StyleSheet.create({
 	interests: {
 		fontSize: 14,
 		color: 'white',
-	},
-	followButton: {
-		paddingVertical: 5,
-		borderRadius: 20,
-		paddingHorizontal: 15,
-		width: 110,
-		backgroundColor: '#1ed760',
-		alignItems: 'center'
-	},
-	followingButton: {
-		backgroundColor: 'black',
-		borderColor: '#1ed760',
-		borderWidth: 0.8,
-	},
-	notFollowingButton: {
-		backgroundColor: '#1ed760',
-		paddingHorizontal: 10,
-	},
-	followButtonText: {
-		color: 'white',
-		fontWeight: 'bold',
-	},
-	followingButtonText: {
-		color: '#1ed760',
-		fontWeight: 'bold',
-	},
+	}
 });
 
 export default FollowsCard;

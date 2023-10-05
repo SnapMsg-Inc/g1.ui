@@ -8,6 +8,7 @@ import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
+import ButtonFollow from '../buttons/buttonFollow';
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -53,7 +54,9 @@ const OtherProfile = ({ navigation }) => {
 		<Tabs.Container
 			tabContainerStyle={styles.tabContainer}
 			renderHeader={() => (
-				<ProfileHeader scrollY={scrollY} navigation={navigation} data={data}/>
+				<ProfileHeader scrollY={scrollY} navigation={navigation}
+								data={data} 
+								headerButton={<ButtonFollow/>}/>
 			)}
 			pointerEvents={'box-none'}
 			allowHeaderOverscroll
