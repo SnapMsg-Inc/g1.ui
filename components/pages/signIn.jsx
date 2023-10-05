@@ -13,11 +13,39 @@ import { LoginAccount, SignFederate } from '../connectivity/authorization';
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [emailError, setEmailError] = useState(null);
+    const [passwordError, setPasswordError] = useState(null);
     const [visible, setVisible] = useState(false)
 
+    const isValidEmail = (email) => {
+        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return regex.test(email);
+    };
+
+    const isValidPassword = (password) => {
+        return password.length >= 8; // Password must be at least 8 characters
+    };
+
+    const Validations = () => {
+        let isValid = true;
+        if (!isValidEmail(email)) {
+            setEmailError('Please enter a valid email.');
+            isValid = false;
+        } else {
+            setEmailError(null);
+        }
+        if (!isValidPassword(password)) {
+            setPasswordError('Password should be at least 8 characters long.');
+            isValid = false;
+        } else {
+            setPasswordError(null);
+        }
+        return isValid
+    }
+
     const handleSignIn = async () => {
-        if (email === '' | password === '') {
-            alert('Please fill out all required fields.')
+        if (!Validations()) {
+            alert('Please check your input and try again.')
         } else {
             try {
                 const success = await LoginAccount(email, password)
@@ -62,6 +90,7 @@ function SignIn({ navigation }) {
                     keyboardType="email-address"
                     data={email}
                     setData={setEmail}
+                    error={emailError}
                 />
                 <Input
                     label="Password"
@@ -76,6 +105,7 @@ function SignIn({ navigation }) {
                     inputType={!visible}
                     data={password}
                     setData={setPassword}
+                    error={passwordError} 
                 />
                 <View style={stylesForms.containerTextSugestion}>
                     <Text style={stylesForms.textSugestion}>Forgot password?</Text>

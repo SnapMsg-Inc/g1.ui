@@ -5,7 +5,7 @@ import ProfileImage from '../profileComponents/profileImage';
 import stylesEditProfile from "../../styles/profile/setupProfile";
 import AcceptButton from "../buttons/buttonAcept";
 
-function SetUpProfile() {
+function EditProfile() {
     const [pic, setPic] = useState('')
     const [nick, setNick] = useState('')
     const [locality, setLocality] = useState('')
@@ -42,10 +42,10 @@ function SetUpProfile() {
                     label={'Interests'}
                 />
             </View>
-            <View>
+            <View style={stylesEditProfile.footer}>
                 <AcceptButton text={'Accept'}/>
             </View>
         </View>   
     );
 }
-export default SetUpProfile
+export default EditProfile

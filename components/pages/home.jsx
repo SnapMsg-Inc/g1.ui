@@ -13,7 +13,7 @@ import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/followingAndFollowersScreen';
 import OtherProfile from './otherProfile';
-import SetUpProfile from './setupProfile';
+import EditProfile from './editProfile';
 
 const ProfileStack = createStackNavigator();
 
@@ -43,7 +43,7 @@ function ProfileStackScreen() {
 			/>
 
 			<ProfileStack.Screen name="SetUpProfile"
-				component={SetUpProfile}
+				component={EditProfile}
 				options={{
 					headerShown: false,
 				}}
