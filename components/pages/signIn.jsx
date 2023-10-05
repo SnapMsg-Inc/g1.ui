@@ -23,7 +23,7 @@ function SignIn({ navigation }) {
     };
 
     const isValidPassword = (password) => {
-        return password.length >= 8; // Password must be at least 8 characters
+        return password.length >= 6; // Password must be at least 8 characters
     };
 
     const Validations = () => {
@@ -35,7 +35,7 @@ function SignIn({ navigation }) {
             setEmailError(null);
         }
         if (!isValidPassword(password)) {
-            setPasswordError('Password should be at least 8 characters long.');
+            setPasswordError('Password should be at least 6 characters long.');
             isValid = false;
         } else {
             setPasswordError(null);
