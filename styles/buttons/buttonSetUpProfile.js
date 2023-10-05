@@ -13,7 +13,7 @@ const stylesSetUpProfile = StyleSheet.create({
         marginTop: 15,
         alignItems: 'center',
         borderColor: colorApp,
-        borderWidth: 0.5,
+        borderWidth: 0.8,
     },
     font: {
         color: colorApp,

@@ -1,46 +1,68 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 
-const ProfileStats = (data) => {
+const ProfileStats = ({ navigation, data }) => {
 	return (
         <View
             style={{
                 flexDirection: 'row',
             }}
         >
-            <Text
-                style={{
-                    color: 'white',
-                    fontWeight: 'bold',
-                    marginRight: 10,
-                }}
-            >
-                70{' '}
-                <Text
-                    style={{
-                        color: '#687684',
-                        fontWeight: 'normal',
-                    }}
-                >
-                    Following
-                </Text>
-            </Text>
 
-            <Text
-                style={{
-                    color: 'white', fontWeight: 'bold'
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('FollowingAndFollowersScreen',
+                                    {data: data})
+                }} 
+                style={{marginRight: 10,
                 }}
             >
-                106{' '}
-                <Text
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text
+                        style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            marginRight: 5,
+                        }}
+                    >
+                        {data.follows}
+                    </Text>
+                    <Text
+                        style={{
+                            color: '#535353',
+                            fontWeight: 'normal',
+                        }}
+                    >
+                        Following
+                    </Text>
+                </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('FollowingAndFollowersScreen',
+                                    {data: data})
+                }}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text
                     style={{
-                        color: '#687684',
-                        fontWeight: 'normal',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        marginRight: 5,
                     }}
-                >
-                    Followers
-                </Text>
-            </Text>
+                    >
+                        {data.followers}
+                    </Text>
+
+                    <Text
+                        style={{
+                            color: '#535353',
+                            fontWeight: 'normal',
+                        }}
+                    >
+                        Followers
+                    </Text>
+                </View>
+            </TouchableOpacity>
         </View>
 	);
 };

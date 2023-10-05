@@ -9,105 +9,124 @@ import AcceptButton from "../buttons/buttonAcept";
 import InterestButton from '../buttons/buttonSelect';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../styles/forms/input";
+import LocationSetup from "./location";
+import Preferences from "./preferences";
+import { PatchUser } from "../connectivity/servicesUser";
 
 function SetupProfile({navigation}) {
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
-    const [next, setNext] = useState(false)
-    let coordinates = null
+    const [step, setStep] = useState(1); 
+    const [interestsList, setInterestsList] = useState([])
+    const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
 
-    const onPressBack = () => {
-        setNext(false)
+    const handleAccept = async() => {
+        console.log(coordinates)
+        console.log(interestsList)
+        try {
+            const success = PatchUser({
+                                "zone": coordinates,
+                                "interests": interestsList,
+                            })
+            if (success) {
+                setTimeout(() => navigation.navigate('Home'), 1000)
+            } else {
+                alert('error')
+            }  
+        } catch(error) {
+            console.log(error)
+        }
+    }
+    
+    const geocode = async () => {
+        if (Location.PermissionStatus === 'denied')
+            return
+        await Location.geocodeAsync(`${locality} ${country}`)
+        .then((geocodeLocation)=> {
+            console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
+            if (!geocodeLocation.length)
+                setCoordinates({ 'latitude': 0, 'longitude': 0})
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    
+    const reverseGeocode = async () => {
+        await Location.reverseGeocodeAsync({
+            latitude: coordinates.latitude,
+            longitude: coordinates.longitude
+        }).then((address)=> {
+            const {city, country} = address[0]
+            setLocality(city)
+            setCountry(country)
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
-    useEffect(() => {
-        const getPermission = async () => {
-            console.log('Probando')
-            let {status} = await Location.requestForegroundPermissionsAsync()
-            if (status !== 'granted'){
-                alert('Permision to access location was denied')
-                return
-            } 
+    const handleNext = () => {
+        if (step === 1)
+            geocode()
+        setStep(step + 1)
+    };
+
+    const handleBack = () => {
+        setStep(step - 1);
+    };
+
+    const setLocation = async () => {
+        try {
+            getPermission()
             await Location.getCurrentPositionAsync({
                 accuracy: Location.Accuracy.High,
                 distanceInterval: 2
             }).then((location) => {
-                console.log(`location: ${location}`)
                 const {coords} = location
                 const {latitude, longitude} = coords
-                coordinates = {'latitude': latitude, 'longitude': longitude}
+                setCoordinates({'latitude': latitude, 'longitude': longitude})
                 console.log(`longitude ${JSON.stringify(coordinates)} `)
-                reverseGeocode()
-            })
-            
+                reverseGeocode() 
+            })  
+        } catch (error) {
+            console.log(error)
         }
-        getPermission()
-    }, [])
-
-    const geocode = async () => {
-        if (locality !== '') {
-            const geocodeLocation = await Location.geocodeAsync(locality)
-            console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-            setNext(true)
-        } else {
-            alert('Complete los datos')
+    }
+    
+    const getPermission = async () => {
+        let {status} = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted'){
+            return
         }
     }
 
-    const reverseGeocode = async () => {
-        const adress = await Location.reverseGeocodeAsync({
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude
-        })
-        console.log(`adress ${JSON.stringify(adress, null, 2)}`)
-        setLocality(adress[0].city)
-        setCountry(adress[0].country)
-    }
-     
+    useEffect(() => {
+        setTimeout(()=>{getPermission()}, 1000)
+    },[])
+
     return(
         <View style={stylesSetup.container}>
             <View style={stylesSetup.header}>
                 <Logo/>
             </View>
-                {next ? 
-                (<View style={stylesSetup.bodyInterests}>
-                    <Text style={stylesSetup.textTitle}>
-                        {"What do you want to see?"}
-                    </Text>
-                    <View style={stylesSetup.buttonsContainer}>
-                        <InterestButton title="Sports" />
-                        <InterestButton title="Gaming" />
-                        <InterestButton title="Travel" />
-                        <InterestButton title="Technology" />
-                        <InterestButton title="Entertainment" />
-                        <InterestButton title="Music" />
-                        <InterestButton title="Arts & culture" />
-                        <InterestButton title="Fitness" />
-                        <InterestButton title="Outdoors" />
-                        <InterestButton title="Bussines & finance" />
-                    </View>
-                </View>) : 
-                (<View style={stylesSetup.bodyLocation}>
-                    <Input
-                        label={'Country'}
-                        data={country}
-                        setData={setCountry}
-                    />
-                    <Input
-                        label={'Locality'}
-                        data={locality}
-                        setData={setLocality}
-                    />
-                </View>)
-                }
-            <View style={stylesSetup.footer}>
-                <TouchableHighlight onPress={onPressBack}>
+            {step === 1 ? 
+                (<LocationSetup country={country}
+                                setCountry={setCountry}
+                                locality={locality}
+                                setLocality={setLocality}
+                                getPermission={setLocation}
+                />) :
+                (<Preferences list={interestsList} setList={setInterestsList}/>) 
+            }
+            <View style={[stylesSetup.footer, step === 1 ? stylesSetup.footerFirst : null]}>
+                {step === 2 ? <TouchableHighlight onPress={handleBack}>
                     <View style={stylesSetup.buttonBack}>
                         <Icon name="chevron-left" color={colorText} size={20}/>
                         <Text style={stylesSetup.text}>Back</Text>
                     </View>
-                </TouchableHighlight>
-                <AcceptButton accept={geocode} text="Next"/>
+                </TouchableHighlight> : <></>}
+                <AcceptButton   accept={step === 2 ? handleAccept : handleNext} 
+                                text={step === 2 ? 'Accept' : 'Next'}/>
             </View>
         </View>
     )

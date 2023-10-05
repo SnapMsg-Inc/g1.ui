@@ -18,13 +18,16 @@ const CustomDrawer = props => {
       "uid": "",
       "fullname": "",
       "interests": [],
-      "zone": "",
+      "zone": {"latitude": 0,
+              "longitude": 0},
       "is_admin": false,
       "ocupation": null,
       "pic": "",
       "email": "",
       "nick": "",
-      "birthdate": ""
+      "birthdate": "",
+      "followers": 0,
+      "follows": 0,
     })
 
     useEffect(()=>{
@@ -36,17 +39,13 @@ const CustomDrawer = props => {
             }
         }
         fetchDataFromApi()
-    },[]) 
+    },[])
 
     const profileImageUri = 
-    'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
-    // const username = '@username';
-    // const nikname = 'Nickname'
-    const followersCount = 100;
-    const followingCount = 50;
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
 
     const pic = data.pic === '' ? profileImageUri : data.pic;
-
+	
   return (
     <View style={{flex: 1}}>
         <DrawerContentScrollView style={styles.scrollView}>
@@ -59,10 +58,10 @@ const CustomDrawer = props => {
                 <Text style={styles.username}>{`@${data.nick}`}</Text>
                 
                 <View style={styles.followersContainer}>
-                    <Text style={{ color: '#687684' }}>
-                        <Text style={styles.followingCount}>{followingCount}</Text> Following</Text>
-                    <Text style={{ color: '#687684' }}>
-                        <Text style={styles.followersCount}>{followersCount}</Text> Followers</Text>
+                    <Text style={{ color: '#535353' }}>
+                        <Text style={styles.followingCount}>{data.follows}</Text> Following</Text>
+                    <Text style={{ color: '#535353' }}>
+                        <Text style={styles.followersCount}>{data.followers}</Text> Followers</Text>
                 </View>
 
             </View>
@@ -73,12 +72,14 @@ const CustomDrawer = props => {
               <View style={styles.signOutButton}>
                 <TouchableOpacity onPress={() => {}}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Ionicons name="exit-outline" color={'#ff0000'} size={20} />
+
+                    <Ionicons name="exit-outline" color={'#535353'} size={22} />
+                    
                     <Text
                       style={{
                         fontSize: 15,
                         marginLeft: 5,
-                        color: '#ff0000',
+                        color: '#535353',
                       }}>
                       Sign Out
                     </Text>
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
     },
     username: {
-      color: '#687684',
+      color: '#535353',
       fontSize: 16,
       fontWeight: 'normal',
     },

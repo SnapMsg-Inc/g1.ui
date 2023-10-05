@@ -9,7 +9,7 @@ export default function Feed({ navigation }) {
     return (
         <View style={styles.body}>
             <Text style={styles.text}>
-                Feed asdsa
+                Feed
             </Text>
         </View>
     )
