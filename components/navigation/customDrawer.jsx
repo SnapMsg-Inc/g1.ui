@@ -1,0 +1,138 @@
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from '@react-navigation/drawer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { GetUserData } from '../connectivity/servicesUser';
+
+const CustomDrawer = props => {
+    const [data, setData] = useState({
+      "uid": "",
+      "fullname": "",
+      "interests": [],
+      "zone": "",
+      "is_admin": false,
+      "ocupation": null,
+      "pic": "",
+      "email": "",
+      "nick": "",
+      "birthdate": ""
+    })
+
+    useEffect(()=>{
+        const fetchDataFromApi = async () => {
+            try {
+                await GetUserData(setData, data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchDataFromApi()
+    },[]) 
+
+    const profileImageUri = 
+    'https://image.winudf.com/v2/image1/bmV0LndsbHBwci5ib3lzX3Byb2ZpbGVfcGljdHVyZXNfc2NyZWVuXzBfMTY2NzUzNzYxN18wOTk/screen-0.webp?fakeurl=1&type=.webp';
+    // const username = '@username';
+    // const nikname = 'Nickname'
+    const followersCount = 100;
+    const followingCount = 50;
+
+    const pic = data.pic === '' ? profileImageUri : data.pic;
+
+  return (
+    <View style={{flex: 1}}>
+        <DrawerContentScrollView style={styles.scrollView}>
+            <View style={styles.headerContainer}>
+                <Image
+                    source={{ uri: pic}}
+                    style={styles.profileImage}
+                />
+                <Text style={styles.nickname}>{data.fullname}</Text>
+                <Text style={styles.username}>{`@${data.nick}`}</Text>
+                
+                <View style={styles.followersContainer}>
+                    <Text style={{ color: '#687684' }}>
+                        <Text style={styles.followingCount}>{followingCount}</Text> Following</Text>
+                    <Text style={{ color: '#687684' }}>
+                        <Text style={styles.followersCount}>{followersCount}</Text> Followers</Text>
+                </View>
+
+            </View>
+
+            <DrawerItemList {...props} />
+            
+            <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
+              <View style={styles.signOutButton}>
+                <TouchableOpacity onPress={() => {}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name="exit-outline" color={'#ff0000'} size={20} />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        marginLeft: 5,
+                        color: '#ff0000',
+                      }}>
+                      Sign Out
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+        </DrawerContentScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+    scrollView: {
+      backgroundColor: '#000000',
+    },
+    headerContainer: {
+      padding: 20,
+      alignItems: 'flex-start',
+    },
+    profileImage: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      marginBottom: 10,
+    },
+    nickname: {
+      color: '#ffffff',
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    username: {
+      color: '#687684',
+      fontSize: 16,
+      fontWeight: 'normal',
+    },
+    followersContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '80%',
+      marginTop: 10,
+    },
+    followersCount: {
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    followingCount: {
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    signOutButton: {
+      width: '50%',
+      paddingVertical: 15,
+    },
+  });
+
+export default CustomDrawer
