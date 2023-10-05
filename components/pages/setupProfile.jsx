@@ -42,6 +42,9 @@ function SetUpProfile() {
                     label={'Interests'}
                 />
             </View>
+            <View>
+                <AcceptButton text={'Accept'}/>
+            </View>
         </View>   
     );
 }

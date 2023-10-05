@@ -13,7 +13,7 @@ import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/followingAndFollowersScreen';
 import OtherProfile from './otherProfile';
-import SetUpProfile from './setUpProfile';
+import SetUpProfile from './setupProfile';
 
 const ProfileStack = createStackNavigator();
 
