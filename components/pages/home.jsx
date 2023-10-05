@@ -13,42 +13,43 @@ import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/followingAndFollowersScreen';
 import OtherProfile from './otherProfile';
+import EditProfile from './editProfile';
 
 const ProfileStack = createStackNavigator();
 
 function ProfileStackScreen() {
-  return (
-	<ProfileStack.Navigator initialRouteName="ProfileScreen">
-		{ /*Pantallas internas del perfil */}
-		<ProfileStack.Screen name="ProfileScreen"
-			component={Profile}
-			options={{
-				headerShown: false,
-			}}
-		/>
+	return (
+		<ProfileStack.Navigator initialRouteName="ProfileScreen">
+			{ /*Pantallas internas del perfil */}
+			<ProfileStack.Screen name="ProfileScreen"
+				component={Profile}
+				options={{
+					headerShown: false,
+				}}
+			/>
 
-		<ProfileStack.Screen name="FollowingAndFollowersScreen"
-			component={FollowingAndFollowersScreen}
-			options={{
-				headerShown: false,
-			}}
-		/>
+			<ProfileStack.Screen name="FollowingAndFollowersScreen"
+				component={FollowingAndFollowersScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
 
-		<ProfileStack.Screen name="OtherProfileScreen"
-			component={OtherProfile}
-			options={{
-				headerShown: false,
-			}}
-		/>
-		{/* ACA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-		{/* <ProfileStack.Screen name="SetUpProfile"
-			component={SetUpProfile}
-			options={{
-				headerShown: false,
-			}}
-		/> */}
-    </ProfileStack.Navigator>
-  );
+			<ProfileStack.Screen name="OtherProfileScreen"
+				component={OtherProfile}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			<ProfileStack.Screen name="SetUpProfile"
+				component={EditProfile}
+				options={{
+					headerShown: false,
+				}}
+			/>
+		</ProfileStack.Navigator>
+	);
 }
 
 const Drawer = createDrawerNavigator();

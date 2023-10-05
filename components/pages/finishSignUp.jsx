@@ -13,7 +13,7 @@ import LocationSetup from "./location";
 import Preferences from "./preferences";
 import { PatchUser } from "../connectivity/servicesUser";
 
-function SetupProfile({navigation}) {
+function FinishSignUp({navigation}) {
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
     const [step, setStep] = useState(1); 
@@ -132,4 +132,4 @@ function SetupProfile({navigation}) {
     )
 }
 
-export default SetupProfile
+export default FinishSignUp

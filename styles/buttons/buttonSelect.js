@@ -9,7 +9,7 @@ const stylesSelect = StyleSheet.create({
         borderRadius: 10,
         margin: 5,
         height: 70,
-        width: Dimensions.get('window').width * .4,
+        width: Dimensions.get('window').width * .39,
         alignItems: 'flex-start',
         justifyContent: 'flex-end'
     },
@@ -17,11 +17,11 @@ const stylesSelect = StyleSheet.create({
         backgroundColor: colorApp, 
     },
     text: {
-        fontSize: 20,
+        fontSize: 18,
         color: colorApp,
     },
     selectedText: {
-        fontSize: 20,
+        fontSize: 18,
         color: 'white',
     },
 })

@@ -114,7 +114,7 @@ function SignUp({navigation}) {
             try {
                 const success = CreateAccount(fullName, alias, nick,date,email,password)
                 if (success)
-                    setTimeout(() => {navigation.navigate('Setup')}, 1000)
+                    setTimeout(() => {navigation.navigate('FinishSignUp')}, 1000)
                 else 
                     alert('Account creation failed.\nPlease ensure that all the information you provided is accurate and try again.')
             } catch (error) {
@@ -127,7 +127,7 @@ function SignUp({navigation}) {
         try {
             const success = SignFederate(true, setUserFederate)
             if (success)
-                setTimeout(() => {navigation.navigate('Setup')}, 1000)
+                setTimeout(() => {navigation.navigate('FinishSignUp')}, 1000)
         } catch (error) {
             console.log(error)
         }
