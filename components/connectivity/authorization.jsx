@@ -13,7 +13,7 @@ GoogleSignin.configure({
     webClientId: Config.WEB_CLIENT_ID
 });
 
-export default async function CreateAccount (fullName, 
+export default async function CreateAccount (fullName, alias,
     nick, dateBirth,
     email, password) {
     const auth = getAuth();
@@ -23,7 +23,7 @@ export default async function CreateAccount (fullName,
     await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         console.log(userCredential)
-        postsUser(fullName, nick, dateBirth, email)
+        postsUser(fullName, alias, nick, dateBirth, email)
     }).catch((error) => {
         console.log(error.code);
         console.log(error.message);

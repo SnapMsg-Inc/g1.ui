@@ -125,7 +125,7 @@ export async function postUserFederate(data) {
     }
 }
 
-export async function postsUser(fullName, nick, dateBirth, email) {
+export async function postsUser(fullName, alias, nick, dateBirth, email) {
 
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
@@ -135,6 +135,7 @@ export async function postsUser(fullName, nick, dateBirth, email) {
         url: URL,
         data: {
             "fullname": fullName,
+            "alias": alias,
             "interests": [],
             "zone": {"latitude": 0,
                     "longitude": 0},

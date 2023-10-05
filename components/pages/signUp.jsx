@@ -16,6 +16,7 @@ import CreateAccount, { SignFederate } from "../connectivity/authorization";
 
 function SignUp({navigation}) {
     const [fullName, setFullName] = useState('')
+    const [alias, setAlias] = useState('')
     const [email, setEmail] = useState('')
     const [nick, setNick] = useState('')
     const [password, setPassword] = useState('')
@@ -24,6 +25,13 @@ function SignUp({navigation}) {
     const [visible, setVisible] = useState(false)
     const [visibleConfirm, setVisibleConfirm] = useState(false)
     const [date, setDate] = useState(new Date())
+    const [fullNameError, setFullNameError] = useState(null);
+    const [aliasError, setAliasError] = useState(null)
+    const [emailError, setEmailError] = useState(null);
+    const [nickError, setNickError] = useState(null);
+    const [passwordError, setPasswordError] = useState(null);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(null);
+    const [dateError, setDateError] = useState(null);
     const [userFederate, setUserFederate] = useState({
         id: '',
         name: '',
@@ -32,19 +40,15 @@ function SignUp({navigation}) {
         familyName: '',
         givenName: ''
     })
-// validacion
-    const [fullNameError, setFullNameError] = useState(null);
-    const [emailError, setEmailError] = useState(null);
-    const [nickError, setNickError] = useState(null);
-    const [passwordError, setPasswordError] = useState(null);
-    const [confirmPasswordError, setConfirmPasswordError] = useState(null);
-    const [dateError, setDateError] = useState(null);
-
-
 
     const isValidEmail = (email) => {
         let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         return regex.test(email);
+    };
+    
+    const isValidNick = (nick) => {
+        let regex = /^[a-zA-Z0-9_-]+$/;
+        return regex.test(nick);
     };
     
     const isValidPassword = (password) => {
@@ -60,8 +64,15 @@ function SignUp({navigation}) {
         } else {
             setFullNameError(null);
         }
+
+        if (!alias.trim()) {
+            setAliasError('Please enter a valid alias')
+            isValid = false;
+        } else {
+            setAliasError(null)
+        }
     
-        if (!nick.trim()) {
+        if (!isValidNick(nick)) {
             setNickError('Nick is required.');
             isValid = false;
         } else {
@@ -89,22 +100,19 @@ function SignUp({navigation}) {
             setConfirmPasswordError(null);
         }
     
-        if (isValid) {
-            // If all validations pass, create the account
-            // CreateAccount(fullName,nick,date,email,password)
-            navigation.navigate('Setup');
-        }
+        return isValid
     };
-// ======
+
     const handleSignUp = async () => {
-        if (fullName === '' | email === '' | nick === '' |
-            password === '' | date === '' | confirmPassword === '')
-            alert('Please fill out all required fields.')
-        else if (password != confirmPassword)
-            alert('Password and confirmation do not match.\nPlease try again.')
+        // if (fullName === '' | email === '' | nick === '' |
+        //     password === '' | date === '' | confirmPassword === '')
+        //     else if (password != confirmPassword)
+        //     alert('Password and confirmation do not match.\nPlease try again.')
+        if (!Validations())
+            alert('Please check your input and try again.')
         else
             try {
-                const success = CreateAccount(fullName,nick,date,email,password)
+                const success = CreateAccount(fullName, alias, nick,date,email,password)
                 if (success)
                     setTimeout(() => {navigation.navigate('Setup')}, 1000)
                 else 
@@ -114,7 +122,6 @@ function SignUp({navigation}) {
                 alert('An error occurred while signing up. Please try again later.')
             }
     }; 
-// ====
 
     const signButtonFederate = async () => {
         try {
@@ -122,7 +129,7 @@ function SignUp({navigation}) {
             if (success)
                 setTimeout(() => {navigation.navigate('Setup')}, 1000)
         } catch (error) {
-
+            console.log(error)
         }
     }   
 
@@ -130,9 +137,8 @@ function SignUp({navigation}) {
         <View style={stylesForms.container}>
             <View style={stylesForms.header}>
                 <Logo/>
-
-              </View>
-// validaciones
+            </View>
+            <ScrollView>
             <View style={stylesForms.body}>
                 <Text style={stylesForms.textTittle} >
                     Create your account
@@ -151,6 +157,19 @@ function SignUp({navigation}) {
                     error={fullNameError}   // Agregando el mensaje de error
                 />
                 <Input
+                    label={'Alias'}
+                    icon={
+                        <Icon   
+                            name={'user'} 
+                            color={colorText} 
+                            size={20} 
+                        />
+                    }
+                    data={alias}
+                    setData={setAlias}
+                    error={aliasError}   // Agregando el mensaje de error
+                />
+                <Input
                     label={'Nick'}
                     icon={
                         <Icon   
@@ -163,7 +182,10 @@ function SignUp({navigation}) {
                     setData={setNick}
                     error={nickError}       // Agregando el mensaje de error
                 />
-                <Calendar data={date} setData={setDate} error={dateError} setError={setDateError} />
+                <Calendar   data={date} 
+                            setData={setDate} 
+                            error={dateError} 
+                            setError={setDateError} />
                 <Input
                     label={'Email'}
                     icon={
@@ -216,105 +238,20 @@ function SignUp({navigation}) {
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>
                     <Separate/>
-                    <ButtonFederate name={'Google'}/>
+                    <ButtonFederate name={'Google'} sign={signButtonFederate} />
                 </View>
                 <View style={stylesForms.footerText}>
                     <Text style={stylesForms.text}>
                         Already have an account?
-// =======
-            <ScrollView>
-                <View style={stylesForms.body}>
-                    <Text style={stylesForms.textTittle} >
-                        Create your account
-//dev
                     </Text>
-                    <Input
-                        label={'Full name'}
-                        icon={
-                            <Icon   
-                                name={'user'} 
-                                color={colorText} 
-                                size={20} 
-                            />
-                        }
-                        data={fullName}
-                        setData={setFullName}
-                    />
-                    <Input
-                        label={'Nick'}
-                        icon={
-                            <Icon   
-                                name={'id-card'} 
-                                color={colorText} 
-                                size={20} 
-                            />
-                        }
-                        data={nick}
-                        setData={setNick}
-                    />
-                    <Calendar data={date} setData={setDate}/>
-                    <Input
-                        label={'Email'}
-                        icon={
-                            <Icon   
-                                name={'envelope'} 
-                                color={colorText} 
-                                size={20} 
-                            />
-                        }
-                        keyboardType="email-address"
-                        data={email}
-                        setData={setEmail}
-                    />
-                    <Input
-                        label="Password"
-                        icon={
-                            <Icon   
-                                name={visible ? 'eye' : 'eye-slash'} 
-                                color={colorText} 
-                                size={20} 
-                                onPress={() => setVisible(!visible)}
-                            />
-                        }
-                        inputType={!visible}
-                        data={password}
-                        setData={setPassword}
-                    />
-                    <Input
-                        label="Confirm Password"
-                        icon={
-                            <Icon   
-                                name={visibleConfirm ? 'eye' : 'eye-slash'} 
-                                color={colorText} 
-                                size={20} 
-                                onPress={() => setVisibleConfirm(!visibleConfirm)}
-                            />
-                        }
-                        inputType={!visibleConfirm}
-                        data={confirmPassword}
-                        setData={setConfirmPassword}
-                    />
-                    <View style={stylesForms.bodyButtons}>
-                        <CancelButton navigation={navigation}/>
-                        <AcceptButton accept={handleSignUp}/>
-                    </View>
+                    <TouchableHighlight onPress={() => {navigation.navigate('SignIn')}}>
+                        <Text style={stylesForms.textSign}> Sign In</Text>
+                    </TouchableHighlight>
                 </View>
-                <View style={stylesForms.footer}>
-                    <View style={stylesForms.footerOption}>
-                        <Separate/>
-                        <ButtonFederate name={'Google'} sign={signButtonFederate} />
-                    </View>
-                    <View style={stylesForms.footerText}>
-                        <Text style={stylesForms.text}>
-                            Already have an account?
-                        </Text>
-                        <TouchableHighlight onPress={() => {navigation.navigate('SignIn')}}>
-                            <Text style={stylesForms.textSign}> Sign In</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
+            </View>
             </ScrollView>
         </View>
-    );}
+    )
+}
     
-    export default SignUp;
+export default SignUp;

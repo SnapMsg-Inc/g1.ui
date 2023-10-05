@@ -13,19 +13,20 @@ export default function Input({
         error
     }) {
         return (
-            <View style={styleInput.input}>
-                <TextInput
-                    value={data}
-                    onChangeText={setData}
-                    placeholder={label}
-                    placeholderTextColor={colorText}  
-                    keyboardType={keyboardType}
-                    style={styleInput.textInput}
-                    secureTextEntry={inputType}
-                />
-                {icon}
-                {/* Renderizar el mensaje de error debajo del TextInput */}
-                {error && <Text style={{ color: 'red', marginTop: 5 }}>{error}</Text>}
+            <View style={styleInput.container}>
+                <View style={styleInput.input}>
+                    <TextInput
+                        value={data}
+                        onChangeText={setData}
+                        placeholder={label}
+                        placeholderTextColor={colorText}  
+                        keyboardType={keyboardType}
+                        style={styleInput.textInput}
+                        secureTextEntry={inputType}
+                    />
+                    {icon}
+                </View>
+                {error && <Text style={styleInput.inputError}>{error}</Text>}
             </View>
         );
     }

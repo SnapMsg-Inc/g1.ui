@@ -54,24 +54,28 @@ export default function Calendar({ data, setData, error, setError }) {
   
     return (
         <View style={stylesCalendar.container}>
-            <TouchableHighlight onPress={onPressTouchable}>
-                <Text style={stylesCalendar.text}>
-                    {hasSelectedDate ? formatDate(data) : 'Date of Birth'}
-                </Text>
-            </TouchableHighlight>
-            {show && (
-                <DateTimePicker
-                    value={data}
-                    mode={mode}
-                    onChange={onChange}
+            <View style={stylesCalendar.calendarContainer}>
+                <TouchableHighlight onPress={onPressTouchable}>
+                    <Text style={stylesCalendar.text}>
+                        {hasSelectedDate ? formatDate(data) : 'Date of Birth'}
+                    </Text>
+                </TouchableHighlight>
+                {show && (
+                    <DateTimePicker
+                        value={data}
+                        mode={mode}
+                        onChange={onChange}
+                    />
+                )}
+                <Icon
+                    name={'calendar'}
+                    color={colorText}
+                    size={20}
                 />
-            )}
-            <Icon
-                name={'calendar'}
-                color={colorText}
-                size={20}
-            />
-            {error && <Text style={{ color: 'red', marginTop: 5 }}>{error}</Text>}
+            </View>
+            <View>
+                {error && <Text style={stylesCalendar.textError}>{error}</Text>}
+            </View>
         </View>
     );
 }
