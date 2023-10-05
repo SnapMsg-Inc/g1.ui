@@ -71,7 +71,7 @@ export default function Calendar({ data, setData, error, setError }) {
                 color={colorText}
                 size={20}
             />
-            {error && <Text style={{ color: 'Green', marginTop: 5 }}>{error}</Text>}
+            {error && <Text style={{ color: 'red', marginTop: 5 }}>{error}</Text>}
         </View>
     );
 }
