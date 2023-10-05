@@ -27,7 +27,7 @@ const FollowingAndFollowersScreen = ({ navigation }) => {
 		<Tabs.Container
 		tabContainerStyle={styles.tabContainer}
 		renderHeader={() => (
-			<FollowersHeader navigation={navigation} fullname={data.fullname}/>
+			<FollowersHeader navigation={navigation} fullname={data.alias}/>
 		)}
 		pointerEvents={'box-none'}
 		allowHeaderOverscroll

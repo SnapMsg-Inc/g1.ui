@@ -17,6 +17,7 @@ export async function GetUserData(state) {
     }).then((response) => {
         state({
             "uid": response.data.uid,
+            "alias": response.data.alias,
             "fullname": response.data.fullname,
             "interests": response.data.interests,
             "zone": {"latitude": response.data.zone.latitude,
@@ -57,7 +58,7 @@ export async function GetUserByUid(setState, uid) {
     }).then((response) => {
       setState({
         "uid": response.data[0].uid,
-        // "fullname": response.data.fullname,
+        "alias": response.data[0].alias,
         "nick": response.data[0].nick,
         "followers": response.data[0].followers,
         "follows": response.data[0].follows,

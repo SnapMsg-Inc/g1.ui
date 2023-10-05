@@ -35,7 +35,7 @@ function SignIn({ navigation }) {
             setEmailError(null);
         }
         if (!isValidPassword(password)) {
-            setPasswordError('Password should be at least 8 characters long.');
+            setPasswordError('Password should be at least 6 characters long.');
             isValid = false;
         } else {
             setPasswordError(null);

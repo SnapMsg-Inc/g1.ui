@@ -16,6 +16,7 @@ import { GetUserData } from '../connectivity/servicesUser';
 const CustomDrawer = props => {
     const [data, setData] = useState({
       "uid": "",
+      "alias": "",
       "fullname": "",
       "interests": [],
       "zone": {"latitude": 0,
