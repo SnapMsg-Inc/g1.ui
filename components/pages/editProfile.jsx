@@ -96,7 +96,7 @@ function EditProfile({navigation}) {
             console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
             const success = await PatchUser(data)
             if (success) {
-                setTimeout(() => navigation.goBack(), 1000)
+                setTimeout(() => navigation.goBack(), 500)
             } else {
                 alert('error')
             }  
@@ -114,7 +114,7 @@ function EditProfile({navigation}) {
     return (
         <View style={stylesEditProfile.container}>
             <View style={stylesEditProfile.header}>
-                <ProfileImage scrollY={scrollY} uri={pic}/>
+                <ProfileImage scrollY={scrollY} uri={data.pic}/>
             </View>
             <View style={stylesEditProfile.body}>
                 <Text style={stylesEditProfile.textTittle}>
@@ -159,7 +159,19 @@ function EditProfile({navigation}) {
                         />
                     }          
                 />
-
+                <Input
+                    label={'Country'}
+                    data={country}
+                    setData={setCountry}
+                    icon={
+                        <Icon   
+                        name={'flag'} 
+                        color={colorText} 
+                        size={20} 
+                        onPress={getPermission}
+                        />
+                    }
+                />
                 <Input
                     label={'Locality'}
                     data={locality}
@@ -170,20 +182,6 @@ function EditProfile({navigation}) {
                         size={20} 
                         onPress={setLocation}
                     />}             
-                />
-
-                <Input
-                    label={'Country'}
-                    data={country}
-                    setData={setCountry}
-                    icon={
-                        <Icon   
-                            name={'flag'} 
-                            color={colorText} 
-                            size={20} 
-                            onPress={getPermission}
-                        />
-                    }
                 />
                 <Input
                     label={'Interests'}

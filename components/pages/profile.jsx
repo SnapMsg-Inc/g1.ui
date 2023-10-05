@@ -7,6 +7,7 @@ import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
+import { useFocusEffect } from '@react-navigation/native';
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -47,9 +48,11 @@ const Profile = ({ navigation }) => {
         }
     }
 
-    useEffect(()=>{
-		fetchDataFromApi()
-    },[])
+	useFocusEffect(
+        React.useCallback(() => {
+          	fetchDataFromApi()
+        }, [])
+    );
 
 	const scrollY = useRef(new Animated.Value(0)).current;
 
