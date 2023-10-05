@@ -9,22 +9,25 @@ export default function Input({
         fieldButtonLabel,
         fieldButtonFunction,
         data,
-        setData
+        setData,
+        error
     }) {
-
-    return (
-        <View style={styleInput.input}>
-            <TextInput
-                value={data}
-                onChangeText={setData}
-                placeholder={label}
-                placeholderTextColor={colorText}
-                keyboardType={keyboardType}
-                style={styleInput.textInput}
-                secureTextEntry={inputType}
-            />
-            {icon}
-        </View>
-    );
-}
+        return (
+            <View style={styleInput.container}>
+                <View style={styleInput.input}>
+                    <TextInput
+                        value={data}
+                        onChangeText={setData}
+                        placeholder={label}
+                        placeholderTextColor={colorText}  
+                        keyboardType={keyboardType}
+                        style={styleInput.textInput}
+                        secureTextEntry={inputType}
+                    />
+                    {icon}
+                </View>
+                {error && <Text style={styleInput.inputError}>{error}</Text>}
+            </View>
+        );
+    }
 

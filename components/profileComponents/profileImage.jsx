@@ -9,10 +9,12 @@ const ProfileImage = ({ scrollY, uri}) => {
 
     const pic = (uri === 'none') || (uri === '') ? profileImageUri : uri;
 
+
 	return (
         <Animated.Image
             source={{
                 uri: pic,
+
             }}
             style={{
                 width: 75,

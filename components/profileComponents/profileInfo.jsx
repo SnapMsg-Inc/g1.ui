@@ -21,6 +21,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
             <ProfileBanner scrollY={scrollY} />
 
             <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED}}>
+
                 <ProfileImage scrollY={scrollY} uri={data.pic}/>
                 {/* For self profile */}
                 {headerButton}
@@ -64,6 +65,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
                     marginBottom: 15, fontSize: 15 
                 }}
             >
+
                 {/* {data.zone.latitude}                 */}
             </Text>
 

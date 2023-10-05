@@ -72,7 +72,9 @@ const CustomDrawer = props => {
               <View style={styles.signOutButton}>
                 <TouchableOpacity onPress={() => {}}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
                     <Ionicons name="exit-outline" color={'#535353'} size={22} />
+                    
                     <Text
                       style={{
                         fontSize: 15,

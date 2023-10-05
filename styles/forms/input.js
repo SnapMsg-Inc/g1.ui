@@ -4,29 +4,25 @@ export const colorText = '#535353'
 const colorApp = '#1ed760'
 
 const styleInput = StyleSheet.create({
+    container: {
+        flexDirection: 'column',
+        marginBottom:15,
+    },
     input: {
         flexDirection: 'row',
         alignItems: 'flex-start',
         color: colorText,
         borderBottomColor: colorText,
         borderBottomWidth: 1,
-        marginBottom: 20,
+        marginBottom: 5,
         marginTop: 20,
         justifyContent: 'space-between',
         marginHorizontal: 30,
         paddingHorizontal: 3,
     },
     inputError: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        color: colorText,
-        borderBottomColor: colorApp,
-        borderBottomWidth: 1,
-        marginBottom: 20,
-        marginTop: 20,
-        justifyContent: 'space-between',
+        color: colorApp,
         marginHorizontal: 30,
-        paddingHorizontal: 3,
     },
     textInput: {
         fontSize: 20,
