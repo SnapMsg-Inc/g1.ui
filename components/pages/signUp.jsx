@@ -31,6 +31,8 @@ function SignUp({navigation}) {
     const [nickError, setNickError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [confirmPasswordError, setConfirmPasswordError] = useState(null);
+    const [dateError, setDateError] = useState(null);
+
 
 
     const isValidEmail = (email) => {
@@ -122,7 +124,7 @@ function SignUp({navigation}) {
                     setData={setNick}
                     error={nickError}       // Agregando el mensaje de error
                 />
-                <Calendar data={date} setData={setDate}/>
+                <Calendar data={date} setData={setDate} error={dateError} setError={setDateError} />
                 <Input
                     label={'Email'}
                     icon={
@@ -187,6 +189,6 @@ function SignUp({navigation}) {
                 </View>
             </View>
         </View>
-    )
-}
+    );}
+    
     export default SignUp;
