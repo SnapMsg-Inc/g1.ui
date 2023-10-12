@@ -55,6 +55,7 @@ export async function SignFederate(signUp) {
             const today = new Date()
             const data = {
                 "fullname": user.name,
+                "alias" : `${user.givenName} ${user.familyName}`,
                 "interests": [],
                 "zone": {"latitude": 0,
                         "longitude": 0},

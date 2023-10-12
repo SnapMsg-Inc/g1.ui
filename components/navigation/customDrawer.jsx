@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GetUserData } from '../connectivity/servicesUser';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CustomDrawer = props => {
     const [data, setData] = useState({
@@ -31,16 +32,19 @@ const CustomDrawer = props => {
       "follows": 0,
     })
 
-    useEffect(()=>{
-        const fetchDataFromApi = async () => {
-            try {
-                await GetUserData(setData, data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+    const fetchDataFromApi = async () => {
+        try {
+            await GetUserData(setData, data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        fetchDataFromApi()
-    },[])
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchDataFromApi()
+        }, [])
+    );
 
     const profileImageUri = 
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';

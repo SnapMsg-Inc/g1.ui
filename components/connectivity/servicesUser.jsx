@@ -140,10 +140,11 @@ export async function postsUser(fullName, alias, nick, dateBirth, email) {
             "interests": [],
             "zone": {"latitude": 0,
                     "longitude": 0},
-            "pic": 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png',
+            "pic": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png",
             "email": email,
             "nick": nick,
             "birthdate": dateBirth.toISOString().substring(0,10),
+            "ocupation": ''
         },
         headers: { 
             'Authorization' : `Bearer ${token}`,
