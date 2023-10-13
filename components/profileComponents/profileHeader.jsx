@@ -2,7 +2,6 @@ import React from 'react';
 import { Animated, View, Text  } from 'react-native';
 import BackButton from '../buttons/buttonBack';
 import RefreshArrow from '../profileComponents/refreshArrow';
-import ProfileNicknameHeader from '../profileComponents/profileNicknameHeader';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 
 import ProfileInfo from './profileInfo';
@@ -28,9 +27,6 @@ export default function ProfileHeader({ scrollY , navigation, data, headerButton
 
             {/* Refresh arrow */}
             {/* <RefreshArrow scrollY={scrollY} /> */}
-
-            {/* Name when scroll down */}
-            {/* <ProfileNicknameHeader scrollY={scrollY} /> */}
 
             {/* Profile Info / Nav Bar */}
             <ProfileInfo scrollY={scrollY} navigation={navigation} data={data} headerButton={headerButton}/>

@@ -4,7 +4,7 @@ import {
     View,
     Text,
 } from 'react-native';
-
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
@@ -60,9 +60,16 @@ export default function Feed({ navigation }) {
         }
     }
 
-    useEffect(()=>{
-		fetchDataFromApi()
-    },[])
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchDataFromApi()
+        }, [])
+    );
+
+    const profileImageUri = 
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
+
+    const pic = data.pic === '' ? profileImageUri : data.pic;
 
     return (
         <View style={styles.container}>
@@ -96,7 +103,7 @@ export default function Feed({ navigation }) {
                             nickname={data.alias}
                             username={data.nick}
                             content={item.content}
-                            profilePictureUri={data.pic}
+                            profilePictureUri={pic}
                             date={item.date}
                             comments={item.comments}
                             reposts={item.reposts}

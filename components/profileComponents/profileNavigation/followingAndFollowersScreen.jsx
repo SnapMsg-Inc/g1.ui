@@ -3,10 +3,10 @@ import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { StyleSheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
-import { GetUserData } from '../connectivity/servicesUser';
-import FollowersHeader from '../profileComponents/followersHeader';
-import FollowingScreen from '../profileComponents/followingScreen';
-import FollowersScreen from '../profileComponents/followersScreen';
+import { GetUserData } from '../../connectivity/servicesUser';
+import FollowersHeader from '../followersHeader';
+import FollowingScreen from './followingScreen';
+import FollowersScreen from './followersScreen';
 
 const tabBar = props => (
     <MaterialTabBar
