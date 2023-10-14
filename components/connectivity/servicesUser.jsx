@@ -211,14 +211,12 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
         });
 
         if (response.status === 200 && response.data.message === 'follow exists') {
-            console.log(response.data)
             setIsFollowing(true)
         } else {
             setIsFollowing(false)
         }
     } catch (error) {
         if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
-            console.log(error.response.data)
             setIsFollowing(false)
         } else {
             console.error('Error al verificar si el usuario sigue a otro:', error);
@@ -240,7 +238,6 @@ export async function followUserByUid(uid) {
                 'Content-Type': 'application/json'
             }
         });
-        console.log(`Usuario con UID ${auth.currentUser.uid} sigue al usuario con UID ${uid}.`);
     } catch (error) {
         console.error('Error al seguir al usuario:', error);
     }
