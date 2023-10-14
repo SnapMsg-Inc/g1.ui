@@ -59,7 +59,7 @@ const OtherProfile = ({ navigation }) => {
 			renderHeader={() => (
 				<ProfileHeader scrollY={scrollY} navigation={navigation}
 								data={data} 
-								headerButton={<ButtonFollow/>}/>
+								headerButton={<ButtonFollow uid={id}/>}/>
 			)}
 			pointerEvents={'box-none'}
 			allowHeaderOverscroll

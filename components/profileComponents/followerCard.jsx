@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import ButtonFollow from '../buttons/buttonFollow';
 import stylesFollow from "../../styles/buttons/buttonFollow";
+import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from '../connectivity/servicesUser';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MAX_INTEREST_LENGTH = 40;
 
@@ -14,9 +16,24 @@ const truncateInterest = (interest) => {
 	}
 };
 
-const FollowerCard = ({ navigation, uid, nick, interests, pic, logedUid }) => {
-	const [isFollowing, setIsFollowing] = useState(true);
+const FollowerCard = ({ navigation, loggedUid, uid, nick, interests, pic, logedUid }) => {
+	const [isFollowing, setIsFollowing] = useState(false);
   	
+	const fetchDataFromApi = async () => {
+        try {
+			await checkIfUserFollows(setIsFollowing, loggedUid, uid);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+	useFocusEffect(
+        React.useCallback(() => {
+          	fetchDataFromApi()
+        }, [])
+    );
+
+
 	const handleProfilePress = () => {
 		if (uid !== logedUid) {
 			navigation.navigate('OtherProfileScreen', { id:uid });
@@ -28,6 +45,7 @@ const FollowerCard = ({ navigation, uid, nick, interests, pic, logedUid }) => {
 
 	const handleToggleFollow = () => {
 		// Lógica para cambiar el estado de seguimiento (following o not following)
+		isFollowing ? deleteUserFollowByUid(uid) : followUserByUid(uid)
 		setIsFollowing(!isFollowing);
 	};
 

@@ -191,10 +191,57 @@ export async function deleteUserFollowByUid(uid) {
                 'Content-Type': 'application/json'
             }
         });
-        // La solicitud DELETE se realizó con éxito.
-        console.log(`Usuario ${uid} eliminado de follows.`);
     } catch (error) {
-        // Manejo de errores si la solicitud falla.
         console.error('Error al eliminar usuario de follows:', error);
+    }
+}
+
+export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/${uid}/follows/${otherUid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200 && response.data.message === 'follow exists') {
+            console.log(response.data)
+            setIsFollowing(true)
+        } else {
+            setIsFollowing(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
+            console.log(error.response.data)
+            setIsFollowing(false)
+        } else {
+            console.error('Error al verificar si el usuario sigue a otro:', error);
+            setIsFollowing(false)
+        }
+    }
+}
+
+export async function followUserByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log(`Usuario con UID ${auth.currentUser.uid} sigue al usuario con UID ${uid}.`);
+    } catch (error) {
+        console.error('Error al seguir al usuario:', error);
     }
 }

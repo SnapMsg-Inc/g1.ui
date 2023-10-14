@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, Animated } from 'react-nativ
 import { Tabs } from 'react-native-collapsible-tab-view';
 import FollowerCard from '../followerCard';
 import { GetUserFollowersByUid } from '../../connectivity/servicesUser';
+import { getAuth } from 'firebase/auth'
 
 const FollowersScreen = ({ navigation, uid }) => {
 
@@ -31,6 +32,7 @@ const FollowersScreen = ({ navigation, uid }) => {
 					followers.map((item) => (
 						<FollowerCard
 							navigation={navigation}
+							loggedUid={getAuth().currentUser.uid}
 							uid={item.uid}
 							nick={item.nick}
 							interests={item.interests}
