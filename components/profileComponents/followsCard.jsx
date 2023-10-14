@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import stylesFollow from '../../styles/buttons/buttonFollow';
+import { deleteUserFollowByUid } from '../connectivity/servicesUser';
 
 const MAX_INTEREST_LENGTH = 40;
 
@@ -22,6 +23,7 @@ const FollowsCard = ({ navigation, uid, nick, interests, pic }) => {
 
     const handleToggleFollow = () => {
 		// Lógica para cambiar el estado de seguimiento (following o not following)
+		deleteUserFollowByUid(uid);
 		setIsFollowing(!isFollowing);
 	};
 

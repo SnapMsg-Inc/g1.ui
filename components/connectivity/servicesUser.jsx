@@ -177,3 +177,24 @@ export async function PatchUser(data) {
         console.log(error)
     }
 }
+
+export async function deleteUserFollowByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        // La solicitud DELETE se realizó con éxito.
+        console.log(`Usuario ${uid} eliminado de follows.`);
+    } catch (error) {
+        // Manejo de errores si la solicitud falla.
+        console.error('Error al eliminar usuario de follows:', error);
+    }
+}
