@@ -87,7 +87,7 @@ function SignUp({navigation}) {
         }
     
         if (!isValidPassword(password)) {
-            setPasswordError('Password should be at least 8 characters long.');
+            setPasswordError('Password should be at least 6 characters long.');
             isValid = false;
         } else {
             setPasswordError(null);
@@ -104,10 +104,6 @@ function SignUp({navigation}) {
     };
 
     const handleSignUp = async () => {
-        // if (fullName === '' | email === '' | nick === '' |
-        //     password === '' | date === '' | confirmPassword === '')
-        //     else if (password != confirmPassword)
-        //     alert('Password and confirmation do not match.\nPlease try again.')
         if (!Validations())
             alert('Please check your input and try again.')
         else

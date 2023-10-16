@@ -2,13 +2,15 @@ import { initializeApp } from 'firebase/app';
 import { useState } from 'react';
 import { getAuth,
         createUserWithEmailAndPassword,
-        signInWithEmailAndPassword, 
+        signInWithEmailAndPassword, signOut,
         deleteUser, getIdToken } from 'firebase/auth'
 import GetLogin, { postsUser, postUserFederate } from './servicesUser';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import Config from "react-native-config";  
-        
+import * as firebase from 'firebase/auth'
+import firebaseApp from './firebase';
+
 GoogleSignin.configure({
     webClientId: Config.WEB_CLIENT_ID
 });
@@ -16,11 +18,9 @@ GoogleSignin.configure({
 export default async function CreateAccount (fullName, alias,
     nick, dateBirth,
     email, password) {
-    const auth = getAuth();
     console.log(email)
     console.log(password)
-    
-    await createUserWithEmailAndPassword(auth, email, password)
+    firebase.getAuth().createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
         console.log(userCredential)
         postsUser(fullName, alias, nick, dateBirth, email)
@@ -29,17 +29,10 @@ export default async function CreateAccount (fullName, alias,
         console.log(error.message);
     })
 }
-    
-export async function LoginAccount (email, password) {
-    const auth = getAuth();
-    try {
-        await signInWithEmailAndPassword(auth, email, password)
-        return true
-    } catch(error) {
-        console.log(`Error with code: ${error.code} and message: ${error.message}`)
-        throw error
-    };
-}
+
+export const LoginAccount = (email, password) =>
+    signInWithEmailAndPassword(firebase.getAuth(firebaseApp), email, password)
+
 
 export async function SignFederate(signUp) {
     try {
@@ -72,4 +65,8 @@ export async function SignFederate(signUp) {
         console.log(error)
     }
 };
+
+export const LogoutAccount = () =>
+    firebase.getAuth(firebaseApp).signOut()
+
             

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -13,23 +13,25 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GetUserData } from '../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
+import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
 
 const CustomDrawer = props => {
+    const { onLogout } = useContext(AuthenticationContext)
     const [data, setData] = useState({
-      "uid": "",
-      "alias": "",
-      "fullname": "",
-      "interests": [],
-      "zone": {"latitude": 0,
-              "longitude": 0},
-      "is_admin": false,
-      "ocupation": null,
-      "pic": "",
-      "email": "",
-      "nick": "",
-      "birthdate": "",
-      "followers": 0,
-      "follows": 0,
+        "uid": "",
+        "alias": "",
+        "fullname": "",
+        "interests": [],
+        "zone": {"latitude": 0,
+                "longitude": 0},
+        "is_admin": false,
+        "ocupation": null,
+        "pic": "",
+        "email": "",
+        "nick": "",
+        "birthdate": "",
+        "followers": 0,
+        "follows": 0,
     })
 
     const fetchDataFromApi = async () => {
@@ -75,7 +77,7 @@ const CustomDrawer = props => {
             
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
               <View style={styles.signOutButton}>
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity onPress={onLogout}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
                     <Ionicons name="exit-outline" color={'#535353'} size={22} />
