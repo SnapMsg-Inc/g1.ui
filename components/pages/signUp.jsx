@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {ScrollView,
         Text,
         TouchableHighlight,
@@ -13,6 +13,8 @@ import Separate from "../forms/separate";
 import stylesForms, { colorText } from "../../styles/SignForms";
 import Calendar from "../forms/calendar";
 import CreateAccount, { SignFederate } from "../connectivity/authorization";
+import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
+import { ValidationsSignUp } from "../forms/validations";
 
 function SignUp({navigation}) {
     const [fullName, setFullName] = useState('')
@@ -21,7 +23,6 @@ function SignUp({navigation}) {
     const [nick, setNick] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [sucess, setSucces] = useState(false)
     const [visible, setVisible] = useState(false)
     const [visibleConfirm, setVisibleConfirm] = useState(false)
     const [date, setDate] = useState(new Date())
@@ -40,83 +41,31 @@ function SignUp({navigation}) {
         familyName: '',
         givenName: ''
     })
-
-    const isValidEmail = (email) => {
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return regex.test(email);
-    };
-    
-    const isValidNick = (nick) => {
-        let regex = /^[a-zA-Z0-9_-]+$/;
-        return regex.test(nick);
-    };
-    
-    const isValidPassword = (password) => {
-        return password.length >= 6; // Password must be at least 8 characters
-    };
-
-    const Validations = () => {
-        let isValid = true; 
-    
-        if (!fullName.trim()) {
-            setFullNameError('Full name is required.');
-            isValid = false;
-        } else {
-            setFullNameError(null);
-        }
-
-        if (!alias.trim()) {
-            setAliasError('Please enter a valid alias')
-            isValid = false;
-        } else {
-            setAliasError(null)
-        }
-    
-        if (!isValidNick(nick)) {
-            setNickError('Nick is required.');
-            isValid = false;
-        } else {
-            setNickError(null);
-        }
-    
-        if (!isValidEmail(email)) {
-            setEmailError('Please enter a valid email.');
-            isValid = false;
-        } else {
-            setEmailError(null);
-        }
-    
-        if (!isValidPassword(password)) {
-            setPasswordError('Password should be at least 6 characters long.');
-            isValid = false;
-        } else {
-            setPasswordError(null);
-        }
-    
-        if (password !== confirmPassword) {
-            setConfirmPasswordError('Password and confirmation do not match.');
-            isValid = false;
-        } else {
-            setConfirmPasswordError(null);
-        }
-    
-        return isValid
-    };
+    const { onRegister, isLoading , error, isRegistrationComplete } = useContext(AuthenticationContext)
 
     const handleSignUp = async () => {
-        if (!Validations())
-            alert('Please check your input and try again.')
-        else
-            try {
-                const success = CreateAccount(fullName, alias, nick,date,email,password)
-                if (success)
-                    setTimeout(() => {navigation.navigate('FinishSignUp')}, 1000)
-                else 
-                    alert('Account creation failed.\nPlease ensure that all the information you provided is accurate and try again.')
-            } catch (error) {
-                console.log(error)
-                alert('An error occurred while signing up. Please try again later.')
+        if (ValidationsSignUp(  fullName, setFullNameError,
+                                alias, setAliasError,
+                                nick, setNickError,
+                                email, setEmailError,
+                                password, setPasswordError,
+                                confirmPassword, setConfirmPasswordError)) {
+            const data = {
+                "fullname": fullName,
+                "alias": alias,
+                "interests": [],
+                "zone": {"latitude": 0,
+                        "longitude": 0},
+                "pic": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png",
+                "email": email,
+                "nick": nick,
+                "birthdate": date.toISOString().substring(0,10),
+                "ocupation": ''
             }
+            onRegister(data, password)
+            if (!isLoading && !error && !isRegistrationComplete)
+                navigation.navigate('FinishSignUp')
+        }
     }; 
 
     const signButtonFederate = async () => {

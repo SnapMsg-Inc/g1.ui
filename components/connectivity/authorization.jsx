@@ -15,20 +15,8 @@ GoogleSignin.configure({
     webClientId: Config.WEB_CLIENT_ID
 });
 
-export default async function CreateAccount (fullName, alias,
-    nick, dateBirth,
-    email, password) {
-    console.log(email)
-    console.log(password)
-    firebase.getAuth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-        console.log(userCredential)
-        postsUser(fullName, alias, nick, dateBirth, email)
-    }).catch((error) => {
-        console.log(error.code);
-        console.log(error.message);
-    })
-}
+export const CreateAccount = (email, password) => 
+    createUserWithEmailAndPassword(firebase.getAuth(firebaseApp), email, password)
 
 export const LoginAccount = (email, password) =>
     signInWithEmailAndPassword(firebase.getAuth(firebaseApp), email, password)

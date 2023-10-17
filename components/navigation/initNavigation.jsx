@@ -11,7 +11,7 @@ import { AuthenticationContext } from '../connectivity/auth/authenticationContex
 const Stack = createStackNavigator();
 
 export default function InitNavigation() {
-    const { isLoading, checkAuth } = useContext(AuthenticationContext)
+    const { isLoading, checkAuth, isRegistrationComplete } = useContext(AuthenticationContext)
     
     useEffect(() => {
         checkAuth()

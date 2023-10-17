@@ -18,14 +18,13 @@ function SignIn({ navigation }) {
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [visible, setVisible] = useState(false)
+    const { onLogin } = useContext(AuthenticationContext)
 
     const handleSignIn = async () => {
         if (ValidationsLogin(email, password, setEmailError, setPasswordError)) {
             onLogin(email, password)
         }
     };
-
-    const { onLogin } = useContext(AuthenticationContext)
 
     const signButtonFederate = async () => {
         try {
