@@ -165,3 +165,68 @@ export async function PatchUser(data) {
         console.log(error)
     }
 }
+
+export async function deleteUserFollowByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error('Error al eliminar usuario de follows:', error);
+    }
+}
+
+export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/${uid}/follows/${otherUid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200 && response.data.message === 'follow exists') {
+            setIsFollowing(true)
+        } else {
+            setIsFollowing(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
+            setIsFollowing(false)
+        } else {
+            console.error('Error al verificar si el usuario sigue a otro:', error);
+            setIsFollowing(false)
+        }
+    }
+}
+
+export async function followUserByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error('Error al seguir al usuario:', error);
+    }
+}

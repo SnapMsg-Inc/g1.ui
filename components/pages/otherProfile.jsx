@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { GetUserByUid } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
@@ -36,18 +37,20 @@ const OtherProfile = ({ navigation }) => {
         "follows": 0,
     })
 
-	
-    useEffect(()=>{
-		const fetchDataFromApi = async () => {
-			try {
-				await GetUserByUid(setData, id);
-			} catch (error) {
-				console.error('Error fetching data:', error);
-			}
+	const fetchDataFromApi = async () => {
+		try {
+			await GetUserByUid(setData, id);
+		} catch (error) {
+			console.error('Error fetching data:', error);
 		}
-		fetchDataFromApi()
-    },[])
+	}
 	
+	useFocusEffect(
+        React.useCallback(() => {
+          	fetchDataFromApi()
+        }, [])
+    );
+
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	return (
@@ -56,7 +59,7 @@ const OtherProfile = ({ navigation }) => {
 			renderHeader={() => (
 				<ProfileHeader scrollY={scrollY} navigation={navigation}
 								data={data} 
-								headerButton={<ButtonFollow/>}/>
+								headerButton={<ButtonFollow uid={id}/>}/>
 			)}
 			pointerEvents={'box-none'}
 			allowHeaderOverscroll

@@ -1,21 +1,22 @@
 import React, { useEffect, useState }  from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Animated } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import FollowsCard from './followsCard';
-import { GetUserFollowsByUid } from '../connectivity/servicesUser';
+import FollowerCard from '../followerCard';
+import { GetUserFollowersByUid } from '../../connectivity/servicesUser';
+import { getAuth } from 'firebase/auth'
 
-const FollowingScreen = ({ navigation, uid }) => {
+const FollowersScreen = ({ navigation, uid }) => {
 
-	const [follows, setFollows] = useState([])
+	const [followers, setFollowers] = useState([])
 	const [loading, setLoading] = useState(true)
 
 	useEffect(()=>{
-		if (follows.length) {
-			setFollows([])
+		if (followers.length) {
+			setFollowers([])
 		}
 		const fetchDataFromApi = async () => {
 			try {
-				await GetUserFollowsByUid(setFollows, uid);
+				await GetUserFollowersByUid(setFollowers, uid);
 				setLoading(false)
 			} catch (error) {
 				console.error('Error fetching data:', error);
@@ -28,17 +29,17 @@ const FollowingScreen = ({ navigation, uid }) => {
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
 				{loading ? <></> : 
-					follows.map((item) => (
-						<FollowsCard
+					followers.map((item) => (
+						<FollowerCard
 							navigation={navigation}
-							key={item.uid}
+							loggedUid={getAuth().currentUser.uid}
 							uid={item.uid}
 							nick={item.nick}
 							interests={item.interests}
 							pic={item.pic}
+							key={item.uid}
 						/>
 				))}
-				
 			</View>
 		</Tabs.ScrollView>
 	);
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 20,
 	},
-
 });
 
-export default FollowingScreen;
+export default FollowersScreen;

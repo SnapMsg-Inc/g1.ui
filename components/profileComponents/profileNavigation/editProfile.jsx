@@ -1,16 +1,16 @@
 import { Animated, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from 'react';
-import Input from "../forms/input";
-import ProfileImage from '../profileComponents/profileImage';
-import stylesEditProfile from "../../styles/profile/setupProfile";
-import AcceptButton from "../buttons/buttonAcept";
-import CancelButton from "../buttons/buttonCancel";
+import Input from "../../forms/input";
+import ProfileImage from '../profileImage';
+import stylesEditProfile from "../../../styles/profile/setupProfile";
+import AcceptButton from "../../buttons/buttonAcept";
+import CancelButton from "../../buttons/buttonCancel";
 import { TouchableHighlight } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../styles/forms/input";
-import { PatchUser } from "../connectivity/servicesUser";
+import { colorText } from "../../../styles/forms/input";
+import { PatchUser } from "../../connectivity/servicesUser";
 
 function EditProfile({navigation}) {
     const route = useRoute();

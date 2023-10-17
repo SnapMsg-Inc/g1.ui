@@ -11,10 +11,9 @@ import Discover from "./discover";
 import Notifications from "./notifications"
 import Messages from "./messages";
 import CustomDrawer from '../navigation/customDrawer';
-import FollowingAndFollowersScreen from '../profileComponents/followingAndFollowersScreen';
+import FollowingAndFollowersScreen from '../profileComponents/profileNavigation/followingAndFollowersScreen';
 import OtherProfile from './otherProfile';
-import EditProfile from './editProfile';
-import { View } from 'react-native';
+import EditProfile from '../profileComponents/profileNavigation/editProfile';
 
 const ProfileStack = createStackNavigator();
 
