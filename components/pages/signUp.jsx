@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import {ScrollView,
+import {ActivityIndicator, ScrollView,
         Text,
         TouchableHighlight,
         View } from "react-native";
@@ -41,9 +41,9 @@ function SignUp({navigation}) {
         familyName: '',
         givenName: ''
     })
-    const { onRegister, isLoading , error, isRegistrationComplete } = useContext(AuthenticationContext)
+    const { onRegister, isLoading } = useContext(AuthenticationContext)
 
-    const handleSignUp = async () => {
+    const handleSignUp = () => {
         if (ValidationsSignUp(  fullName, setFullNameError,
                                 alias, setAliasError,
                                 nick, setNickError,
@@ -62,9 +62,9 @@ function SignUp({navigation}) {
                 "birthdate": date.toISOString().substring(0,10),
                 "ocupation": ''
             }
-            onRegister(data, password)
-            if (!isLoading && !error && !isRegistrationComplete)
-                navigation.navigate('FinishSignUp')
+            onRegister(data, password, () => {
+                console.log('me voy a terminar el registro')
+            })
         }
     }; 
 
@@ -175,10 +175,11 @@ function SignUp({navigation}) {
                     setData={setConfirmPassword}
                     error={confirmPasswordError}  // Agregando el mensaje de error
                 />
-                <View style={stylesForms.bodyButtons}>
-                    <CancelButton navigation={navigation}/>
-                    <AcceptButton accept={handleSignUp}/>
-                </View>
+                {isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> :
+                    <View style={stylesForms.bodyButtons}>
+                        <CancelButton navigation={navigation}/>
+                        <AcceptButton accept={handleSignUp}/>
+                    </View>}
             </View>
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>

@@ -14,14 +14,18 @@ import Preferences from "./preferences";
 import { PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, getPermission } from "../connectivity/location/permissionLocation";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import firebaseApp from "../connectivity/firebase";
+import { useRoute } from "@react-navigation/native";
+import { LoginAccount } from "../connectivity/authorization";
 
-function FinishSignUp() {
+function FinishSignUp({ navigation}) {
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
     const [step, setStep] = useState(1); 
     const [interestsList, setInterestsList] = useState([])
     const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
-    const { markRegistrationComplete } = useContext(AuthenticationContext)
+    const { markRegisterComplete } = useContext(AuthenticationContext)
 
     const handleAccept = async() => {
         try {
@@ -30,10 +34,11 @@ function FinishSignUp() {
                                 "interests": interestsList,
                             })
             if (success) {
-                markRegistrationComplete()
-            } else {
+                markRegisterComplete()
+            }
+            else {
                 alert('error')
-            }  
+            }
         } catch(error) {
             console.log(error)
         }
@@ -82,6 +87,7 @@ function FinishSignUp() {
     };
 
     const setLocation = () => {
+        getPermission()
         CurrentPosition({
             accuracy: Location.Accuracy.High,
             distanceInterval: 2
@@ -95,6 +101,7 @@ function FinishSignUp() {
     }
 
     useEffect(() => {
+        console.log('Estoy terminando el registro')
         getPermission()
     },[])
 

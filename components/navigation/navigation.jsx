@@ -1,18 +1,20 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext"
 import { NavigationContainer } from "@react-navigation/native"
 import Home from "../pages/home"
 import InitNavigation from "./initNavigation"
-import { SafeAreaView, View } from "react-native"
-import FinishSignUp from "../pages/finishSignUp"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
+import RegisterNavigation from "./navigationRegister"
 
 export const Navigation = () => {
-    const { isAuthenticated } = useContext(AuthenticationContext)
+    const { isAuthenticated, checkAuth, isRegister } = useContext(AuthenticationContext)
+       
+    useEffect(() => {
+        checkAuth()
+    },[])
 
     return (
         <NavigationContainer>
-            { isAuthenticated ? <Home/> : <InitNavigation/>}
+            { isAuthenticated ? <Home/> : ( isRegister ?  <RegisterNavigation/> : <InitNavigation/>)}
         </NavigationContainer>
     )
 }
