@@ -20,7 +20,7 @@ function generateSnaps(limit) {
             content: 'Lorem ipsum dolor ametLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel egestas dolor, nec dignissim metus '.repeat(repetitions),
             nickname: 'Nickname',
             username: 'username',
-            profilePictureUri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png',
+            profilePictureUri: '',
             date: '18/06/2023',
             comments: 4,
             reposts: 18,
@@ -66,11 +66,6 @@ export default function Feed({ navigation }) {
         }, [])
     );
 
-    const profileImageUri = 
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
-
-    const pic = data.pic === '' ? profileImageUri : data.pic;
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -103,7 +98,7 @@ export default function Feed({ navigation }) {
                             nickname={data.alias}
                             username={data.nick}
                             content={item.content}
-                            profilePictureUri={pic}
+                            profilePictureUri={data.pic}
                             date={item.date}
                             comments={item.comments}
                             reposts={item.reposts}

@@ -12,7 +12,7 @@ function generateSnaps(limit) {
 			content: 'Lorem ipsum dolor ametLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel egestas dolor, nec dignissim metus '.repeat(repetitions),
 			nickname: 'Nickname',
 			username: 'username',
-			profilePictureUri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png',
+			profilePictureUri: '',
 			date: '18/06/2023',
 			comments: 4,
 			reposts: 18,
@@ -31,12 +31,6 @@ const PostsScreen = ({data}) => {
 		setTimeout(() => {setLoading(false)}, 1000 )
 	},[])
 
-
-	const profileImageUri = 
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
-
-    const pic = data.pic === '' ? profileImageUri : data.pic;
-
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
@@ -47,7 +41,7 @@ const PostsScreen = ({data}) => {
 							nickname={data.alias}
 							username={data.nick}
 							content={item.content}
-							profilePictureUri={pic}
+							profilePictureUri={data.pic}
 							date={item.date}
 							comments={item.comments}
 							reposts={item.reposts}
