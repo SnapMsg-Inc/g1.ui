@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -61,13 +61,13 @@ export default function Home() {
             initialRouteName='Feed'
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
-              drawerActiveTintColor: '#ffffff',
-              drawerInactiveTintColor: '#ffffff',
-              drawerLabelStyle: {
+            drawerActiveTintColor: '#ffffff',
+            drawerInactiveTintColor: '#ffffff',
+            drawerLabelStyle: {
                 marginLeft: -25,
                 fontSize: 15,
-              },
-              swipeEdgeWidth: 150,            
+            },
+            swipeEdgeWidth: 150,            
             }}
             >
             <Drawer.Screen
@@ -75,48 +75,48 @@ export default function Home() {
             component={ProfileStackScreen}
             options={{              
                 drawerIcon: ({size}) => (
-                  <FontAwesome5 name="user" color={iconColor} size={size} />
+                <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
                 headerShown:false,							
-				        swipeEdgeWidth: 0,
+                        swipeEdgeWidth: 0,
             }}
             />
             <Drawer.Screen
             name="Feed"
             component={Feed}
             options={{
-              drawerIcon: ({size}) => (
+            drawerIcon: ({size}) => (
                 <Octicons name="home" size={size} color={iconColor} />
-              ),
-              headerShown:false,
+            ),
+            headerShown:false,
             }}
             />
             <Drawer.Screen
             name="Discover"
             component={Discover}
             options={{
-              drawerIcon: ({size}) => (
+            drawerIcon: ({size}) => (
                 <Octicons name="search" size={size} color={iconColor} />
-              ),
-              }}
+            ),
+            }}
             />
             <Drawer.Screen
             name="Notifications"
             component={Notifications}
             options={{
                 drawerIcon: ({size }) => (
-                  <Octicons name="bell" color={iconColor} size={size} />
+                <Octicons name="bell" color={iconColor} size={size} />
                 ),
-              }}
+            }}
             />
             <Drawer.Screen
             name="Messages"
             component={Messages}
             options={{
                 drawerIcon: ({size }) => (
-                  <FontAwesome5 name="envelope" color={iconColor} size={size} />
+                <FontAwesome5 name="envelope" color={iconColor} size={size} />
                 ),
-              }}
+            }}
             />
         </Drawer.Navigator>
     )

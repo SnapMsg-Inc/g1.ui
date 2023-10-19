@@ -1,15 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { Animated, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useRoute } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { GetUserByUid } from '../connectivity/servicesUser';
+import { GetUserByUid, checkIfUserFollows } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import ButtonFollow from '../buttons/buttonFollow';
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -25,8 +26,11 @@ const tabBar = props => (
 
 
 const OtherProfile = ({ navigation }) => {
+	const { userData } = useContext(LoggedUserContext)
+	const [isFollowing, setIsFollowing] = useState(false);
 	const route = useRoute();
 	const { id } = route.params;
+	const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState({
         "uid": "",
         "alias": "",
@@ -38,13 +42,18 @@ const OtherProfile = ({ navigation }) => {
     })
 
 	const fetchDataFromApi = async () => {
-		try {
-			await GetUserByUid(setData, id);
-		} catch (error) {
-			console.error('Error fetching data:', error);
-		}
-	}
-	
+        setIsLoading(true)
+        GetUserByUid(setData, id)
+		checkIfUserFollows(setIsFollowing, userData.uid, id)
+        .then(() => {
+            setIsLoading(false)
+        })
+        .catch((error) => {
+            console.error('Error fetching other user data:', error);
+            setIsLoading(false)
+        })
+    }
+
 	useFocusEffect(
         React.useCallback(() => {
           	fetchDataFromApi()
@@ -54,40 +63,50 @@ const OtherProfile = ({ navigation }) => {
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	return (
-		<Tabs.Container
-			tabContainerStyle={styles.tabContainer}
-			renderHeader={() => (
-				<ProfileHeader scrollY={scrollY} navigation={navigation}
-								data={data} 
-								headerButton={<ButtonFollow uid={id}/>}/>
-			)}
-			pointerEvents={'box-none'}
-			allowHeaderOverscroll
-			renderTabBar={tabBar}
-			>
-			<Tabs.Tab name="Posts" label="Posts">
-				<PostScreen data={data}/>
-			</Tabs.Tab>
+		<View style={styles.container}>
+			{ isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
+				<Tabs.Container
+					tabContainerStyle={styles.tabContainer}
+					renderHeader={() => (
+						<ProfileHeader scrollY={scrollY} navigation={navigation}
+										data={data} 
+										headerButton={<ButtonFollow uid={id} following={isFollowing}/>}/>
+					)}
+					pointerEvents={'box-none'}
+					allowHeaderOverscroll
+					renderTabBar={tabBar}
+					>
+					<Tabs.Tab name="Posts" label="Posts">
+						<PostScreen data={data}/>
+					</Tabs.Tab>
 
-			<Tabs.Tab name="Replies" label="Replies">
-				<RepliesScreen />
-			</Tabs.Tab>
+					<Tabs.Tab name="Replies" label="Replies">
+						<RepliesScreen />
+					</Tabs.Tab>
 
-			<Tabs.Tab name="Likes" label="Likes">
-				<LikesScreen />
-			</Tabs.Tab>
-		</Tabs.Container>
+					<Tabs.Tab name="Likes" label="Likes">
+						<LikesScreen />
+					</Tabs.Tab>
+				</Tabs.Container>
+		)}
+
+		</View> 
 	);
 };
 
 const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: 'black',
-  },
-  label: {
-    fontSize: 16,
-    textTransform: 'none',
-  },
+	container: {
+        flex:1,
+        backgroundColor: '#000',
+        justifyContent: 'center',
+    },
+	tabBar: {
+		backgroundColor: 'black',
+	},
+	label: {
+		fontSize: 16,
+		textTransform: 'none',
+	},
 });
 
 export default OtherProfile;

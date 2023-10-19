@@ -126,26 +126,13 @@ export async function postUserFederate(data) {
     }
 }
 
-export async function postsUser(fullName, alias, nick, dateBirth, email) {
-
+export async function postsUser(data) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    console.log(`email: ${email}`)
     await axios({
         method: 'post',
         url: URL,
-        data: {
-            "fullname": fullName,
-            "alias": alias,
-            "interests": [],
-            "zone": {"latitude": 0,
-                    "longitude": 0},
-            "pic": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png",
-            "email": email,
-            "nick": nick,
-            "birthdate": dateBirth.toISOString().substring(0,10),
-            "ocupation": ''
-        },
+        data: data,
         headers: { 
             'Authorization' : `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -161,6 +148,7 @@ export async function postsUser(fullName, alias, nick, dateBirth, email) {
 
 export async function PatchUser(data) {
     const auth = getAuth();
+    console.log('user pacth ', auth.currentUser)
     const token = await getIdToken(auth.currentUser, true);
     try {
         await axios({

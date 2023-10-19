@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Text, View } from "react-native";
 import * as Location from 'expo-location';
 import { TouchableHighlight } from "react-native";
@@ -12,24 +12,25 @@ import { colorText } from "../../styles/forms/input";
 import LocationSetup from "./location";
 import Preferences from "./preferences";
 import { PatchUser } from "../connectivity/servicesUser";
+import { CurrentPosition, getPermission } from "../connectivity/location/permissionLocation";
+import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
 
-function FinishSignUp({navigation}) {
+function FinishSignUp() {
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
     const [step, setStep] = useState(1); 
     const [interestsList, setInterestsList] = useState([])
     const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
+    const { markRegistrationComplete } = useContext(AuthenticationContext)
 
     const handleAccept = async() => {
-        console.log(coordinates)
-        console.log(interestsList)
         try {
             const success = PatchUser({
                                 "zone": coordinates,
                                 "interests": interestsList,
                             })
             if (success) {
-                setTimeout(() => navigation.navigate('Home'), 1000)
+                markRegistrationComplete()
             } else {
                 alert('error')
             }  
@@ -80,33 +81,21 @@ function FinishSignUp({navigation}) {
         setStep(step - 1);
     };
 
-    const setLocation = async () => {
-        try {
-            getPermission()
-            await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.High,
-                distanceInterval: 2
-            }).then((location) => {
-                const {coords} = location
-                const {latitude, longitude} = coords
-                setCoordinates({'latitude': latitude, 'longitude': longitude})
-                console.log(`longitude ${JSON.stringify(coordinates)} `)
-                reverseGeocode() 
-            })  
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    
-    const getPermission = async () => {
-        let {status} = await Location.requestForegroundPermissionsAsync()
-        if (status !== 'granted'){
-            return
-        }
+    const setLocation = () => {
+        CurrentPosition({
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 2
+        }).then((location) => {
+            const {coords} = location
+            const {latitude, longitude} = coords
+            setCoordinates({'latitude': latitude, 'longitude': longitude})
+            console.log(`longitude ${JSON.stringify(coordinates)} `)
+            reverseGeocode() 
+        })  
     }
 
     useEffect(() => {
-        setTimeout(()=>{getPermission()}, 1000)
+        getPermission()
     },[])
 
     return(
