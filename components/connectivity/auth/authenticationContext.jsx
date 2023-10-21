@@ -20,7 +20,6 @@ export const AuthenticationContextProvider = ({children}) => {
 
     const checkAuth = () => {
         setIsLoadingApp(true)
-        console.log('autentico usuario')
         getAuth(firebaseApp).onAuthStateChanged((userCredential) => {
             if (userCredential) {
                 console.log('creation: ', userCredential.metadata.creationTime)
@@ -40,7 +39,6 @@ export const AuthenticationContextProvider = ({children}) => {
         LoginAccount(email, password)
         .then((userCredential) => {
             dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
-            console.log('signed in ', signedIn)
             setIsLoading(false)
         })
         .catch((error) => {
@@ -92,6 +90,7 @@ export const AuthenticationContextProvider = ({children}) => {
 
     const onRegisterFederate = () => {
         setIsLoading(true)
+        setIsRegister(false)
         setError(false)
         GoogleSignin.hasPlayServices();
         SignInWithGoogle()
@@ -113,13 +112,8 @@ export const AuthenticationContextProvider = ({children}) => {
                     "email": user.email,
                     "nick": user.givenName,
                     "birthdate": today.toISOString().substring(0,10),
-                }, setIsRegister, setIsLoading)
+                }, setIsRegister, setIsLoading, onLogout)
                 dispatchSignedIn({type: 'SIGN_UP'})
-            })
-            .catch((error) => {
-                setIsRegister(false)
-                dispatchSignedIn({type: 'SIGN_OUT'})
-                setError(true)
             })
         })
     }

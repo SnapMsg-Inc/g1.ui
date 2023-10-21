@@ -126,7 +126,7 @@ export const postsUser = async (data) => {
     })
 }
 
-export const postsUserFederate = async (data, setIsRegister, setIsLoading) => {
+export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLogout) => {
     const auth = getAuth()
     const token = await getIdToken(auth.currentUser, true)
     await axios({
@@ -145,10 +145,12 @@ export const postsUserFederate = async (data, setIsRegister, setIsLoading) => {
     })
     . catch((error) => {
         console.log(error.response.status)
-        if (error.response.status === 400)
+        if (error.response.status === 400) {
             alert('Email already in use')
-        else 
+            onLogout()
+        } else {
             deleteUser(auth.currentUser)
+        } 
         setIsLoading(false)
     })
 }
