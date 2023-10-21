@@ -1,9 +1,11 @@
 import React, { useState, createContext, useReducer, useEffect} from "react";
-import { CreateAccount,  LoginAccount, LogoutAccount } from "../authorization";
+import { CreateAccount,  LoginAccount, LogoutAccount, SignFederate, SignInWithGoogle } from "../authorization";
 import { getAuth, signOut } from "firebase/auth";
 import firebaseApp from "../firebase";
-import { GetUserData, postsUser } from "../servicesUser";
+import { GetUserData, postsUser, postsUserFederate } from "../servicesUser";
 import { SignInReducer } from "../reducer/authReducer";
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 
 export const AuthenticationContext = createContext()
 
@@ -43,27 +45,82 @@ export const AuthenticationContextProvider = ({children}) => {
         })
         .catch((error) => {
             alert('Invalid username or password.\nPlease check your credentials and try again.')
+            dispatchSignedIn({type: 'SIGN_OUT'})
+            setError(true)
+            setIsLoading(false)
+        })
+    }
+    
+    const onLoginFederate = () => {
+        setIsLoading(true)
+        setError(false)
+        GoogleSignin.hasPlayServices();
+        SignInWithGoogle()
+        .then((currentUser) => {
+            SignFederate(currentUser)
+            .then((u) => {
+                dispatchSignedIn({type: 'SIGN_IN', payload: 'signed_in'})
+                setIsLoading(false)
+            })
+        }) 
+        .catch((error) => {
+            alert('Invalid account.\nPlease check your credentials and try again.')
+            dispatchSignedIn({type: 'SIGN_OUT'})
             setError(true)
             setIsLoading(false)
         })
     }
 
-    const onRegister = (data, password, navigateTo) => {
+    const onRegister = (data, password) => {
         setIsLoading(true)
-        setIsRegister(true)
         setError(false)
         CreateAccount(data.email, password)
         .then((userCredential) => {
-            postsUser(data)
+            setIsRegister(true)
+            postsUser(data, false)
             dispatchSignedIn({type: 'SIGN_UP'})
             setIsLoading(false)
-            navigateTo()
         }).catch((error) => {
-            console.log(error.code);
+            console.log('register', error.code);
+            dispatchSignedIn({type: 'SIGN_OUT'})
             alert('Email already in use')
             setError(true)
             setIsLoading(false)
             setIsRegister(false)
+        })
+    }
+
+    const onRegisterFederate = () => {
+        setIsLoading(true)
+        setError(false)
+        GoogleSignin.hasPlayServices();
+        SignInWithGoogle()
+        .then((currentUser) => {
+            SignFederate(currentUser)
+            .then((u) => {
+                const {user} = currentUser 
+                user.givenName = user.givenName.replace(/ /g, '_')
+                console.log(JSON.stringify(user,null,2))
+                const today = new Date()
+                postsUserFederate({
+                    "fullname": user.name,
+                    "alias" : `${user.givenName} ${user.familyName}`,
+                    "interests": [],
+                    "zone": {"latitude": 0,
+                    "longitude": 0},
+                    "ocupation": '',
+                    "pic": user.photo,
+                    "email": user.email,
+                    "nick": user.givenName,
+                    "birthdate": today.toISOString().substring(0,10),
+                }, setIsRegister, setIsLoading)
+                dispatchSignedIn({type: 'SIGN_UP'})
+            })
+            .catch((error) => {
+                setIsRegister(false)
+                dispatchSignedIn({type: 'SIGN_OUT'})
+                setError(true)
+            })
         })
     }
 
@@ -90,7 +147,9 @@ export const AuthenticationContextProvider = ({children}) => {
                     error,
                     checkAuth,
                     onRegister,
+                    onRegisterFederate,
                     onLogin,
+                    onLoginFederate,
                     onLogout,
                     markRegisterComplete
                 }

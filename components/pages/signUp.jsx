@@ -33,15 +33,7 @@ function SignUp({navigation}) {
     const [passwordError, setPasswordError] = useState(null);
     const [confirmPasswordError, setConfirmPasswordError] = useState(null);
     const [dateError, setDateError] = useState(null);
-    const [userFederate, setUserFederate] = useState({
-        id: '',
-        name: '',
-        email: '',
-        photo: '',
-        familyName: '',
-        givenName: ''
-    })
-    const { onRegister, isLoading } = useContext(AuthenticationContext)
+    const { onRegister, onRegisterFederate, isLoading } = useContext(AuthenticationContext)
 
     const handleSignUp = () => {
         if (ValidationsSignUp(  fullName, setFullNameError,
@@ -62,20 +54,12 @@ function SignUp({navigation}) {
                 "birthdate": date.toISOString().substring(0,10),
                 "ocupation": ''
             }
-            onRegister(data, password, () => {
-                console.log('me voy a terminar el registro')
-            })
+            onRegister(data, password)
         }
     }; 
 
-    const signButtonFederate = async () => {
-        try {
-            const success = SignFederate(true, setUserFederate)
-            if (success)
-                setTimeout(() => {navigation.navigate('FinishSignUp')}, 1000)
-        } catch (error) {
-            console.log(error)
-        }
+    const signButtonFederate = () => {
+        onRegisterFederate()
     }   
 
     return (
@@ -175,11 +159,16 @@ function SignUp({navigation}) {
                     setData={setConfirmPassword}
                     error={confirmPasswordError}  // Agregando el mensaje de error
                 />
-                {isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> :
-                    <View style={stylesForms.bodyButtons}>
-                        <CancelButton navigation={navigation}/>
-                        <AcceptButton accept={handleSignUp}/>
-                    </View>}
+                {isLoading ? 
+                        <View style={stylesForms.bodyButtonsLoading}>
+                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                        </View> 
+                    :
+                        <View style={stylesForms.bodyButtons}>
+                            <CancelButton navigation={navigation}/>
+                            <AcceptButton accept={handleSignUp}/>
+                        </View>
+                }
             </View>
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>

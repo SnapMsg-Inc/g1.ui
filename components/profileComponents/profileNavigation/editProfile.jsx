@@ -50,15 +50,11 @@ function EditProfile({navigation}) {
         }
     }
 
-    const geocode = async () => {
-        if (Location.PermissionStatus === 'denied')
-            return
-        await Location.geocodeAsync(`${locality} ${country}`)
+    const geocode = () => {
+        Location.geocodeAsync(`${locality} ${country}`)
         .then((geocodeLocation)=> {
             console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-            if (!geocodeLocation.length)
-                setCoordinates({ 'latitude': 0, 'longitude': 0})
-            else {
+            if (geocodeLocation.length) {
                 setCoordinates({'latitude': geocodeLocation[0].latitude,
                                 'longitude': geocodeLocation[0].longitude})
                 console.log(coordinates)
