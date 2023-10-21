@@ -48,7 +48,7 @@ function SignUp({navigation}) {
                 "interests": [],
                 "zone": {"latitude": 0,
                         "longitude": 0},
-                "pic": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png",
+                "pic": "",
                 "email": email,
                 "nick": nick,
                 "birthdate": date.toISOString().substring(0,10),
