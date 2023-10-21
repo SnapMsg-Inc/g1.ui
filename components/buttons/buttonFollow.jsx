@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Text, TouchableOpacity, ActivityIndicator, View } from 'react-native';
 import stylesFollow from "../../styles/buttons/buttonFollow";
+import { deleteUserFollowByUid, followUserByUid } from '../connectivity/servicesUser';
 
 function ButtonFollow ({ uid, following }) {
     const [isFollowing, setIsFollowing] = useState(following);
