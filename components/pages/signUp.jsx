@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import {ScrollView,
+import {ActivityIndicator, ScrollView,
         Text,
         TouchableHighlight,
         View } from "react-native";
@@ -33,17 +33,9 @@ function SignUp({navigation}) {
     const [passwordError, setPasswordError] = useState(null);
     const [confirmPasswordError, setConfirmPasswordError] = useState(null);
     const [dateError, setDateError] = useState(null);
-    const [userFederate, setUserFederate] = useState({
-        id: '',
-        name: '',
-        email: '',
-        photo: '',
-        familyName: '',
-        givenName: ''
-    })
-    const { onRegister, isLoading , error, isRegistrationComplete } = useContext(AuthenticationContext)
+    const { onRegister, onRegisterFederate, isLoading } = useContext(AuthenticationContext)
 
-    const handleSignUp = async () => {
+    const handleSignUp = () => {
         if (ValidationsSignUp(  fullName, setFullNameError,
                                 alias, setAliasError,
                                 nick, setNickError,
@@ -63,19 +55,11 @@ function SignUp({navigation}) {
                 "ocupation": ''
             }
             onRegister(data, password)
-            if (!isLoading && !error && !isRegistrationComplete)
-                navigation.navigate('FinishSignUp')
         }
     }; 
 
-    const signButtonFederate = async () => {
-        try {
-            const success = SignFederate(true, setUserFederate)
-            if (success)
-                setTimeout(() => {navigation.navigate('FinishSignUp')}, 1000)
-        } catch (error) {
-            console.log(error)
-        }
+    const signButtonFederate = () => {
+        onRegisterFederate()
     }   
 
     return (
@@ -175,10 +159,16 @@ function SignUp({navigation}) {
                     setData={setConfirmPassword}
                     error={confirmPasswordError}  // Agregando el mensaje de error
                 />
-                <View style={stylesForms.bodyButtons}>
-                    <CancelButton navigation={navigation}/>
-                    <AcceptButton accept={handleSignUp}/>
-                </View>
+                {isLoading ? 
+                        <View style={stylesForms.bodyButtonsLoading}>
+                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                        </View> 
+                    :
+                        <View style={stylesForms.bodyButtons}>
+                            <CancelButton navigation={navigation}/>
+                            <AcceptButton accept={handleSignUp}/>
+                        </View>
+                }
             </View>
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>

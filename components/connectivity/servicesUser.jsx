@@ -100,35 +100,13 @@ export async function GetUserFollowsByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-      setState(response.data);
+        setState(response.data);
     });
 }
 
-export async function postUserFederate(data) {
-    const auth = getAuth();
-    const token = await getIdToken(auth.currentUser, true);
-    console.log(`Estoy en postUser ${JSON.stringify(data, null, 2)}`)
-    try {
-        await axios({
-            method: 'post',
-            url: URL,
-            data: data,
-            headers: { 
-                'Authorization' : `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            } 
-        })
-        return true
-    } catch(error) {
-        console.log(error.status)
-        console.log('error gateway: ', error)
-        deleteUser(auth.currentUser)
-    }
-}
-
-export async function postsUser(data) {
-    const auth = getAuth();
-    const token = await getIdToken(auth.currentUser, true);
+export const postsUser = async (data) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
     await axios({
         method: 'post',
         url: URL,
@@ -137,12 +115,43 @@ export async function postsUser(data) {
             'Authorization' : `Bearer ${token}`,
             'Content-Type': 'application/json'
         } 
-    }).then((response) => {
+    })
+    .then((response) => {
         console.log(response.status)
         console.log('User create')
-    }). catch((error) => {
-        console.log('error gateway: ', error)
+    })
+    . catch((error) => {
+        console.log(error.response.status)
         deleteUser(auth.currentUser)
+    })
+}
+
+export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLogout) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
+    await axios({
+        method: 'post',
+        url: URL,
+        data: data,
+        headers: { 
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        } 
+    })
+    .then((response) => {
+        console.log(response.status)
+        setIsLoading(false)
+        setIsRegister(true)
+    })
+    . catch((error) => {
+        console.log(error.response.status)
+        if (error.response.status === 400) {
+            alert('Email already in use')
+            onLogout()
+        } else {
+            deleteUser(auth.currentUser)
+        } 
+        setIsLoading(false)
     })
 }
 

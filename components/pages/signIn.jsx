@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableHighlight, Button } from 'react-native';
+import { View, Text, TextInput, TouchableHighlight, Button, ActivityIndicator } from 'react-native';
 import AcceptButton from '../buttons/buttonAcept';
 import CancelButton from '../buttons/buttonCancel';
 import ButtonFederate from '../buttons/buttonFederate';
@@ -18,7 +18,7 @@ function SignIn({ navigation }) {
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [visible, setVisible] = useState(false)
-    const { onLogin } = useContext(AuthenticationContext)
+    const { onLogin, onLoginFederate, isLoading } = useContext(AuthenticationContext)
 
     const handleSignIn = async () => {
         if (ValidationsLogin(email, password, setEmailError, setPasswordError)) {
@@ -27,13 +27,7 @@ function SignIn({ navigation }) {
     };
 
     const signButtonFederate = async () => {
-        try {
-            const success = await SignFederate(false)
-            if (success)
-                setTimeout(() => {navigation.navigate('Home')}, 1000)
-        } catch (error) {
-
-        }
+        onLoginFederate()
     }  
         
     return (
@@ -77,10 +71,16 @@ function SignIn({ navigation }) {
                 <View style={stylesForms.containerTextSugestion}>
                     <Text style={stylesForms.textSugestion}>Forgot password?</Text>
                 </View>
-                <View style={stylesForms.bodyButtons}>
-                    <CancelButton navigation={navigation}/>
-                    <AcceptButton accept={handleSignIn}/>
-                </View>
+                {isLoading ? 
+                        <View style={stylesForms.bodyButtonsLoading}>
+                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                        </View>
+                    :
+                        <View style={stylesForms.bodyButtons}>
+                            <CancelButton navigation={navigation}/>
+                            <AcceptButton accept={handleSignIn}/>
+                        </View>
+                }
             </View>
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>

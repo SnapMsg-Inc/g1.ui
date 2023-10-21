@@ -27,6 +27,12 @@ const stylesForms = StyleSheet.create({
         marginHorizontal: 30,
         marginVertical: 30,
     },
+    bodyButtonsLoading:{
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 30,
+        marginVertical: 30,
+    },
     footer: {
         justifyContent: 'space-between',
     },
