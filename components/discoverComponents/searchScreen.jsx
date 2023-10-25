@@ -91,7 +91,7 @@ const SearchScreen = ({ navigation }) => {
 					<View style={{width: '100%'}}>
 						<FlatList
 							data={data}
-							keyExtractor={(item) => {item.uid}}
+							keyExtractor={(item) => item.uid.toString()}
 							renderItem={({item}) => (
 								<FollowerCard
 									uid={item.uid}

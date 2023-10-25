@@ -83,6 +83,7 @@ export async function GetUserFollowersByUid(setState, uid) {
       }
     }).then((response) => {
       setState(response.data);
+      console.log(response.data);
     });
 }
 
