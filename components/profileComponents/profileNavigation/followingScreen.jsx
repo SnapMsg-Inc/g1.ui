@@ -37,9 +37,9 @@ const FollowingScreen = ({ navigation, uid }) => {
 				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : 
 					follows.map((item) => (
 						<FollowsCard
-							navigation={navigation}
 							key={item.uid}
 							uid={item.uid}
+							alias={item.alias}
 							nick={item.nick}
 							interests={item.interests}
 							pic={item.pic}

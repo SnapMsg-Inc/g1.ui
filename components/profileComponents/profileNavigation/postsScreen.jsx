@@ -33,6 +33,7 @@ const PostsScreen = ({data}) => {
 
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+			<Text>BOOOOOOOOOOOOCA BOCAAAAA</Text>
 			<View style={styles.container}>
 				{loading ? <></> :
 					MOCKED_SNAPS.map((item, index) => (

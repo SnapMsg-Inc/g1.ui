@@ -87,8 +87,6 @@ export default function Feed({ navigation }) {
                     {/* <Text style={styles.fontLogo}>SnapMsg</Text> */}
                 </View>
             </View>
-            <View style={styles.tab}>
-            </View>
             <ScrollView>
                 <View style={styles.container}>
                     {loading ? <></> :
@@ -132,6 +130,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 10,
         paddingHorizontal: 10,
+        marginTop: 10,
     },
     containerLogo: {
         backgroundColor: 'transparent',

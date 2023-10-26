@@ -37,8 +37,8 @@ const FollowersScreen = ({ navigation, uid }) => {
 				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : 
 					followers.map((item) => (
 						<FollowerCard
-							navigation={navigation}
 							uid={item.uid}
+							alias={item.alias}
 							nick={item.nick}
 							interests={item.interests}
 							pic={item.pic}

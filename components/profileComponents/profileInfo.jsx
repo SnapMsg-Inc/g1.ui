@@ -65,8 +65,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
                     marginBottom: 15, fontSize: 15 
                 }}
             >
-
-                {/* {data.zone.latitude}                 */}
+                {data.interests}
             </Text>
 
             {/* Profile stats */}

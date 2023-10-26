@@ -14,6 +14,7 @@ import CustomDrawer from '../navigation/customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/profileNavigation/followingAndFollowersScreen';
 import OtherProfile from './otherProfile';
 import EditProfile from '../profileComponents/profileNavigation/editProfile';
+import SearchScreen from '../discoverComponents/searchScreen';
 
 const ProfileStack = createStackNavigator();
 
@@ -52,6 +53,28 @@ function ProfileStackScreen() {
 	);
 }
 
+const DiscoverStack = createStackNavigator();
+
+function DiscoverStackScreen() {
+	return (
+		<DiscoverStack.Navigator initialRouteName="DiscoverScreen">
+			<DiscoverStack.Screen name="DiscoverScreen"
+				component={Discover}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			<DiscoverStack.Screen name="SearchScreen"
+				component={SearchScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+		</DiscoverStack.Navigator>
+	);
+}
+
 const Drawer = createDrawerNavigator();
 const iconColor = '#1ED760';
 
@@ -78,26 +101,27 @@ export default function Home() {
                 <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
                 headerShown:false,							
-                        swipeEdgeWidth: 0,
+                swipeEdgeWidth: 0,
             }}
             />
             <Drawer.Screen
             name="Feed"
             component={Feed}
             options={{
-            drawerIcon: ({size}) => (
-                <Octicons name="home" size={size} color={iconColor} />
-            ),
-            headerShown:false,
+                drawerIcon: ({size}) => (
+                    <Octicons name="home" size={size} color={iconColor} />
+                ),
+                headerShown:false,
             }}
             />
             <Drawer.Screen
             name="Discover"
-            component={Discover}
+            component={DiscoverStackScreen}
             options={{
-            drawerIcon: ({size}) => (
-                <Octicons name="search" size={size} color={iconColor} />
-            ),
+                drawerIcon: ({size}) => (
+                    <Octicons name="search" size={size} color={iconColor} />
+                ),
+                headerShown:false,
             }}
             />
             <Drawer.Screen
