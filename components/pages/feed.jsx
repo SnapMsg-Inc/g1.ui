@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-} from 'react-native';
+import { StyleSheet, View, Text, Pressable, TouchableOpacity} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
+import { FlatList, ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { GetUserData } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
+import PostButton from '../buttons/buttonPost';
 
 function generateSnaps(limit) {
     return new Array(limit).fill(0).map((_, index) => {
@@ -84,28 +81,25 @@ export default function Feed({ navigation }) {
                 <View style={styles.containerLogo}>
                     <Icon name="snapchat-ghost" color={colorApp} size={30}/>
                     <Icon name="envelope" color={colorApp} size={10}/>
-                    {/* <Text style={styles.fontLogo}>SnapMsg</Text> */}
                 </View>
             </View>
-            <ScrollView>
-                <View style={styles.container}>
-                    {loading ? <></> :
-                        (MOCKED_SNAPS.map((item, index) => (
-                            <SnapMsg
-                            key={item.key}
-                            nickname={data.alias}
-                            username={data.nick}
-                            content={item.content}
-                            profilePictureUri={data.pic}
-                            date={item.date}
-                            comments={item.comments}
-                            reposts={item.reposts}
-                            likes={item.likes}
-                            />
-                        )))
-                    }
-                </View>
-            </ScrollView>
+            <FlatList
+                data={MOCKED_SNAPS}
+                renderItem={({item}) => 
+                                <SnapMsg
+                                    key={item.key}
+                                    nickname={data.alias}
+                                    username={data.nick}
+                                    content={item.content}
+                                    profilePictureUri={data.pic}
+                                    date={item.date}
+                                    comments={item.comments}
+                                    reposts={item.reposts}
+                                    likes={item.likes}
+                                />
+                }
+            />
+            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
         </View>
     )
 }
@@ -117,7 +111,6 @@ export const colorText = '#535353'
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
         backgroundColor: colorBackground,
     },
     header: {
