@@ -5,16 +5,39 @@ import { createStackNavigator } from '@react-navigation/stack'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { CommonActions } from '@react-navigation/native';
 
-import Profile from "./profile";
-import Feed from "./feed";
-import Discover from "./discover";
-import Notifications from "./notifications"
-import Messages from "./messages";
-import CustomDrawer from '../navigation/customDrawer';
+import Profile from "../pages/profile";
+import Feed from "../pages/feed";
+import Discover from "../pages/discover";
+import Notifications from "../pages/notifications"
+import Messages from "../pages/messages";
+import CustomDrawer from './customDrawer';
 import FollowingAndFollowersScreen from '../profileComponents/profileNavigation/followingAndFollowersScreen';
-import OtherProfile from './otherProfile';
+import OtherProfile from '../pages/otherProfile';
 import EditProfile from '../profileComponents/profileNavigation/editProfile';
 import SearchScreen from '../discoverComponents/searchScreen';
+import CreatePostScreen from '../feedComponents/createPost';
+
+const FeedStack = createStackNavigator();
+
+function FeedStackScreen() {
+	return (
+		<FeedStack.Navigator initialRouteName="FeedScreen">
+			<FeedStack.Screen name="FeedScreen"
+				component={Feed}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			<DiscoverStack.Screen name="CreatePostScreen"
+				component={CreatePostScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+		</FeedStack.Navigator>
+	);
+}
 
 const ProfileStack = createStackNavigator();
 
@@ -106,7 +129,7 @@ export default function Home() {
             />
             <Drawer.Screen
             name="Feed"
-            component={Feed}
+            component={FeedStackScreen}
             options={{
                 drawerIcon: ({size}) => (
                     <Octicons name="home" size={size} color={iconColor} />

@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react"
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext"
 import { NavigationContainer } from "@react-navigation/native"
-import Home from "../pages/home"
+import Home from "./home"
 import InitNavigation from "./initNavigation"
 import RegisterNavigation from "./navigationRegister"
 
