@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -16,28 +16,44 @@ const CreatePostScreen = ({ navigation }) => {
     const [image, setImage] = useState(null);
 
     const takePhotoFromCamera = () => {
-        console.log("entro a choose foto from cam")
         ImagePicker.openCamera({
             width: 1200,
             height: 780,
             cropping: true,
-        }).then((image) => {
-            console.log(image);
-            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-            setImage(imageUri);
+        })
+        .then((image) => {
+            if (!image.cancelled) {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            }
+        })
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
         });
     };
     
     const choosePhotoFromGalery = () => {
-        console.log("entro a choose foto from gale")
         ImagePicker.openPicker({
             width: 1200,
             height: 780,
             cropping: true,
-        }).then((image) => {
-            console.log(image);
-            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-            setImage(imageUri);
+        })
+        .then((image) => {
+            if (!image.cancelled) {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            }
+        })
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
         });
     };
     
@@ -77,23 +93,25 @@ const CreatePostScreen = ({ navigation }) => {
                 </TouchableHighlight>
             </View>
 
-            <View style={styles.inputContainer}>
-                <Image source={{uri: userData.pic}} style={styles.image} />
-                <TextInput
-                    value={text}
-                    onChangeText={(content) => setText(content)}
-                    placeholder="What's happening?"
-                    multiline
-                    numberOfLines={5}
-                    style={styles.textInput}
-                    placeholderTextColor={colorText}
-                    autoFocus
-                />
-            </View>
+            <ScrollView style={{ flex: 1 }}>
+                <View style={styles.inputContainer}>
+                    <Image source={{uri: userData.pic}} style={styles.image} />
+                    <TextInput
+                        value={text}
+                        onChangeText={(content) => setText(content)}
+                        placeholder="What's happening?"
+                        multiline
+                        numberOfLines={5}
+                        style={styles.textInput}
+                        placeholderTextColor={colorText}
+                        autoFocus
+                    />
+                </View>
+                {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}
+            </ScrollView>
             <FloatingAction
                 actions={actions}
                 onPressItem={name => {
-                    console.log(`selected button: ${name}`);
                     if (name === "bt_take_photo") {
                         takePhotoFromCamera();
                     } else if (name === "bt_choose_photo") {
@@ -170,7 +188,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         color: 'white',
-        height: 50,
+        textAlignVertical: 'top',
     },
 	cancelButton: {
 		position: 'absolute',
@@ -180,6 +198,12 @@ const styles = StyleSheet.create({
     cancelButtonLabel: {
         color: 'white',
 		fontSize: 16,
+    },
+    postImage: {
+        borderRadius: 15,
+        width: '%100',
+        height: 250,
+        marginVertical: 10,
     }
 });
 
