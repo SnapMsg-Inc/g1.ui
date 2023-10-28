@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput,
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -8,12 +9,15 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import BackButton from '../buttons/buttonBack';
 import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
     
     const [text, setText] = useState('');
     const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -57,6 +61,62 @@ const CreatePostScreen = ({ navigation }) => {
         });
     };
     
+    const submitPost = async () => {
+        const imageUrl = await uploadImage();
+        // TODO: hacer el post con el end-point
+      }
+
+    const uploadImage = async () => {
+        if( image == null ) {
+            return null;
+        }
+        const uploadUri = image;
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+    
+        // Add timestamp to File Name
+        const extension = filename.split('.').pop(); 
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+    
+        setUploading(true);
+        setTransferred(0);
+    
+        const storageRef = storage().ref(`photos/${filename}`);
+        const task = storageRef.putFile(uploadUri);
+    
+        // Set transferred state
+        task.on('state_changed', (taskSnapshot) => {
+        console.log(
+            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+    
+        setTransferred(
+            Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            100,
+        );
+        });
+    
+        try {
+        await task;
+    
+        const url = await storageRef.getDownloadURL();
+    
+        setUploading(false);
+        setImage(null);
+    
+        Alert.alert(
+          'Image uploaded!',
+          'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+        );
+        return url;
+    
+        } catch (e) {
+            console.log(e);
+        return null;
+        }
+    
+    };
+
     const actions = [
         {
           text: "Take Photo",
@@ -86,11 +146,18 @@ const CreatePostScreen = ({ navigation }) => {
                     >
                         <Text style={styles.cancelButtonLabel}>Cancel</Text>
                 </TouchableHighlight>
-                <TouchableHighlight
-                    style={styles.postButton}
-                    onPress={() => { }}>
-                    <Text style={styles.postButtonLabel}>Post</Text>
-                </TouchableHighlight>
+                {uploading ? (
+                    <View style={styles.statusWrapper}>
+                        <Text>{transferred} % Completed!</Text>
+                        <ActivityIndicator size="large" color={colorApp} />
+                    </View>
+                    ) : (
+                    <TouchableHighlight
+                        style={styles.postButton}
+                        onPress={submitPost}>
+                        <Text style={styles.postButtonLabel}>Post</Text>
+                    </TouchableHighlight>
+                )}
             </View>
 
             <ScrollView style={{ flex: 1 }}>
@@ -204,6 +271,11 @@ const styles = StyleSheet.create({
         width: '%100',
         height: 250,
         marginVertical: 10,
+    },
+    statusWrapper: {
+        position: 'absolute',
+        right: 10,
+        top: -15,
     }
 });
 
