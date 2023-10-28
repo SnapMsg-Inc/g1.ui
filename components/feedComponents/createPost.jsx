@@ -7,17 +7,38 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import BackButton from '../buttons/buttonBack';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
+    
     const [text, setText] = useState('');
+    const [image, setImage] = useState(null);
 
     const takePhotoFromCamera = () => {
-        console.log("take photo from camera")
+        console.log("entro a choose foto from cam")
+        ImagePicker.openCamera({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        }).then((image) => {
+            console.log(image);
+            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+            setImage(imageUri);
+        });
     };
     
     const choosePhotoFromGalery = () => {
-        console.log("choose photo from galery")
+        console.log("entro a choose foto from gale")
+        ImagePicker.openPicker({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        }).then((image) => {
+            console.log(image);
+            const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+            setImage(imageUri);
+        });
     };
     
     const actions = [
@@ -26,7 +47,6 @@ const CreatePostScreen = ({ navigation }) => {
           icon: <Icon name="camera" size={25} color="white" />,
           color: colorApp,
           name: "bt_take_photo",
-          onPress:{takePhotoFromCamera},
           position: 1,
         },
         {
@@ -34,7 +54,6 @@ const CreatePostScreen = ({ navigation }) => {
           icon: <SimpleLineIcons name="picture" size={25} color="white" />,
           color: colorApp,
           name: "bt_choose_photo",
-          onPress: {choosePhotoFromGalery},
           position: 2
         },
     ];
@@ -62,19 +81,24 @@ const CreatePostScreen = ({ navigation }) => {
                 <Image source={{uri: userData.pic}} style={styles.image} />
                 <TextInput
                     value={text}
-                    onChangeText={setText}
+                    onChangeText={(content) => setText(content)}
                     placeholder="What's happening?"
                     multiline
                     numberOfLines={5}
                     style={styles.textInput}
-                    placeholderTextColor="white"
+                    placeholderTextColor={colorText}
                     autoFocus
                 />
             </View>
             <FloatingAction
                 actions={actions}
                 onPressItem={name => {
-                console.log(`selected button: ${name}`);
+                    console.log(`selected button: ${name}`);
+                    if (name === "bt_take_photo") {
+                        takePhotoFromCamera();
+                    } else if (name === "bt_choose_photo") {
+                        choosePhotoFromGalery();
+                    }
                 }}
                 color={colorApp}
                 overlayColor= 'rgba(68, 68, 68, 0.0)'
@@ -103,8 +127,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         backgroundColor: 'black',
         marginBottom: 10,
-        borderBottomWidth: 1, // Agrega un borde inferior de 1 píxel
-        borderBottomColor: 'rgba(255, 255, 255, 0.3)', // Color del borde
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.3)',
         height: 50,
     },
     text: {
