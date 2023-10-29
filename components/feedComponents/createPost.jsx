@@ -10,6 +10,9 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import BackButton from '../buttons/buttonBack';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
+import { createPost } from '../connectivity/servicesUser';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
@@ -18,6 +21,8 @@ const CreatePostScreen = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
+    const [hashtags, setHashtags] = useState('');
+    const [isPublic, setIsPublic] = useState(true);
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -63,7 +68,18 @@ const CreatePostScreen = ({ navigation }) => {
     
     const submitPost = async () => {
         const imageUrl = await uploadImage();
-        // TODO: hacer el post con el end-point
+        
+        createPost(text, imageUrl, isPublic, hashtags)
+        .then(() => {
+            Alert.alert(
+                'Post published!',
+                'Your post has been published Successfully!',
+            );
+            setPost(null);
+        })
+        .catch((error) => {
+            console.log(error.response.status)
+        })
       }
 
     const uploadImage = async () => {
@@ -104,10 +120,10 @@ const CreatePostScreen = ({ navigation }) => {
         setUploading(false);
         setImage(null);
     
-        Alert.alert(
-          'Image uploaded!',
-          'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
-        );
+        // Alert.alert(
+        //   'Image uploaded!',
+        //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+        // );
         return url;
     
         } catch (e) {
@@ -133,6 +149,13 @@ const CreatePostScreen = ({ navigation }) => {
           position: 2
         },
     ];
+
+    const defaultImage = require('../../assets/default_user_pic.png')
+    
+    const handleToggleIsPublic = () => {
+        isPublic ? setIsPublic(false) : setIsPublic(true);
+    }
+
 	return (
 		<View style={styles.container}>
             <View style={styles.header}>
@@ -162,17 +185,36 @@ const CreatePostScreen = ({ navigation }) => {
 
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.inputContainer}>
-                    <Image source={{uri: userData.pic}} style={styles.image} />
-                    <TextInput
-                        value={text}
-                        onChangeText={(content) => setText(content)}
-                        placeholder="What's happening?"
-                        multiline
-                        numberOfLines={5}
-                        style={styles.textInput}
-                        placeholderTextColor={colorText}
-                        autoFocus
-                    />
+                    <Image source={( userData.pic == 'none') || (userData.pic === '') ? defaultImage : { uri: uri}} style={styles.image} />
+                    <View>
+                        {
+                            isPublic ? (
+                                <TouchableOpacity onPress={handleToggleIsPublic}>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text style={{color: colorApp, marginRight: 10}}>Public</Text>
+                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} />
+                                    </View>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity onPress={handleToggleIsPublic}>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text style={{color: 'red', marginRight: 10}}>Private</Text>
+                                        <FontAwesome5 name="lock" color={'red'} size={16} />
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        }
+                        <TextInput
+                            value={text}
+                            onChangeText={(content) => setText(content)}
+                            placeholder="What's happening?"
+                            multiline
+                            numberOfLines={5}
+                            style={styles.textInput}
+                            placeholderTextColor={colorText}
+                            autoFocus
+                        />
+                    </View>
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}
             </ScrollView>
