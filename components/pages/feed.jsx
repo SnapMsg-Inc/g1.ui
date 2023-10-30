@@ -4,54 +4,19 @@ import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
 import { FlatList, ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import { GetUserData } from '../connectivity/servicesUser';
+import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
-
-function generateSnaps(limit) {
-    return new Array(limit).fill(0).map((_, index) => {
-        const repetitions = Math.floor(Math.random() * 4) + 1;
-    
-        return {
-            key: index.toString(),
-            content: 'Lorem ipsum dolor ametLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel egestas dolor, nec dignissim metus '.repeat(repetitions),
-            nickname: 'Nickname',
-            username: 'username',
-            profilePictureUri: '',
-            date: '18/06/2023',
-            comments: 4,
-            reposts: 18,
-            likes: 12,
-            picUri: 'https://firebasestorage.googleapis.com/v0/b/snap-msg.appspot.com/o/photos%2F534ba2ce-2d68-422d-9e5f-46e1b7a607cb1698507950786.jpg?alt=media&token=b76bf434-99cb-4e4a-aec7-724296f45f85&_gl=1*icc097*_ga*MTczNDg3OTg0NC4xNjk3MzEwODIy*_ga_CW55HF8NVT*MTY5ODYyNzU5NC4xNS4xLjE2OTg2Mjg3MjYuNDUuMC4w'
-        };
-    });
-  }
-  
-const MOCKED_SNAPS = generateSnaps(30);
 
 export default function Feed({ navigation }) {
     const [loading, setLoading] = useState(true)
 
-    const [data, setData] = useState({
-        "uid": "",
-        "alias": "",
-        "fullname": "",
-        "interests": [],
-        "zone": {"latitude": 0,
-                "longitude": 0},
-        "is_admin": false,
-        "ocupation": null,
-        "pic": "",
-        "email": "",
-        "nick": "",
-        "birthdate": "",
-        "followers": 0,
-        "follows": 0,
-    })
+    const [data, setData] = useState([])
 
     const fetchDataFromApi = async () => {
         try {
-			await GetUserData(setData);
+            // TODO: USAR GET_FEED (PREGUNTAR POR QUE NO ANDA BIEN)
+            await GetPosts(setData, '', '', 100, 0)
             setLoading(false)
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -85,19 +50,17 @@ export default function Feed({ navigation }) {
                 </View>
             </View>
             <FlatList
-                data={MOCKED_SNAPS}
+                data={data}
                 renderItem={({item}) => 
                                 <SnapMsg
-                                    key={item.key}
-                                    nickname={data.alias}
-                                    username={data.nick}
-                                    content={item.content}
-                                    profilePictureUri={data.pic}
-                                    date={item.date}
-                                    comments={item.comments}
-                                    reposts={item.reposts}
+                                    key={item.pid}
+                                    uid={item.uid}
+                                    pid={item.pid}
+                                    username={item.nick}
+                                    content={item.text}
+                                    date={item.timestamp}
                                     likes={item.likes}
-                                    picUri={item.picUri}
+                                    picUri={item.media_uri}
                                 />
                 }
             />

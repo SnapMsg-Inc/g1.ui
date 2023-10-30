@@ -79,17 +79,18 @@ const CreatePostScreen = ({ navigation }) => {
 
     const submitPost = async () => {
         const imageUrl = await uploadImage();
-        
-        createPost(text, imageUrl, isPublic, hashtags)
+        console.log(imageUrl)
+        const uri = imageUrl ? [imageUrl] : [];
+        createPost(text, uri, !isPublic, hashtags)
         .then(() => {
             Alert.alert(
                 'Post published!',
                 'Your post has been published Successfully!',
             );
-            setPost(null);
+            setText(null);
         })
         .catch((error) => {
-            console.log(error.response.status)
+            console.log(error)
         })
       }
 

@@ -101,7 +101,7 @@ const ForYouScreen = () => {
 			</View>
 			 {/* VER ACA -> USAR DATA OBTENIDA DEL ENDPOINT (PREGUNTAR CUAL ES)*/}
 			<View style={styles.container}>
-				{loading ? <></> :
+				{/* {loading ? <></> :
 					MOCKED_SNAPS.map((item, index) => (
 						<SnapMsg
 							key={item.key}
@@ -116,7 +116,7 @@ const ForYouScreen = () => {
 							picUri={item.picUri}
 						/>
 					))
-				}
+				} */}
 			</View>
 		</Tabs.ScrollView>
 	);

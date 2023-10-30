@@ -1,35 +1,79 @@
-import React from 'react';
+import React, { useState, } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
+import { useFocusEffect } from '@react-navigation/native';
+import { GetUserByUid } from './connectivity/servicesUser';
 
-export default SnapMsg = ({ nickname, username, content, profilePictureUri, date, comments, reposts, likes, picUri}) => {
+function formatDateToDDMMYYYY(timestamp) {
+	const date = new Date(timestamp);
+  
+	const day = date.getDate();
+	const month = date.getMonth() + 1; // los meses comienzan desde 0
+	const year = date.getFullYear();
+  
+	const formattedDate = `${day}/${month}/${year}`;
+  
+	return formattedDate;
+  }
+
+export default SnapMsg = ({ uid, pid, username, content, date, comments=0, reposts=0, likes=0, picUri}) => {
   	const defaultImage = require('../assets/default_user_pic.png')
+
+	  const [isLoading, setIsLoading] = useState(false)
+	  const [data, setData] = useState({
+		  "uid": "",
+		  "alias": "",
+		  "interests": [],
+		  "pic": "",
+		  "nick": "",
+		  "followers": 0,
+		  "follows": 0,
+	  })
+  
+	  const fetchDataFromApi = async () => {
+		  setIsLoading(true)
+		  GetUserByUid(setData, uid)
+		  .then(() => {
+			  setIsLoading(false)
+		  })
+		  .catch((error) => {
+			  console.error('Error fetching other user data:', error);
+			  setIsLoading(false)
+		  })
+	  }
+  
+	  useFocusEffect(
+		  React.useCallback(() => {
+				fetchDataFromApi()
+		  }, [])
+	  );
+
 	return (
 		<View style={styles.snapMsg}>
 			<Image
-				source={profilePictureUri === '' || profilePictureUri === 'none' ? defaultImage : { uri: profilePictureUri }}
+				source={data.pic === '' || data.pic === 'none' ? defaultImage : { uri: data.pic }}
 				style={styles.profilePicture}
 			/>
 
 			<View style={styles.container}>
 				<View style={{flexDirection: 'row'}}>
 					<Text style={styles.nickname}>
-						{nickname}{' '}
+						{data.alias}{' '}
 					</Text>
 					<Text style={styles.username}>
-						@{username} · {date}
+						@{username} · {formatDateToDDMMYYYY(date)}
 					</Text>
 				</View>
 
 				<Text style={styles.text}>{content}</Text>
 
 				{
-					picUri ? (
+					picUri.length > 0 ? (
 						<Image
-							source={{ uri: picUri }}
+							source={{ uri: picUri[0] }}
 							style={styles.postPic}
 						/>
-					) : <></>
+						) : <></>
 				}
 				
 				{/* Botones de acción 

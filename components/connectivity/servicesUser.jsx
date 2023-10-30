@@ -253,18 +253,14 @@ export async function followUserByUid(uid) {
 }
 
 
-export const createPost = async (text, pic, isPublic, hashtags) => {
+export const createPost = async (text, pic, isPrivate, hashtags) => {
     const auth = getAuth()
     const token = await getIdToken(auth.currentUser, true)
 
     const data = {
-        "hashtags": [
-          hashtags
-        ],
-        "ispublic": isPublic,
-        "mediaURI": [
-          pic
-        ],
+        "hashtags": hashtags,
+        "is_private": isPrivate,
+        "media_uri": pic,
         "text": text
       }
 
@@ -285,28 +281,38 @@ export const createPost = async (text, pic, isPublic, hashtags) => {
     })
 }
 
-export async function GetPosts(setState, nick='', text='', maxResults, page) {
+export async function GetPosts(setState, nick, text, maxResults=100, page=0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+    // 'https://api-gateway-marioax.cloud.okteto.net/posts?nick=admin&limit=100&page=0'
+    // 'https://api-gateway-marioax.cloud.okteto.net/posts?&nick=admin&limit=100'
+    // URL base sin parámetros obligatorios
+    let url = `${URL_POST}?`;
 
-    // 'https://api-gateway-marioax.cloud.okteto.net/posts?nick=admin&text=hola&maxresults=1&page=1'
-    
-    //TODO: PREGUNTAR QUE PASA SI LE DOY PARAMS '' ''
+    // Agregar los parámetros si están definidos
+    if (nick) {
+        url += `&nick=${nick}`;
+    }
+    if (text) {
+        url += `&text=${text}`;
+    }
+
+    url += `&limit=${maxResults}`;
+    url += `&page=${page}`;
+
+
+    console.log(url)
+
     await axios({
         method: 'get',
-        url: URL_POST,
-        params: {
-            nick: nick,
-            text: text,
-            maxResults: maxResults,
-            page: page
-        },
+        url: url,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     }).then((response) => {
         setState(response.data)
+        console.log(response.data)
     })
     . catch((error) => {
         console.log(error.response.status)
@@ -383,6 +389,7 @@ export async function GetFeedPosts(setState, maxResults, page) {
         }
     }).then((response) => {
         setState(response.data)
+        console.log(response.data)
     })
     . catch((error) => {
         console.log(error.response.status)

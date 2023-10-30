@@ -35,7 +35,7 @@ const PostsScreen = ({data}) => {
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
-				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
+				{/* {loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
 					MOCKED_SNAPS.map((item, index) => (
 						<SnapMsg
 							key={item.key}
@@ -50,7 +50,7 @@ const PostsScreen = ({data}) => {
 							picUri={item.picUri}
 						/>
 					))
-				}
+				} */}
 			</View>
 		</Tabs.ScrollView>
 	);
