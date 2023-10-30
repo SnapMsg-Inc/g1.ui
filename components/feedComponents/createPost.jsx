@@ -21,7 +21,7 @@ const CreatePostScreen = ({ navigation }) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
-    const [hashtags, setHashtags] = useState('');
+    const [hashtags, setHashtags] = useState([]);
     const [isPublic, setIsPublic] = useState(true);
 
     const takePhotoFromCamera = () => {
@@ -66,6 +66,17 @@ const CreatePostScreen = ({ navigation }) => {
         });
     };
     
+    const extractHashtags = (inputText) => {
+        const hashtagRegex = /#[^\s#]+/g;
+        const extractedHashtags = inputText.match(hashtagRegex);
+        setHashtags(extractedHashtags || []);
+    };
+
+    const handleTextChange = (content) => {
+        setText(content);
+        extractHashtags(content);
+    };
+
     const submitPost = async () => {
         const imageUrl = await uploadImage();
         
@@ -185,8 +196,8 @@ const CreatePostScreen = ({ navigation }) => {
 
             <ScrollView style={{ flex: 1 }}>
                 <View style={styles.inputContainer}>
-                    <Image source={( userData.pic == 'none') || (userData.pic === '') ? defaultImage : { uri: uri}} style={styles.image} />
-                    <View>
+                    <Image source={( userData.pic == 'none') || (userData.pic === '') ? defaultImage : { uri: userData.pic}} style={styles.image} />
+                    <View style={{ flex: 1}}>
                         {
                             isPublic ? (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
@@ -206,15 +217,21 @@ const CreatePostScreen = ({ navigation }) => {
                         }
                         <TextInput
                             value={text}
-                            onChangeText={(content) => setText(content)}
+                            onChangeText={handleTextChange}
                             placeholder="What's happening?"
                             multiline
                             numberOfLines={5}
                             style={styles.textInput}
                             placeholderTextColor={colorText}
                             autoFocus
+                            textAlignVertical="top"
                         />
                     </View>
+                </View>
+                <View style={styles.hashtagsContainer}>
+                    {hashtags.map((hashtag, index) => (
+                        <Text key={index} style={styles.hashtagText}>{hashtag}</Text>
+                    ))}
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}
             </ScrollView>
@@ -263,6 +280,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 	},
     inputContainer: {
+        flex: 1,
         flexDirection: 'row',
     },
     image: {
