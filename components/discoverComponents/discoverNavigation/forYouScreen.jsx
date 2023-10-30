@@ -23,6 +23,7 @@ function generateSnaps(limit) {
 		  comments: 4,
 		  reposts: 18,
 		  likes: 12,
+		  picUri: 'https://firebasestorage.googleapis.com/v0/b/snap-msg.appspot.com/o/photos%2F534ba2ce-2d68-422d-9e5f-46e1b7a607cb1698507950786.jpg?alt=media&token=b76bf434-99cb-4e4a-aec7-724296f45f85&_gl=1*icc097*_ga*MTczNDg3OTg0NC4xNjk3MzEwODIy*_ga_CW55HF8NVT*MTY5ODYyNzU5NC4xNS4xLjE2OTg2Mjg3MjYuNDUuMC4w'
 	  };
 });
 }
@@ -112,6 +113,7 @@ const ForYouScreen = () => {
 							comments={item.comments}
 							reposts={item.reposts}
 							likes={item.likes}
+							picUri={item.picUri}
 						/>
 					))
 				}
