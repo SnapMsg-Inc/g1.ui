@@ -85,33 +85,39 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 	const defaultImage = require('../assets/default_user_pic.png')
   
 	return (
-		<TouchableOpacity onPress={handleProfilePress}>       
-            <View style={styles.cardContainer}>
-                <Image source={{uri:PROFILE_BANNER_URI}} style={styles.banner}/>
-                <Image source={(pic === 'none') || (pic === '') ? defaultImage : { uri: pic }}
-                    style={styles.profileImage} />
-                <View style={styles.container}>
-                    <View>
-                        <Text style={styles.name}>{truncateAlias(alias)}</Text>
-                        <Text style={styles.nick}>{`@${truncateNick(nick)}`}</Text>
-                    </View>
-                    { loading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
-                        userData.uid === uid ? <></> : (
-                            <TouchableOpacity
-                                style={[stylesFollow.card,
-                                        isFollowing ? stylesFollow.followingButton : stylesFollow.notFollowingButton]}
-                                onPress={handleToggleFollow}
-                            >
-                                <Text style={isFollowing ? stylesFollow.followingButtonText : stylesFollow.followButtonText}>
-                                    {isFollowing ? 'Following' : 'Follow'}
-                                </Text>
-                            </TouchableOpacity>
-                        )
-                    )}
-                </View>
-                <Text style={styles.interests}>{truncateInterest(interests)}</Text>
-            </View>
-		</TouchableOpacity>
+		<>
+		{
+			loading ? <></> : (
+				<TouchableOpacity onPress={handleProfilePress}>       
+					<View style={styles.cardContainer}>
+						<Image source={{uri:PROFILE_BANNER_URI}} style={styles.banner}/>
+						<Image source={(pic === 'none') || (pic === '') ? defaultImage : { uri: pic }}
+							style={styles.profileImage} />
+						<View style={styles.container}>
+							<View>
+								<Text style={styles.name}>{truncateAlias(alias)}</Text>
+								<Text style={styles.nick}>{`@${truncateNick(nick)}`}</Text>
+							</View>
+							{	
+								userData.uid === uid ? <></> : (
+									<TouchableOpacity
+										style={[stylesFollow.card,
+												isFollowing ? stylesFollow.followingButton : stylesFollow.notFollowingButton]}
+										onPress={handleToggleFollow}
+									>
+										<Text style={isFollowing ? stylesFollow.followingButtonText : stylesFollow.followButtonText}>
+											{isFollowing ? 'Following' : 'Follow'}
+										</Text>
+									</TouchableOpacity>
+								)
+							}
+						</View>
+						<Text style={styles.interests}>{truncateInterest(interests)}</Text>
+					</View>
+				</TouchableOpacity>
+			)
+		}
+		</>
 	);
 };
 

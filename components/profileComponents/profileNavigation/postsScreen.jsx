@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Animated, ActivityIndicator } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../SnapMsg';
 
@@ -34,9 +34,8 @@ const PostsScreen = ({data}) => {
 
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-			<Text>BOOOOOOOOOOOOCA BOCAAAAA</Text>
 			<View style={styles.container}>
-				{loading ? <></> :
+				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
 					MOCKED_SNAPS.map((item, index) => (
 						<SnapMsg
 							key={item.key}
