@@ -15,6 +15,7 @@ const PostsScreen = ({url}) => {
         try {
             // TODO: paginacion dependiendo del scroll
             //await GetPosts(setPosts, nick, '', 100, 0)
+			console.log("URL RECIBIDA: \n\n", url);
 			await GetPosts(setPosts, url)
             setLoading(false)
         } catch (error) {

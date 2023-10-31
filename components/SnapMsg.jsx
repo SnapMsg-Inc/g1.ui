@@ -98,6 +98,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 
 	const editPost = () => {
 		const postData = {
+			pid: pid,
 			content: content,
 			picUri: picUri,
 		}

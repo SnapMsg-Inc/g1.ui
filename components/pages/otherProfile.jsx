@@ -26,7 +26,6 @@ const tabBar = props => (
 );
 
 
-
 const OtherProfile = ({ navigation }) => {
 	const { userData } = useContext(LoggedUserContext)
 	const [isFollowing, setIsFollowing] = useState(false);

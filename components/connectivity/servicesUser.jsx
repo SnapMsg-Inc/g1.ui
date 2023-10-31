@@ -20,7 +20,7 @@ export async function GetUsers(setState, url) {
         setState(response.data)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -53,7 +53,7 @@ export async function GetUserData(state) {
         })
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -91,7 +91,7 @@ export async function GetUserByUid(setState, uid) {
       });
     })
     . catch((error) => {
-        console.log(error.response)
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -112,7 +112,7 @@ export async function GetUserFollowersByUid(setState, uid) {
       setState(response.data);
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -133,7 +133,7 @@ export async function GetUserFollowsByUid(setState, uid) {
         setState(response.data);
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -176,7 +176,7 @@ export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLog
         setIsRegister(true)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
         if (error.response.status === 400) {
             alert('Email already in use')
             onLogout()
@@ -203,7 +203,7 @@ export async function PatchUser(data) {
         })
         return true
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -221,7 +221,7 @@ export async function deleteUserFollowByUid(uid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -248,7 +248,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
         if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
             setIsFollowing(false)
         } else {
-            console.log(error.response.status)
+            console.log(JSON.stringify(error.response, null, 2))
             setIsFollowing(false)
         }
     }
@@ -268,7 +268,7 @@ export async function followUserByUid(uid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -297,7 +297,7 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
         console.log("Post created")
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -316,7 +316,7 @@ export async function GetPosts(setState, url) {
         setState(response.data)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -334,7 +334,7 @@ export async function GetFavPosts(setState) {
         setState(response.data)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -352,7 +352,7 @@ export async function addPostToFav(pid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -370,7 +370,7 @@ export async function deletePostFromFav(pid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -398,7 +398,7 @@ export async function GetFeedPosts(setState, maxResults=100, page=0) {
         console.log(response.data)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -416,7 +416,7 @@ export async function likePost(pid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -434,7 +434,7 @@ export async function unlikePost(pid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -453,10 +453,9 @@ export async function GetRecommendedPosts(setState, uid, maxResults, page) {
         }
     }).then((response) => {
         setState(response.data)
-        console.log(response.data)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -474,7 +473,7 @@ export async function deletePost(pid) {
             }
         });
     } catch (error) {
-        console.log(error.response.status)
+        console.log(error)
     }
 }
 
@@ -482,12 +481,12 @@ export async function PatchPostData(data, pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    // console.log(token)
+    const url = `${URL_POST}/${pid}`;
 
     try {
         await axios({
             method: 'patch',
-            url: `${URL_POST}/${pid}`,
+            url: url,
             data: data,
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -496,6 +495,6 @@ export async function PatchPostData(data, pid) {
         })
         return true
     } catch (error) {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
