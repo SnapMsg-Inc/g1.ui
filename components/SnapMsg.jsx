@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserByUid, deletePost } from './connectivity/servicesUser';
 import { LoggedUserContext } from './connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
+import { useNavigation } from '@react-navigation/native';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -38,8 +39,9 @@ function formatDateToDDMMYYYY(timestamp) {
 	return formattedDate;
 }
 
-export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, reposts = 0, likes = 0, picUri }) => {
+export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, reposts = 0, likes = 0, picUri, hashtags}) => {
 	const { userData } = useContext(LoggedUserContext)
+	const navigation = useNavigation();
 
 	const defaultImage = require('../assets/default_user_pic.png')
 
@@ -94,12 +96,15 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	};
 
 	const editPost = () => {
-		// Lógica para editar el post
+		const postData = {
+			content: content,
+			picUri: picUri,
+		}
+		navigation.navigate('EditPost', {data:postData})
 		hideOptionsMenu();
 	};
 
 	const deleteSnap = () => {
-		// Lógica para eliminar el post
 		deletePost(pid)
 		.then(() => {
 			setIsLoading(false);

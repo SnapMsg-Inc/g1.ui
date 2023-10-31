@@ -60,7 +60,7 @@ export async function GetUserByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
       setState({
         "uid": response.data[0].uid,
         "alias": response.data[0].alias,
@@ -286,8 +286,6 @@ export async function GetPosts(setState, url) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    console.log(url)
-
     await axios({
         method: 'get',
         url: url,
@@ -444,7 +442,7 @@ export async function GetRecommendedPosts(setState, maxResults, page) {
 export async function deletePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    console.log(token)
+
     const urlWithQueryParams = `${URL_POST}/${pid}`;
     console.log("eliminando post con pid: ", pid )
     try {
@@ -459,9 +457,8 @@ export async function deletePost(pid) {
     }
 }
 
-export async function PatchPostData(data) {
+export async function PatchPostData(data, pid) {
     const auth = getAuth();
-    console.log('user pacth ', auth.currentUser)
     const token = await getIdToken(auth.currentUser, true);
     try {
         await axios({
