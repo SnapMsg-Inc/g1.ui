@@ -86,13 +86,22 @@ const CreatePostScreen = ({ navigation }) => {
             Alert.alert(
                 'Post published!',
                 'Your post has been published Successfully!',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            
+                            navigation.navigate('FeedScreen');
+                        },
+                    },
+                ]
             );
             setText(null);
         })
         .catch((error) => {
             console.log(error)
         })
-      }
+    }
 
     const uploadImage = async () => {
         if( image == null ) {

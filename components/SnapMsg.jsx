@@ -6,6 +6,7 @@ import { GetUserByUid, deletePost } from './connectivity/servicesUser';
 import { LoggedUserContext } from './connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
+import TwitterTextView from "react-native-twitter-textview";
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -148,8 +149,17 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 						
 					</View>
 
-					<Text style={styles.text}>{content}</Text>
-
+					{/* <Text style={styles.text}>{content}</Text> */}
+					{/* <SnapMsgText text={content}/> */}
+					<TwitterTextView
+						style={styles.text}
+						hashtagStyle={styles.hashtagStyle}
+						mentionStyle={styles.mentionStyle}
+						linkStyle={styles.linkStyle}
+						emailStyle={styles.emailStyle}
+					>
+						{content}
+					</TwitterTextView>
 					{
 						picUri.length > 0 ? (
 							<Image
@@ -275,13 +285,13 @@ const styles = StyleSheet.create({
 		width: 200,
 		backgroundColor: 'rgba(0, 0, 0, 1)',
 		borderWidth: 1,
-		 borderColor:  colorApp,
+		borderColor:  colorApp,
 		borderRadius: 15
 	},
 	optionItem: {
 		padding: 10,
-		borderBottomWidth: 1,
-		borderColor: colorApp,
+		//borderBottomWidth: 1,
+		//borderColor: colorApp,
 		alignItems: 'center',
 		flexDirection: 'row',
 		justifyContent: 'space-between'
@@ -290,4 +300,10 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		color: 'white',
 	},
+	hashtagStyle: {
+		color: colorApp
+	},
+	mentionStyle: {
+		color: colorApp
+	}
 });

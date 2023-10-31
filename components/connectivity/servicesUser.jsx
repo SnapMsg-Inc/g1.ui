@@ -378,10 +378,11 @@ export async function GetFeedPosts(setState, maxResults=100, page=0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
+    console.log(token)
      // URL base sin parámetros obligatorios
      let url = `${URL_POST}/feed?`;
  
-    url += `&limit=${maxResults}`;
+    url += `limit=${maxResults}`;
     url += `&page=${page}`;
 
      console.log(url)
@@ -480,6 +481,9 @@ export async function deletePost(pid) {
 export async function PatchPostData(data, pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+
+    // console.log(token)
+
     try {
         await axios({
             method: 'patch',

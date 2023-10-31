@@ -83,19 +83,26 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
     const submitPost = async () => {
         const imageUrl = await uploadImage();
         const uri = imageUrl ? [imageUrl] : [];
-
+    
         const postData = {
             "text": text,
             "hashtags": hashtags,
             "media_uri": uri,
+            "is_private": !isPublic,
         }
-        const success = await PatchPostData(postData, data.pid)
-        if (success) {
-            setTimeout(() => navigation.goBack(), 500)
-        } else {
-            alert('error')
-        }  
-      }
+    
+        try {
+            const success = await PatchPostData(postData, data.pid);
+            if (success) {
+                setTimeout(() => navigation.goBack(), 500);
+            } else {
+                alert('Error');
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud PATCH:", error);
+            alert('Error al realizar la solicitud PATCH');
+        }
+    }
 
     const uploadImage = async () => {
         if( image == null ) {
@@ -111,7 +118,7 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
     
         setUploading(true);
         setTransferred(0);
-    
+        console.log("file: ", filename)
         const storageRef = storage().ref(`photos/${filename}`);
         const task = storageRef.putFile(uploadUri);
     
