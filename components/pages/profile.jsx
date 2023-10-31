@@ -10,6 +10,9 @@ import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 
+
+const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+
 const tabBar = props => (
 	<MaterialTabBar
 		{...props}
@@ -21,8 +24,6 @@ const tabBar = props => (
 	/>
 );
 
-
-
 const Profile = ({ navigation }) => {
 	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
 
@@ -33,6 +34,11 @@ const Profile = ({ navigation }) => {
     );
 
 	const scrollY = useRef(new Animated.Value(0)).current;
+
+	const getUrl = () => {
+		//TODO: PAGINACION!!
+		return `${URL_POST}/me?limit=${100}&page=${0}`;
+	}
 
 	return (
 		<View style={styles.container}>
@@ -51,7 +57,7 @@ const Profile = ({ navigation }) => {
 					renderTabBar={tabBar}
 					>
 					<Tabs.Tab name="Posts" label="Posts">
-						<PostScreen data={userData}/>
+						<PostScreen url={getUrl()}/>
 					</Tabs.Tab>
 
 					<Tabs.Tab name="Replies" label="Replies">

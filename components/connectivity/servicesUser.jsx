@@ -60,6 +60,7 @@ export async function GetUserByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
+        console.log(response.data)
       setState({
         "uid": response.data[0].uid,
         "alias": response.data[0].alias,
@@ -71,7 +72,7 @@ export async function GetUserByUid(setState, uid) {
       });
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(error.response)
     });
 }
 
@@ -281,24 +282,9 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
     })
 }
 
-export async function GetPosts(setState, nick, text, maxResults=100, page=0) {
+export async function GetPosts(setState, url) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-
-    // URL base sin parámetros obligatorios
-    let url = `${URL_POST}?`;
-
-    // Agregar los parámetros si están definidos
-    if (nick) {
-        url += `&nick=${nick}`;
-    }
-    if (text) {
-        url += `&text=${text}`;
-    }
-
-    url += `&limit=${maxResults}`;
-    url += `&page=${page}`;
-
 
     console.log(url)
 
@@ -311,7 +297,6 @@ export async function GetPosts(setState, nick, text, maxResults=100, page=0) {
         }
     }).then((response) => {
         setState(response.data)
-        console.log(response.data)
     })
     . catch((error) => {
         console.log(error.response.status)
@@ -459,9 +444,9 @@ export async function GetRecommendedPosts(setState, maxResults, page) {
 export async function deletePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-  
+    console.log(token)
     const urlWithQueryParams = `${URL_POST}/${pid}`;
-
+    console.log("eliminando post con pid: ", pid )
     try {
         await axios.delete(urlWithQueryParams, {
             headers: {
