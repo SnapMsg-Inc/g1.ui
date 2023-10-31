@@ -16,6 +16,7 @@ import OtherProfile from '../pages/otherProfile';
 import EditProfile from '../profileComponents/profileNavigation/editProfile';
 import SearchScreen from '../discoverComponents/searchScreen';
 import CreatePostScreen from '../feedComponents/createPost';
+import EditPost from '../profileComponents/profileNavigation/editPost';
 
 const FeedStack = createStackNavigator();
 
@@ -70,6 +71,13 @@ function ProfileStackScreen() {
 				component={EditProfile}
 				options={{
 					headerShown: false,
+				}}
+			/>
+
+            <ProfileStack.Screen name="EditPost"
+                component={EditPost}
+                options={{
+                    headerShown: false,
 				}}
 			/>
 		</ProfileStack.Navigator>

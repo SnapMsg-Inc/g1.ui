@@ -34,7 +34,7 @@ const FollowersScreen = ({ navigation, uid }) => {
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
-				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : 
+				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> : 
 					followers.map((item) => (
 						<FollowerCard
 							uid={item.uid}
@@ -53,7 +53,7 @@ const FollowersScreen = ({ navigation, uid }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'black'
+		backgroundColor: 'black',
 	},
 	text: {
 		fontSize: 20,

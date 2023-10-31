@@ -1,44 +1,36 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import RecommendedUserCard from '../../recommendedUser';
 import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
-import { GetUserFollowersByUid } from '../../connectivity/servicesUser';
+import { GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
 
-
-function generateSnaps(limit) {
-	return new Array(limit).fill(0).map((_, index) => {
-	  const repetitions = Math.floor(Math.random() * 4) + 1;
-
-	  return {
-		  key: index.toString(),
-		  content: 'Lorem ipsum dolor ametLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel egestas dolor, nec dignissim metus '.repeat(repetitions),
-		  nickname: 'Nickname',
-		  username: 'username',
-		  profilePictureUri: '',
-		  date: '18/06/2023',
-		  comments: 4,
-		  reposts: 18,
-		  likes: 12,
-	  };
-});
-}
-
-const MOCKED_SNAPS = generateSnaps(30);
-
 const ForYouScreen = () => {
-	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+	const { userData } = useContext(LoggedUserContext)
 	const width = Dimensions.get('window').width;
 
-	// TODO: USAR ENDP ......
 	const [loading, setLoading] = useState(true)
 
-	useEffect(()=>{
-		setTimeout(() => {setLoading(false)}, 1000 )
-	},[])
+    const [posts, setPosts] = useState([])
+
+    const fetchRecommendedPostsFromApi = async () => {
+        try {
+            // TODO: paginacion dependiendo del scroll
+            await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchRecommendedPostsFromApi()
+        }, [])
+    );
 
 	// TODO: CONECTAR CON SEARCH / USAR END POINT ADECUADO
 	const [fullData, setFullData] = useState([]);
@@ -46,7 +38,8 @@ const ForYouScreen = () => {
 
 	const fetchDataFromApi = async () => {
         setIsLoading(true)
-        GetUserFollowersByUid(setFullData, userData.uid)
+        // GetUserFollowersByUid(setFullData, userData.uid)
+		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
         .then(() => {
             setIsLoading(false)
         })
@@ -100,21 +93,20 @@ const ForYouScreen = () => {
 			</View>
 			 {/* VER ACA -> USAR DATA OBTENIDA DEL ENDPOINT (PREGUNTAR CUAL ES)*/}
 			<View style={styles.container}>
-				{loading ? <></> :
-					MOCKED_SNAPS.map((item, index) => (
-						<SnapMsg
-							key={item.key}
-							nickname={userData.alias}
-							username={userData.nick}
-							content={item.content}
-							profilePictureUri={userData.pic}
-							date={item.date}
-							comments={item.comments}
-							reposts={item.reposts}
-							likes={item.likes}
-						/>
-					))
-				}
+				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
+						posts.map((item, index) => (
+							<SnapMsg
+								key={item.pid}
+								uid={item.uid}
+								pid={item.pid}
+								username={item.nick}
+								content={item.text}
+								date={item.timestamp}
+								likes={item.likes}
+								picUri={item.media_uri}
+							/>
+						))
+					}
 			</View>
 		</Tabs.ScrollView>
 	);

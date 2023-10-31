@@ -3,6 +3,26 @@ import { getAuth, getIdToken, deleteUser } from 'firebase/auth'
 import axios from 'axios';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
+const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+
+export async function GetUsers(setState, url) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    });
+}
 
 export async function GetUserData(state) {
     const auth = getAuth();
@@ -32,6 +52,9 @@ export async function GetUserData(state) {
             "follows": response.data.follows,
         })
     })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
 }
 
 export async function GetUserByUid(setState, uid) {
@@ -56,6 +79,7 @@ export async function GetUserByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
+        // console.log(response.data)
       setState({
         "uid": response.data[0].uid,
         "alias": response.data[0].alias,
@@ -65,6 +89,9 @@ export async function GetUserByUid(setState, uid) {
         "interests": response.data[0].interests,
         "pic": response.data[0].pic,
       });
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -83,7 +110,9 @@ export async function GetUserFollowersByUid(setState, uid) {
       }
     }).then((response) => {
       setState(response.data);
-      console.log(response.data);
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -102,6 +131,9 @@ export async function GetUserFollowsByUid(setState, uid) {
       }
     }).then((response) => {
         setState(response.data);
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -118,7 +150,6 @@ export const postsUser = async (data) => {
         } 
     })
     .then((response) => {
-        console.log(response.status)
         console.log('User create')
     })
     . catch((error) => {
@@ -145,7 +176,7 @@ export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLog
         setIsRegister(true)
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.log(JSON.stringify(error.response, null, 2))
         if (error.response.status === 400) {
             alert('Email already in use')
             onLogout()
@@ -172,7 +203,7 @@ export async function PatchUser(data) {
         })
         return true
     } catch (error) {
-        console.log(error)
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -190,7 +221,7 @@ export async function deleteUserFollowByUid(uid) {
             }
         });
     } catch (error) {
-        console.error('Error al eliminar usuario de follows:', error);
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -217,7 +248,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
         if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
             setIsFollowing(false)
         } else {
-            console.error('Error al verificar si el usuario sigue a otro:', error);
+            console.log(JSON.stringify(error.response, null, 2))
             setIsFollowing(false)
         }
     }
@@ -237,6 +268,233 @@ export async function followUserByUid(uid) {
             }
         });
     } catch (error) {
-        console.error('Error al seguir al usuario:', error);
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+
+export const createPost = async (text, pic, isPrivate, hashtags) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
+
+    const data = {
+        "hashtags": hashtags,
+        "is_private": isPrivate,
+        "media_uri": pic,
+        "text": text
+      }
+
+    await axios({
+        method: 'post',
+        url: URL_POST,
+        data: data,
+        headers: { 
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        } 
+    })
+    .then((response) => {
+        console.log("Post created")
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function GetPosts(setState, url) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    });
+}
+
+export async function GetFavPosts(setState) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+    await axios({
+        method: 'get',
+        url: `${URL_POST}/fav`, 
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function addPostToFav(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function deletePostFromFav(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function GetFeedPosts(setState, maxResults=100, page=0) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    console.log(token)
+     // URL base sin parámetros obligatorios
+     let url = `${URL_POST}/feed?`;
+ 
+    url += `limit=${maxResults}`;
+    url += `&page=${page}`;
+
+     console.log(url)
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+        console.log(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function likePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function unlikePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function GetRecommendedPosts(setState, uid, maxResults, page) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    let url = `${URL_POST}/recommended?limit=${maxResults}&page=${page}`;
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function deletePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/${pid}`;
+    console.log("eliminando post con pid: ", pid )
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function PatchPostData(data, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const url = `${URL_POST}/${pid}`;
+
+    try {
+        await axios({
+            method: 'patch',
+            url: url,
+            data: data,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        return true
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }

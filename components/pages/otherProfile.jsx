@@ -12,6 +12,8 @@ import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import ButtonFollow from '../buttons/buttonFollow';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 
+const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+
 const tabBar = props => (
 	<MaterialTabBar
 		{...props}
@@ -22,7 +24,6 @@ const tabBar = props => (
 		labelStyle={styles.label}
 	/>
 );
-
 
 
 const OtherProfile = ({ navigation }) => {
@@ -62,6 +63,11 @@ const OtherProfile = ({ navigation }) => {
 
 	const scrollY = useRef(new Animated.Value(0)).current;
 
+	const getUrl = () => {
+		//TODO: PAGINACION!!
+		return `${URL_POST}?nick=${data.nick}&limit=${100}&page=${0}`;
+	}
+
 	return (
 		<View style={styles.container}>
 			{ isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
@@ -77,7 +83,7 @@ const OtherProfile = ({ navigation }) => {
 					renderTabBar={tabBar}
 					>
 					<Tabs.Tab name="Posts" label="Posts">
-						<PostScreen data={data}/>
+						<PostScreen url={getUrl()}/>
 					</Tabs.Tab>
 
 					<Tabs.Tab name="Replies" label="Replies">

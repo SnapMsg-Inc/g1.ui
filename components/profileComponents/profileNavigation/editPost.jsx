@@ -6,19 +6,23 @@ import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
-import BackButton from '../buttons/buttonBack';
+import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
+import BackButton from '../../buttons/buttonBack';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-import { createPost } from '../connectivity/servicesUser';
+import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 
-const CreatePostScreen = ({ navigation }) => {
+const EditPost = ({ navigation, content, picUri, hashtag}) => {
+    const route = useRoute();
+	const { data } = route.params;
+
     const { userData } = useContext(LoggedUserContext)
-    
-    const [text, setText] = useState('');
-    const [image, setImage] = useState(null);
+
+    const [text, setText] = useState(data.content);
+    const [image, setImage] = useState(data.picUri[0]);
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
     const [hashtags, setHashtags] = useState([]);
@@ -53,7 +57,6 @@ const CreatePostScreen = ({ navigation }) => {
         })
         .then((image) => {
             if (!image.cancelled) {
-                console.log(image);
                 const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
                 setImage(imageUri);
             }
@@ -79,28 +82,29 @@ const CreatePostScreen = ({ navigation }) => {
 
     const submitPost = async () => {
         const imageUrl = await uploadImage();
-        console.log(imageUrl)
         const uri = imageUrl ? [imageUrl] : [];
-        createPost(text, uri, !isPublic, hashtags)
-        .then(() => {
-            Alert.alert(
-                'Post published!',
-                'Your post has been published Successfully!',
-                [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            
-                            navigation.navigate('FeedScreen');
-                        },
-                    },
-                ]
-            );
-            setText(null);
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+    
+        const postData = {
+            "text": text,
+            "hashtags": hashtags,
+            "media_uri": uri,
+            "is_private": !isPublic,
+        }
+        
+        console.log(postData)
+        
+        console.log("PID INVIADO: ", data.pid)
+        try {
+            const success = await PatchPostData(postData, data.pid);
+            if (success) {
+                setTimeout(() => navigation.goBack(), 500);
+            } else {
+                alert('Error');
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud PATCH:", error);
+            alert('Error al realizar la solicitud PATCH');
+        }
     }
 
     const uploadImage = async () => {
@@ -117,7 +121,7 @@ const CreatePostScreen = ({ navigation }) => {
     
         setUploading(true);
         setTransferred(0);
-    
+        console.log("file: ", filename)
         const storageRef = storage().ref(`photos/${filename}`);
         const task = storageRef.putFile(uploadUri);
     
@@ -171,7 +175,7 @@ const CreatePostScreen = ({ navigation }) => {
         },
     ];
 
-    const defaultImage = require('../../assets/default_user_pic.png')
+    const defaultImage = require('../../../assets/default_user_pic.png')
     
     const handleToggleIsPublic = () => {
         isPublic ? setIsPublic(false) : setIsPublic(true);
@@ -199,7 +203,7 @@ const CreatePostScreen = ({ navigation }) => {
                     <TouchableHighlight
                         style={styles.postButton}
                         onPress={submitPost}>
-                        <Text style={styles.postButtonLabel}>Post</Text>
+                        <Text style={styles.postButtonLabel}>Confirm edition</Text>
                     </TouchableHighlight>
                 )}
             </View>
@@ -237,11 +241,6 @@ const CreatePostScreen = ({ navigation }) => {
                             textAlignVertical="top"
                         />
                     </View>
-                </View>
-                <View style={styles.hashtagsContainer}>
-                    {hashtags.map((hashtag, index) => (
-                        <Text key={index} style={styles.hashtagText}>{hashtag}</Text>
-                    ))}
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}
             </ScrollView>
@@ -313,7 +312,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: 110,
 		height: 30,
 		paddingHorizontal: 15,
     },
@@ -349,4 +347,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CreatePostScreen;
+export default EditPost;

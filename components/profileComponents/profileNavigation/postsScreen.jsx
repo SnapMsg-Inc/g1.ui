@@ -1,52 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Animated } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { View, Text, StyleSheet, Image, ScrollView, Animated, ActivityIndicator } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../SnapMsg';
+import { GetPosts } from '../../connectivity/servicesUser';
 
-function generateSnaps(limit) {
-  	return new Array(limit).fill(0).map((_, index) => {
-    	const repetitions = Math.floor(Math.random() * 4) + 1;
+const PostsScreen = ({url}) => {
+	const [loading, setLoading] = useState(true)
 
-		return {
-			key: index.toString(),
-			content: 'Lorem ipsum dolor ametLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel egestas dolor, nec dignissim metus '.repeat(repetitions),
-			nickname: 'Nickname',
-			username: 'username',
-			profilePictureUri: '',
-			date: '18/06/2023',
-			comments: 4,
-			reposts: 18,
-			likes: 12,
-		};
-  });
-}
+    const [posts, setPosts] = useState([])
 
-const MOCKED_SNAPS = generateSnaps(30);
-  
+    const fetchDataFromApi = async () => {
+        try {
+            // TODO: paginacion dependiendo del scroll
+            //await GetPosts(setPosts, nick, '', 100, 0)
+			console.log("URL RECIBIDA: \n\n", url);
+			await GetPosts(setPosts, url)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
-const PostsScreen = ({data}) => {
-  	const [loading, setLoading] = useState(true)
-
-	useEffect(()=>{
-		setTimeout(() => {setLoading(false)}, 1000 )
-	},[])
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchDataFromApi()
+        }, [])
+    );
 
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-			<Text>BOOOOOOOOOOOOCA BOCAAAAA</Text>
 			<View style={styles.container}>
-				{loading ? <></> :
-					MOCKED_SNAPS.map((item, index) => (
+				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
+					posts.map((item, index) => (
 						<SnapMsg
-							key={item.key}
-							nickname={data.alias}
-							username={data.nick}
-							content={item.content}
-							profilePictureUri={data.pic}
-							date={item.date}
-							comments={item.comments}
-							reposts={item.reposts}
+							key={item.pid}
+							uid={item.uid}
+							pid={item.pid}
+							username={item.nick}
+							content={item.text}
+							date={item.timestamp}
 							likes={item.likes}
+							picUri={item.media_uri}
 						/>
 					))
 				}

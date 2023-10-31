@@ -4,7 +4,7 @@ import { Octicons } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
 import FollowerCard from '../profileComponents/followerCard';
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserFollowersByUid } from '../connectivity/servicesUser';
+import { GetUserFollowersByUid, GetUsers } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import filter from 'lodash.filter';
 
@@ -17,10 +17,9 @@ const SearchScreen = ({ navigation }) => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [showFlatList, setShowFlatList] = useState(false);
 
-	// TODO: USAR END POINT ADECUADO
 	const fetchDataFromApi = async () => {
         setIsLoading(true)
-        GetUserFollowersByUid(setFullData, userData.uid)
+		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
         .then(() => {
             setIsLoading(false)
         })
@@ -51,6 +50,11 @@ const SearchScreen = ({ navigation }) => {
 		return aliasParts.some((part) => part.toLowerCase().includes(query))
 		 	|| nick.includes(query) ? true : false
 	}
+
+	const handleSearchPress = () => {
+		// Realiza la búsqueda y pasa el valor de búsqueda
+		navigation.goBack({ searchQuery:searchQuery });
+	};
 
 	return (
 		<View style={styles.container}>

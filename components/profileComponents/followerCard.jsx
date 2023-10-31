@@ -65,29 +65,35 @@ const FollowerCard = ({ uid, alias, nick, interests, pic }) => {
 	const defaultImage = require('../../assets/default_user_pic.png')
   
 	return (
-		<TouchableOpacity onPress={handleProfilePress}>
-			<View style={styles.container}>
-				<Image source={(pic === 'none') || (pic === '') ? defaultImage : { uri: pic }}
-					style={styles.profileImage} />
-				<View style={styles.infoContainer}>
-					<Text style={styles.name}>{alias}</Text>
-					<Text style={styles.nick}>{`@${nick}`}</Text>
-				</View>
-				{ loading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
-					userData.uid === uid ? <></> : (
-						<TouchableOpacity
-							style={[stylesFollow.card,
-									isFollowing ? stylesFollow.followingButton : stylesFollow.notFollowingButton]}
-							onPress={handleToggleFollow}
-						>
-							<Text style={isFollowing ? stylesFollow.followingButtonText : stylesFollow.followButtonText}>
-								{isFollowing ? 'Following' : 'Follow'}
-							</Text>
-						</TouchableOpacity>
-					)
-				)}
-			</View>
-		</TouchableOpacity>
+		<>
+		{
+			loading ? <></> : (
+				<TouchableOpacity onPress={handleProfilePress}>
+					<View style={styles.container}>
+						<Image source={(pic === 'none') || (pic === '') ? defaultImage : { uri: pic }}
+							style={styles.profileImage} />
+						<View style={styles.infoContainer}>
+							<Text style={styles.name}>{alias}</Text>
+							<Text style={styles.nick}>{`@${nick}`}</Text>
+						</View>
+						{
+							userData.uid === uid ? <></> : (
+								<TouchableOpacity
+									style={[stylesFollow.card,
+											isFollowing ? stylesFollow.followingButton : stylesFollow.notFollowingButton]}
+									onPress={handleToggleFollow}
+								>
+									<Text style={isFollowing ? stylesFollow.followingButtonText : stylesFollow.followButtonText}>
+										{isFollowing ? 'Following' : 'Follow'}
+									</Text>
+								</TouchableOpacity>
+							)
+						}
+					</View>
+				</TouchableOpacity>
+				)
+		}
+		</>
 	);
 };
 
