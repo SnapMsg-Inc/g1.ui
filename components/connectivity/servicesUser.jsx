@@ -5,6 +5,25 @@ import axios from 'axios';
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
+export async function GetUsers(setState, url) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(error.response.status)
+    });
+}
+
 export async function GetUserData(state) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
@@ -362,9 +381,10 @@ export async function GetFeedPosts(setState, maxResults=100, page=0) {
      // URL base sin parámetros obligatorios
      let url = `${URL_POST}/feed?`;
  
-     url += `&limit=${maxResults}`;
-     url += `&page=${page}`;
- 
+    url += `&limit=${maxResults}`;
+    url += `&page=${page}`;
+
+     console.log(url)
     await axios({
         method: 'get',
         url: url,
@@ -417,22 +437,22 @@ export async function unlikePost(pid) {
     }
 }
 
-export async function GetRecommendedPosts(setState, maxResults, page) {
+export async function GetRecommendedPosts(setState, uid, maxResults, page) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+
+    let url = `${URL_POST}/recommended?limit=${maxResults}&page=${page}`;
+
     await axios({
         method: 'get',
-        url: `${URL_POST}/recommended`,
-        params: {
-            maxResults: maxResults,
-            page: page
-        },
+        url: url,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     }).then((response) => {
         setState(response.data)
+        console.log(response.data)
     })
     . catch((error) => {
         console.log(error.response.status)
