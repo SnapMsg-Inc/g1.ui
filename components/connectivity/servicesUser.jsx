@@ -284,8 +284,7 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
 export async function GetPosts(setState, nick, text, maxResults=100, page=0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    // 'https://api-gateway-marioax.cloud.okteto.net/posts?nick=admin&limit=100&page=0'
-    // 'https://api-gateway-marioax.cloud.okteto.net/posts?&nick=admin&limit=100'
+
     // URL base sin parámetros obligatorios
     let url = `${URL_POST}?`;
 
@@ -373,16 +372,19 @@ export async function deletePostFromFav(pid) {
     }
 }
 
-export async function GetFeedPosts(setState, maxResults, page) {
+export async function GetFeedPosts(setState, maxResults=100, page=0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+
+     // URL base sin parámetros obligatorios
+     let url = `${URL_POST}/feed?`;
+ 
+     url += `&limit=${maxResults}`;
+     url += `&page=${page}`;
+ 
     await axios({
         method: 'get',
-        url: `${URL_POST}/feed`,
-        params: {
-            maxResults: maxResults,
-            page: page
-        },
+        url: url,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

@@ -15,8 +15,8 @@ export default function Feed({ navigation }) {
 
     const fetchDataFromApi = async () => {
         try {
-            // TODO: USAR GET_FEED (PREGUNTAR POR QUE NO ANDA BIEN)
-            await GetPosts(setData, '', '', 100, 0)
+            // TODO: paginacion dependiendo del scroll
+            await GetFeedPosts(setData, 100, 0)
             setLoading(false)
         } catch (error) {
             console.error('Error fetching data:', error);
