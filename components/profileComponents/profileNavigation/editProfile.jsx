@@ -1,16 +1,16 @@
 import { Animated, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from 'react';
-import Input from "../forms/input";
-import ProfileImage from '../profileComponents/profileImage';
-import stylesEditProfile from "../../styles/profile/setupProfile";
-import AcceptButton from "../buttons/buttonAcept";
-import CancelButton from "../buttons/buttonCancel";
+import Input from "../../forms/input";
+import ProfileImage from '../profileImage';
+import stylesEditProfile from "../../../styles/profile/setupProfile";
+import AcceptButton from "../../buttons/buttonAcept";
+import CancelButton from "../../buttons/buttonCancel";
 import { TouchableHighlight } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../styles/forms/input";
-import { PatchUser } from "../connectivity/servicesUser";
+import { colorText } from "../../../styles/forms/input";
+import { PatchUser } from "../../connectivity/servicesUser";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -50,15 +50,11 @@ function EditProfile({navigation}) {
         }
     }
 
-    const geocode = async () => {
-        if (Location.PermissionStatus === 'denied')
-            return
-        await Location.geocodeAsync(`${locality} ${country}`)
+    const geocode = () => {
+        Location.geocodeAsync(`${locality} ${country}`)
         .then((geocodeLocation)=> {
             console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-            if (!geocodeLocation.length)
-                setCoordinates({ 'latitude': 0, 'longitude': 0})
-            else {
+            if (geocodeLocation.length) {
                 setCoordinates({'latitude': geocodeLocation[0].latitude,
                                 'longitude': geocodeLocation[0].longitude})
                 console.log(coordinates)

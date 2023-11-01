@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableHighlight, Button } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, TextInput, TouchableHighlight, Button, ActivityIndicator } from 'react-native';
 import AcceptButton from '../buttons/buttonAcept';
 import CancelButton from '../buttons/buttonCancel';
 import ButtonFederate from '../buttons/buttonFederate';
@@ -9,6 +9,8 @@ import Input from '../forms/input';
 import Logo from '../logo';
 import stylesForms, { colorText } from '../../styles/SignForms';
 import { LoginAccount, SignFederate } from '../connectivity/authorization';
+import { ValidationsLogin } from '../forms/validations';
+import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
 
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
@@ -16,57 +18,16 @@ function SignIn({ navigation }) {
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [visible, setVisible] = useState(false)
-
-    const isValidEmail = (email) => {
-        let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return regex.test(email);
-    };
-
-    const isValidPassword = (password) => {
-        return password.length >= 6; // Password must be at least 8 characters
-    };
-
-    const Validations = () => {
-        let isValid = true;
-        if (!isValidEmail(email)) {
-            setEmailError('Please enter a valid email.');
-            isValid = false;
-        } else {
-            setEmailError(null);
-        }
-        if (!isValidPassword(password)) {
-            setPasswordError('Password should be at least 6 characters long.');
-            isValid = false;
-        } else {
-            setPasswordError(null);
-        }
-        return isValid
-    }
+    const { onLogin, onLoginFederate, isLoading } = useContext(AuthenticationContext)
 
     const handleSignIn = async () => {
-        if (!Validations()) {
-            alert('Please check your input and try again.')
-        } else {
-            try {
-                const success = await LoginAccount(email, password)
-                if (success)
-                    navigation.navigate('Home')
-                else
-                    alert('Invalid username or password.\nPlease check your credentials and try again.')
-            } catch (error) {
-                alert('An error occurred while signing in. Please try again later.');
-            }
+        if (ValidationsLogin(email, password, setEmailError, setPasswordError)) {
+            onLogin(email, password)
         }
     };
 
     const signButtonFederate = async () => {
-        try {
-            const success = await SignFederate(false)
-            if (success)
-                setTimeout(() => {navigation.navigate('Home')}, 1000)
-        } catch (error) {
-
-        }
+        onLoginFederate()
     }  
         
     return (
@@ -110,10 +71,16 @@ function SignIn({ navigation }) {
                 <View style={stylesForms.containerTextSugestion}>
                     <Text style={stylesForms.textSugestion}>Forgot password?</Text>
                 </View>
-                <View style={stylesForms.bodyButtons}>
-                    <CancelButton navigation={navigation}/>
-                    <AcceptButton accept={handleSignIn}/>
-                </View>
+                {isLoading ? 
+                        <View style={stylesForms.bodyButtonsLoading}>
+                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                        </View>
+                    :
+                        <View style={stylesForms.bodyButtons}>
+                            <CancelButton navigation={navigation}/>
+                            <AcceptButton accept={handleSignIn}/>
+                        </View>
+                }
             </View>
             <View style={stylesForms.footer}>
                 <View style={stylesForms.footerOption}>

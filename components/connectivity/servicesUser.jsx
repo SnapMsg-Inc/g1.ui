@@ -3,6 +3,26 @@ import { getAuth, getIdToken, deleteUser } from 'firebase/auth'
 import axios from 'axios';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
+const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+
+export async function GetUsers(setState, url) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    });
+}
 
 export async function GetUserData(state) {
     const auth = getAuth();
@@ -32,6 +52,9 @@ export async function GetUserData(state) {
             "follows": response.data.follows,
         })
     })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
 }
 
 export async function GetUserByUid(setState, uid) {
@@ -56,6 +79,7 @@ export async function GetUserByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
+        // console.log(response.data)
       setState({
         "uid": response.data[0].uid,
         "alias": response.data[0].alias,
@@ -65,6 +89,9 @@ export async function GetUserByUid(setState, uid) {
         "interests": response.data[0].interests,
         "pic": response.data[0].pic,
       });
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -83,6 +110,9 @@ export async function GetUserFollowersByUid(setState, uid) {
       }
     }).then((response) => {
       setState(response.data);
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -100,67 +130,66 @@ export async function GetUserFollowsByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-      setState(response.data);
+        setState(response.data);
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
     });
 }
 
-export async function postUserFederate(data) {
-    const auth = getAuth();
-    const token = await getIdToken(auth.currentUser, true);
-    console.log(`Estoy en postUser ${JSON.stringify(data, null, 2)}`)
-    try {
-        await axios({
-            method: 'post',
-            url: URL,
-            data: data,
-            headers: { 
-                'Authorization' : `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            } 
-        })
-        return true
-    } catch(error) {
-        console.log(error.status)
-        console.log('error gateway: ', error)
-        deleteUser(auth.currentUser)
-    }
-}
-
-export async function postsUser(fullName, alias, nick, dateBirth, email) {
-
-    const auth = getAuth();
-    const token = await getIdToken(auth.currentUser, true);
-    console.log(`email: ${email}`)
+export const postsUser = async (data) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
     await axios({
         method: 'post',
         url: URL,
-        data: {
-            "fullname": fullName,
-            "alias": alias,
-            "interests": [],
-            "zone": {"latitude": 0,
-                    "longitude": 0},
-            "pic": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png",
-            "email": email,
-            "nick": nick,
-            "birthdate": dateBirth.toISOString().substring(0,10),
-            "ocupation": ''
-        },
+        data: data,
         headers: { 
             'Authorization' : `Bearer ${token}`,
             'Content-Type': 'application/json'
         } 
-    }).then((response) => {
-        console.log(response.status)
+    })
+    .then((response) => {
         console.log('User create')
-    }). catch((error) => {
-        console.log('error gateway: ', error)
+    })
+    . catch((error) => {
+        console.log(error.response.status)
         deleteUser(auth.currentUser)
+    })
+}
+
+export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLogout) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
+    await axios({
+        method: 'post',
+        url: URL,
+        data: data,
+        headers: { 
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        } 
+    })
+    .then((response) => {
+        console.log(response.status)
+        setIsLoading(false)
+        setIsRegister(true)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+        if (error.response.status === 400) {
+            alert('Email already in use')
+            onLogout()
+        } else {
+            deleteUser(auth.currentUser)
+        } 
+        setIsLoading(false)
     })
 }
 
 export async function PatchUser(data) {
     const auth = getAuth();
+    console.log('user pacth ', auth.currentUser)
     const token = await getIdToken(auth.currentUser, true);
     try {
         await axios({
@@ -174,6 +203,298 @@ export async function PatchUser(data) {
         })
         return true
     } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function deleteUserFollowByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/${uid}/follows/${otherUid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200 && response.data.message === 'follow exists') {
+            setIsFollowing(true)
+        } else {
+            setIsFollowing(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
+            setIsFollowing(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsFollowing(false)
+        }
+    }
+}
+
+export async function followUserByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL}/me/follows/${uid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+
+export const createPost = async (text, pic, isPrivate, hashtags) => {
+    const auth = getAuth()
+    const token = await getIdToken(auth.currentUser, true)
+
+    const data = {
+        "hashtags": hashtags,
+        "is_private": isPrivate,
+        "media_uri": pic,
+        "text": text
+      }
+
+    await axios({
+        method: 'post',
+        url: URL_POST,
+        data: data,
+        headers: { 
+            'Authorization' : `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        } 
+    })
+    .then((response) => {
+        console.log("Post created")
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function GetPosts(setState, url) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    });
+}
+
+export async function GetFavPosts(setState) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+    await axios({
+        method: 'get',
+        url: `${URL_POST}/fav`, 
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function addPostToFav(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function deletePostFromFav(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function GetFeedPosts(setState, maxResults=100, page=0) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    console.log(token)
+     // URL base sin parámetros obligatorios
+     let url = `${URL_POST}/feed?`;
+ 
+    url += `limit=${maxResults}`;
+    url += `&page=${page}`;
+
+     console.log(url)
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+        console.log(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function likePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function unlikePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function GetRecommendedPosts(setState, uid, maxResults, page) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    let url = `${URL_POST}/recommended?limit=${maxResults}&page=${page}`;
+
+    await axios({
+        method: 'get',
+        url: url,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        setState(response.data)
+    })
+    . catch((error) => {
+        console.log(JSON.stringify(error.response, null, 2))
+    })
+}
+
+export async function deletePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/${pid}`;
+    console.log("eliminando post con pid: ", pid )
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
         console.log(error)
+    }
+}
+
+export async function PatchPostData(data, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const url = `${URL_POST}/${pid}`;
+
+    try {
+        await axios({
+            method: 'patch',
+            url: url,
+            data: data,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        return true
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
     }
 }

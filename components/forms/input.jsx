@@ -6,8 +6,6 @@ export default function Input({
         icon,
         inputType,
         keyboardType,
-        fieldButtonLabel,
-        fieldButtonFunction,
         data,
         setData,
         error

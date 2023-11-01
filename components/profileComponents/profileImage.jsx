@@ -4,17 +4,13 @@ import { Animated } from 'react-native';
 const HEADER_HEIGHT_EXPANDED = 75;
  
 const ProfileImage = ({ scrollY, uri}) => {
-    const profileImageUri = 
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1024px-Windows_10_Default_Profile_Picture.svg.png';
-
-    const pic = (uri === 'none') || (uri === '') ? profileImageUri : uri;
+    const defaultImage = require('../../assets/default_user_pic.png')
 
 	return (
         <Animated.Image
-            source={{
-                uri: pic,
-
-            }}
+            source={
+                (uri === 'none') || (uri === '') ? defaultImage : { uri: uri}
+            }
             style={{
                 width: 75,
                 height: 75,
