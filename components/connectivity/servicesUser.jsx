@@ -377,9 +377,9 @@ export async function deletePostFromFav(pid) {
 export async function GetFeedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    console.log(token)
+    
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
-  
+
     try {
     const response = await axios({
         method: 'get',
@@ -389,7 +389,6 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
         'Content-Type': 'application/json'
         }
     });
-
     return response.data;
     } catch (error) {
     console.log(JSON.stringify(error.response, null, 2));

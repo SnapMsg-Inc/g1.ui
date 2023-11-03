@@ -10,32 +10,29 @@ import PostButton from '../buttons/buttonPost';
 
 export default function Feed({ navigation }) {
     const [fullPosts, setFullPosts] = useState([])
-    // const [newPosts, setNewPosts] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
 
     const fetchDataFromApi = async () => {
         setIsLoading(true);
         try {
-          const newPosts = await GetFeedPosts(100, 0);
+          const newPosts = await GetFeedPosts(6, currentPage);
           console.log("Posts recibidos:");
           console.log(newPosts);
-          setFullPosts([...fullPosts, ...newPosts]);
+          if (newPosts.length > 0) {
+            setFullPosts([...fullPosts, ...newPosts]);
+            setCurrentPage(currentPage + 1);
+          }
           setIsLoading(false);
-          setCurrentPage(currentPage + 1)
           console.log(currentPage)
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       }
-
+    
     useEffect(()=> {
         fetchDataFromApi()
     }, []);
-
-    const loadMorePosts = () => {
-
-    }
 
     const renderLoader = () => {
         return(
@@ -77,7 +74,7 @@ export default function Feed({ navigation }) {
                                 />
                 }
                 onEndReached={fetchDataFromApi}
-                onEndReachedThreshold={0.1}
+                onEndReachedThreshold={0.0}
                 ListFooterComponent={renderLoader}
             />
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
