@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Pressable, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Pressable, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
@@ -9,26 +9,39 @@ import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 
 export default function Feed({ navigation }) {
-    const [loading, setLoading] = useState(true)
-
-    const [data, setData] = useState([])
+    const [fullPosts, setFullPosts] = useState([])
+    // const [newPosts, setNewPosts] = useState([])
+    const [currentPage, setCurrentPage] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
 
     const fetchDataFromApi = async () => {
+        setIsLoading(true);
         try {
-            // TODO: paginacion dependiendo del scroll
-            await GetFeedPosts(setData, 100, 0)
-            setLoading(false)
+          const newPosts = await GetFeedPosts(100, 0);
+          console.log("Posts recibidos:");
+          console.log(newPosts);
+          setFullPosts([...fullPosts, ...newPosts]);
+          setIsLoading(false);
+          setCurrentPage(currentPage + 1)
+          console.log(currentPage)
         } catch (error) {
-            console.error('Error fetching data:', error);
+          console.error('Error fetching data:', error);
         }
+      }
+
+    useEffect(()=> {
+        fetchDataFromApi()
+    }, []);
+
+    const loadMorePosts = () => {
+
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchDataFromApi()
-        }, [])
-    );
-
+    const renderLoader = () => {
+        return(
+            isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : <></>
+        );
+    }
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -50,7 +63,7 @@ export default function Feed({ navigation }) {
                 </View>
             </View>
             <FlatList
-                data={data}
+                data={fullPosts}
                 renderItem={({item}) => 
                                 <SnapMsg
                                     key={item.pid}
@@ -63,6 +76,9 @@ export default function Feed({ navigation }) {
                                     picUri={item.media_uri}
                                 />
                 }
+                onEndReached={fetchDataFromApi}
+                onEndReachedThreshold={0.1}
+                ListFooterComponent={renderLoader}
             />
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
         </View>

@@ -374,32 +374,26 @@ export async function deletePostFromFav(pid) {
     }
 }
 
-export async function GetFeedPosts(setState, maxResults=100, page=0) {
+export async function GetFeedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-
     console.log(token)
-     // URL base sin parámetros obligatorios
-     let url = `${URL_POST}/feed?`;
- 
-    url += `limit=${maxResults}`;
-    url += `&page=${page}`;
-
-     console.log(url)
-    await axios({
+    const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
+  
+    try {
+    const response = await axios({
         method: 'get',
         url: url,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-        console.log(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-    })
+    });
+
+    return response.data;
+    } catch (error) {
+    console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function likePost(pid) {
