@@ -12,8 +12,12 @@ export default function Feed({ navigation }) {
     const [fullPosts, setFullPosts] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
+    const [allDataLoaded, setAllDataLoaded] = useState(false);
 
     const fetchDataFromApi = async () => {
+        if (allDataLoaded || isLoading) {
+            return;
+        }
         setIsLoading(true);
         try {
           const newPosts = await GetFeedPosts(6, currentPage);
@@ -22,7 +26,9 @@ export default function Feed({ navigation }) {
           if (newPosts.length > 0) {
             setFullPosts([...fullPosts, ...newPosts]);
             setCurrentPage(currentPage + 1);
-          }
+          } else {
+            setAllDataLoaded(true);
+        }
           setIsLoading(false);
           console.log(currentPage)
         } catch (error) {
