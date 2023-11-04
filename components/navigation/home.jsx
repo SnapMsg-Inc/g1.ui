@@ -131,8 +131,7 @@ export default function Home() {
                 drawerIcon: ({size}) => (
                 <FontAwesome5 name="user" color={iconColor} size={size} />
                 ),
-                headerShown:false,							
-                swipeEdgeWidth: 0,
+                headerShown:false,
             }}
             />
             <Drawer.Screen
