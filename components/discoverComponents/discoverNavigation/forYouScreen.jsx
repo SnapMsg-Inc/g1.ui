@@ -8,17 +8,22 @@ import { GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../conn
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
 import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-const ForYouScreen = () => {
+const ForYouScreen = ({searchQuery=null}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const width = Dimensions.get('window').width;
 
-	const route = useRoute();
-	if (route) console.log("route: ", route)
+	// const navigation = useNavigation();
+	// //const routeName = navigation.dangerouslyGetState().routes.slice(-1)[0].name;
+  	// console.log('Navegado desde la pantalla:', navigation);
 
-	const searchQuery = route.params && route.params.searchQuery ? route.params.searchQuery : null;
+	// const route = useRoute();
+	//  if (route) console.log("route: ", route)
+
+	// const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
 	console.log("SEARCH QUERY en ForYou: " , searchQuery)
-	
+
 	const [loading, setLoading] = useState(true)
 
     const [posts, setPosts] = useState([])

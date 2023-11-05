@@ -60,8 +60,11 @@ const SearchScreen = () => {
 		// Realiza la búsqueda y pasa el valor de búsqueda
 		console.log("Query enviada: ", searchQuery)
 		// navigation.navigate('DiscoverScreen', { searchQuery:searchQuery });
+		// navigation.navigate('DiscoverScreen', {
+		// 	screen: 'ForYouScreen',
+		// 	searchQuery: searchQuery
+		// });
 		navigation.navigate('DiscoverScreen', {
-			screen: 'ForYouScreen',
 			searchQuery: searchQuery
 		});
 	};
