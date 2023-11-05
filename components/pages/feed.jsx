@@ -1,67 +1,111 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Pressable, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Pressable, TouchableOpacity, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
-import { FlatList, ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 
 export default function Feed({ navigation }) {
-    const [loading, setLoading] = useState(true)
-
-    const [data, setData] = useState([])
+    const [fullPosts, setFullPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [allDataLoaded, setAllDataLoaded] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const fetchDataFromApi = async () => {
+        if (allDataLoaded || isLoading) {
+            return;
+        }
+        setIsLoading(true);
         try {
-            // TODO: paginacion dependiendo del scroll
-            await GetFeedPosts(setData, 100, 0)
-            setLoading(false)
+            const newPosts = await GetFeedPosts(6, currentPage);
+            console.log("Posts recibidos:");
+            console.log(newPosts);
+            if (newPosts.length > 0) {
+                setFullPosts([...fullPosts, ...newPosts]);
+                setCurrentPage(currentPage + 1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoading(false);
+            console.log(currentPage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchDataFromApi()
-        }, [])
-    );
+    const handleRefresh = async () => {
+        if (isRefreshing) {
+            return;
+        }
+        console.log("Entro")
+        setIsRefreshing(true);
+        setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
+        await fetchDataFromApi();
+        setIsRefreshing(false);
+    }
+
+    useEffect(() => {
+        fetchDataFromApi();
+    }, []);
+
+    const renderLoader = () => {
+        return (
+            isLoading && !isRefreshing ? <ActivityIndicator size={'large'} color={'#1ed760'} /> : <></>
+        );
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableHighlight
-                    onPress={() => { 
-                        navigation.dispatch(DrawerActions.openDrawer())
+                    onPress={() => {
+                        navigation.dispatch(DrawerActions.openDrawer());
                     }}
                 >
-                    <View style={{flexDirection:'row', justifyContent: 'center'}}>
-                        <Octicons name="home" size={22} 
-                            color={colorApp} 
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Octicons name="home" size={22}
+                            color={colorApp}
                         />
                         <Text style={styles.font}>Feed</Text>
                     </View>
                 </TouchableHighlight>
                 <View style={styles.containerLogo}>
-                    <Icon name="snapchat-ghost" color={colorApp} size={30}/>
-                    <Icon name="envelope" color={colorApp} size={10}/>
+                    <Icon name="snapchat-ghost" color={colorApp} size={30} />
+                    <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
             <FlatList
-                data={data}
-                renderItem={({item}) => 
-                                <SnapMsg
-                                    key={item.pid}
-                                    uid={item.uid}
-                                    pid={item.pid}
-                                    username={item.nick}
-                                    content={item.text}
-                                    date={item.timestamp}
-                                    likes={item.likes}
-                                    picUri={item.media_uri}
-                                />
+                data={fullPosts}
+                renderItem={({ item }) =>
+                    <SnapMsg
+                        key={item.pid}
+                        uid={item.uid}
+                        pid={item.pid}
+                        username={item.nick}
+                        content={item.text}
+                        date={item.timestamp}
+                        likes={item.likes}
+                        picUri={item.media_uri}
+                    />
+                }
+                onEndReached={fetchDataFromApi}
+                onEndReachedThreshold={0.10}
+                ListFooterComponent={renderLoader}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={"large"}
+                    />
                 }
             />
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
@@ -80,9 +124,9 @@ const styles = StyleSheet.create({
     },
     header: {
         justifyContent: 'space-between',
-        alignItems:'center',
-        flexDirection:'row',
-        paddingVertical:10,
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingVertical: 10,
         borderWidth: 1,
         borderColor: colorApp,
         borderRadius: 10,
@@ -103,8 +147,8 @@ const styles = StyleSheet.create({
     },
     tab: {
         paddingBottom: 10,
-        flexDirection:'row',
-        paddingVertical:10,
+        flexDirection: 'row',
+        paddingVertical: 10,
         paddingBottom: 20,
         marginLeft: 10,
     },
@@ -112,6 +156,6 @@ const styles = StyleSheet.create({
         color: colorApp,
         fontSize: 18,
         marginLeft: 5,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
-})
+});

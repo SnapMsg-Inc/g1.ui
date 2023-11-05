@@ -64,8 +64,7 @@ const OtherProfile = ({ navigation }) => {
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	const getUrl = () => {
-		//TODO: PAGINACION!!
-		return `${URL_POST}?nick=${data.nick}&limit=${100}&page=${0}`;
+		return `${URL_POST}?nick=${data.nick}`;
 	}
 
 	return (
@@ -83,7 +82,12 @@ const OtherProfile = ({ navigation }) => {
 					renderTabBar={tabBar}
 					>
 					<Tabs.Tab name="Posts" label="Posts">
-						<PostScreen url={getUrl()}/>
+						{	
+							// To ensure that data is already loaded
+							data.nick.length > 0 ? (
+								<PostScreen url={getUrl()}/>
+							) : <></>
+						}
 					</Tabs.Tab>
 
 					<Tabs.Tab name="Replies" label="Replies">

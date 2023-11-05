@@ -301,23 +301,28 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
     })
 }
 
-export async function GetPosts(setState, url) {
+export async function GetPosts(url, maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+    
+    const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    await axios({
+    console.log(token)
+
+    console.log("URL con QUERY: \n\n", urlWithQueryParams);
+    try {
+    const response = await axios({
         method: 'get',
-        url: url,
+        url: urlWithQueryParams,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
     });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function GetFavPosts(setState) {
@@ -374,32 +379,25 @@ export async function deletePostFromFav(pid) {
     }
 }
 
-export async function GetFeedPosts(setState, maxResults=100, page=0) {
+export async function GetFeedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+    
+    const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
 
-    console.log(token)
-     // URL base sin parámetros obligatorios
-     let url = `${URL_POST}/feed?`;
- 
-    url += `limit=${maxResults}`;
-    url += `&page=${page}`;
-
-     console.log(url)
-    await axios({
+    try {
+    const response = await axios({
         method: 'get',
         url: url,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-        console.log(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-    })
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function likePost(pid) {

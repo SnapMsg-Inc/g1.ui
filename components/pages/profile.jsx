@@ -36,8 +36,7 @@ const Profile = ({ navigation }) => {
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	const getUrl = () => {
-		//TODO: PAGINACION!!
-		return `${URL_POST}/me?limit=${100}&page=${0}`;
+		return `${URL_POST}/me?`;
 	}
 
 	return (
