@@ -14,12 +14,13 @@ const SearchScreen = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [fullData, setFullData] = useState([]);
-	const [searchQuery, setSearchQuery] = useState('');
+	const [searchQuery, setSearchQuery] = useState(null);
 	const [showFlatList, setShowFlatList] = useState(false);
 
-	const fetchDataFromApi = async () => {
+	const fetchDataFromApi = async (query) => {
         setIsLoading(true)
-		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
+		const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${query}&limit=100&page=0`;
+		GetUsers(setFullData, urlWithQueryParams)
         .then(() => {
             setIsLoading(false)
         })
@@ -33,11 +34,13 @@ const SearchScreen = ({ navigation }) => {
 		setSearchQuery(query);
 		setShowFlatList(query.length > 0)
 
-		if (query.length > 0) {
-			fetchDataFromApi();
-		}
-
+		
 		const formattedQuery = query.toLowerCase();
+		
+		if (formattedQuery.length == 1) {
+			fetchDataFromApi(formattedQuery);
+		}
+		
 		const filteredData = filter(fullData, (user) => {
 			return contains(user.alias, user.nick, formattedQuery)
 		})
