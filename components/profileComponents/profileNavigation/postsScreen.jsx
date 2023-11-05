@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../SnapMsg';
-import { GetFeedPosts, GetPosts } from '../../connectivity/servicesUser';
+import { GetPosts } from '../../connectivity/servicesUser';
 import PostButton from '../../buttons/buttonPost';
 
 const PostsScreen = ({url}) => {
@@ -19,10 +18,7 @@ const PostsScreen = ({url}) => {
         }
         setIsLoading(true);
         try {
-			console.log("URL RECIBIDA: \n\n", url);
-            const newPosts = await GetFeedPosts(6, currentPage);
-            console.log("Posts recibidos:");
-            console.log(newPosts);
+            const newPosts = await GetPosts(url, 10, currentPage);
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
@@ -30,7 +26,6 @@ const PostsScreen = ({url}) => {
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
-            console.log(currentPage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -40,7 +35,6 @@ const PostsScreen = ({url}) => {
         if (isRefreshing) {
             return;
         }
-        console.log("Entro")
         setIsRefreshing(true);
         setCurrentPage(0);
         setAllDataLoaded(false)
