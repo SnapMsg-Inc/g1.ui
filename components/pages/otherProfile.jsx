@@ -64,8 +64,10 @@ const OtherProfile = ({ navigation }) => {
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	const getUrl = () => {
-		//TODO: PAGINACION!!
-		return `${URL_POST}?nick=${data.nick}&limit=${100}&page=${0}`;
+		if (data.nick) {
+			return `${URL_POST}?nick=${data.nick}`;
+		}
+		// return `${URL_POST}?nick=${data.nick}`;
 	}
 
 	return (
