@@ -19,12 +19,14 @@ const tabBar = props => (
 	/>
 );
 
-export default function Discover({ navigation }) {
+export default function Discover({ navigation, searchQuery=null }) {
 	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
 
 	useFocusEffect(
         React.useCallback(() => {
-          	fetchUserDataFromApi()
+            //if(searchQuery)
+                
+          	// fetchUserDataFromApi()
         }, [])
     );
 
@@ -41,7 +43,7 @@ export default function Discover({ navigation }) {
 					renderTabBar={tabBar}
 					>
 					<Tabs.Tab name="For you" label="For you">
-                        <ForYouScreen/>
+                        <ForYouScreen searchQuery={searchQuery}/>
 					</Tabs.Tab>
 
 					<Tabs.Tab name="Trending" label="Trending">

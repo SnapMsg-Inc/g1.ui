@@ -7,8 +7,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserFollowersByUid, GetUsers } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import filter from 'lodash.filter';
+import { useNavigation } from '@react-navigation/native';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
+	const navigation = useNavigation();
 	const { userData } = useContext(LoggedUserContext)
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +58,12 @@ const SearchScreen = ({ navigation }) => {
 
 	const handleSearchPress = () => {
 		// Realiza la búsqueda y pasa el valor de búsqueda
-		navigation.goBack({ searchQuery:searchQuery });
+		console.log("Query enviada: ", searchQuery)
+		// navigation.navigate('DiscoverScreen', { searchQuery:searchQuery });
+		navigation.navigate('DiscoverScreen', {
+			screen: 'ForYouScreen',
+			searchQuery: searchQuery
+		});
 	};
 
 	return (
@@ -76,6 +83,7 @@ const SearchScreen = ({ navigation }) => {
 						onChangeText={(query) => handleSearch(query)}
 						autoFocus
 						keyboardType='twitter'
+						onSubmitEditing={handleSearchPress}
 					/>
 				</View>
 				<TouchableHighlight

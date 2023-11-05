@@ -7,11 +7,18 @@ import Carousel from 'react-native-reanimated-carousel';
 import { GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
+import { useRoute } from '@react-navigation/native';
 
 const ForYouScreen = () => {
 	const { userData } = useContext(LoggedUserContext)
 	const width = Dimensions.get('window').width;
 
+	const route = useRoute();
+	if (route) console.log("route: ", route)
+
+	const searchQuery = route.params && route.params.searchQuery ? route.params.searchQuery : null;
+	console.log("SEARCH QUERY en ForYou: " , searchQuery)
+	
 	const [loading, setLoading] = useState(true)
 
     const [posts, setPosts] = useState([])
