@@ -62,8 +62,6 @@ const SearchScreen = () => {
 	}
 
 	const handleSearchPress = () => {
-		// Realiza la búsqueda y pasa el valor de búsqueda
-		console.log("Query enviada: ", searchQuery)
 		navigation.navigate('DiscoverScreen', {
 			searchQuery: searchQuery
 		});

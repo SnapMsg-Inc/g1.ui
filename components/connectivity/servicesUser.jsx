@@ -307,7 +307,6 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     
     const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    console.log("URL con QUERY: \n\n", urlWithQueryParams);
     try {
     const response = await axios({
         method: 'get',

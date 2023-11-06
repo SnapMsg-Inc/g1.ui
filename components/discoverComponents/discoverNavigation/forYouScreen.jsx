@@ -20,11 +20,40 @@ const ForYouScreen = ({searchQuery=null}) => {
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const fetchPostsFromApi = async () => {
-        if (allDataLoaded || isLoading) {
+	const fetchInitialPostsFromApi = async (query=searchQuery) => {
+        setLoading(true);
+		setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
+		console.log("fetching initial posts")
+        try {
+			// TODO: USAR end-point adecuado
+			//await GetRecommendedPosts...
+			let urlWithQueryParams;
+			query !== null ? 
+				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?text=${encodeURIComponent(query)}` :
+				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+
+            const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
+			setFullPosts(newPosts);
+            if (newPosts.length > 0) {
+                setCurrentPage(1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching initial posts:', error);
+        }
+    }
+
+    const fetchMorePostsFromApi = async () => {
+        if (allDataLoaded || isLoading || isRefreshing) {
             return;
         }
         setLoading(true);
+		
+		console.log("fetching MORE posts")
         try {
 			// TODO: USAR end-point adecuado
 			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
@@ -43,7 +72,7 @@ const ForYouScreen = ({searchQuery=null}) => {
             }
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching more posts:', error);
         }
     }
 
@@ -52,17 +81,9 @@ const ForYouScreen = ({searchQuery=null}) => {
             return;
         }
         setIsRefreshing(true);
-        setCurrentPage(0);
-        setAllDataLoaded(false)
-        setFullPosts([]);
-		searchQuery = null;
-        await fetchPostsFromApi();
+        await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
     }
-
-    useEffect(() => {
-        fetchPostsFromApi();
-    }, [searchQuery]);
 
     const renderLoader = () => {
         return (
@@ -75,7 +96,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	
-	const fetchDataFromApi = async () => {
+	const fetchUsersFromApi = async () => {
 		setIsLoading(true)
 		let urlWithQueryParams;
 		searchQuery !== null ? 
@@ -94,7 +115,8 @@ const ForYouScreen = ({searchQuery=null}) => {
     }
 
 	useEffect(() => {
-		fetchDataFromApi()
+		fetchUsersFromApi()
+		fetchInitialPostsFromApi();
     }, [searchQuery])
 
 	return (
@@ -179,7 +201,7 @@ const ForYouScreen = ({searchQuery=null}) => {
                         picUri={item.media_uri}
                     />
                 }
-                onEndReached={fetchPostsFromApi}
+                onEndReached={fetchMorePostsFromApi}
                 onEndReachedThreshold={0.10}
                 ListFooterComponent={renderLoader}
                 refreshControl={
