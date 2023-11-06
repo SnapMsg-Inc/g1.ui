@@ -7,51 +7,44 @@ import Carousel from 'react-native-reanimated-carousel';
 import { GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
 
 const ForYouScreen = ({searchQuery=null}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const width = Dimensions.get('window').width;
 
-	// const navigation = useNavigation();
-	// //const routeName = navigation.dangerouslyGetState().routes.slice(-1)[0].name;
-  	// console.log('Navegado desde la pantalla:', navigation);
-
-	// const route = useRoute();
-	//  if (route) console.log("route: ", route)
-
-	// const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
-	console.log("SEARCH QUERY en ForYou: " , searchQuery)
-
+	
 	const [loading, setLoading] = useState(true)
-
     const [posts, setPosts] = useState([])
-
+	
     const fetchRecommendedPostsFromApi = async () => {
-        try {
-            // TODO: paginacion dependiendo del scroll
+		try {
+			// TODO: paginacion dependiendo del scroll
             await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
             setLoading(false)
         } catch (error) {
-            console.error('Error fetching data:', error);
+			console.error('Error fetching data:', error);
         }
     }
-
+	
     useFocusEffect(
-        React.useCallback(() => {
-            fetchRecommendedPostsFromApi()
+		React.useCallback(() => {
+			fetchRecommendedPostsFromApi()
         }, [])
-    );
-
+	);
+	
 	// TODO: CONECTAR CON SEARCH / USAR END POINT ADECUADO
-	const [fullData, setFullData] = useState([]);
+	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-
+	
 	const fetchDataFromApi = async () => {
-        setIsLoading(true)
-        // GetUserFollowersByUid(setFullData, userData.uid)
-		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
+		setIsLoading(true)
+		let urlWithQueryParams;
+		searchQuery !== null ? 
+			urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${searchQuery}&limit=100&page=0` :
+			// TODO: si search query == null entonces tengo que usar el endp de recommended users
+			urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0`
+
+		GetUsers(setUsers, urlWithQueryParams)
         .then(() => {
             setIsLoading(false)
         })
@@ -61,25 +54,32 @@ const ForYouScreen = ({searchQuery=null}) => {
         })
     }
 
-	useFocusEffect(
-        React.useCallback(() => {
-          	fetchDataFromApi()
-        }, [])
-    );
+	useEffect(() => {
+		fetchDataFromApi()
+    }, [searchQuery])
 
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
-				<Text style={styles.text}>
-					People
-				</Text>
+				{
+					searchQuery ? (
+						<Text style={styles.text}>
+							People
+						</Text>
+					) : (
+						<Text style={styles.text}>
+							Who to follow
+						</Text>
+					)
+
+				}
 				{
 					isLoading ? <></> : (
 						<View style={{marginVertical: 20}}>
 							<Carousel
 								loop={false}
 								width={width}
-								data={fullData}
+								data={users}
 								height={180}
 								sliderWidth={300}
               					itemWidth={300}
@@ -107,16 +107,16 @@ const ForYouScreen = ({searchQuery=null}) => {
 			<View style={styles.container}>
 				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
 						posts.map((item, index) => (
-							<SnapMsg
-								key={item.pid}
-								uid={item.uid}
-								pid={item.pid}
-								username={item.nick}
-								content={item.text}
-								date={item.timestamp}
-								likes={item.likes}
-								picUri={item.media_uri}
-							/>
+								<SnapMsg
+									key={item.pid}
+									uid={item.uid}
+									pid={item.pid}
+									username={item.nick}
+									content={item.text}
+									date={item.timestamp}
+									likes={item.likes}
+									picUri={item.media_uri}
+								/>
 						))
 					}
 			</View>
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		color: 'white',
 		fontWeight: 'bold',
+		marginHorizontal: 10,
 	},
 });
 
