@@ -95,22 +95,28 @@ const ForYouScreen = ({searchQuery=null}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	
 	const fetchUsersFromApi = async () => {
-		setIsLoading(true)
+		setIsLoading(true);
 		let urlWithQueryParams;
-		searchQuery !== null ? 
-			urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${searchQuery}&limit=100&page=0` :
-			// TODO: si search query == null entonces tengo que usar el endp de recommended users
-			urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0`
-
+	  
+		if (searchQuery !== null) {
+		  // Si searchQuery comienza con '#', quita el '#' y usa el resto como nick
+		  const nick = searchQuery.startsWith('#') ? searchQuery.slice(1) : searchQuery;
+		  urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${nick}&limit=10&page=0`;
+		} else {
+		  // TODO: si searchQuery == null entonces tengo que usar el endpoint de recommended users
+		  urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?limit=10&page=0`;
+		}
+	  
 		GetUsers(setUsers, urlWithQueryParams)
-        .then(() => {
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            console.error('Error fetching followers data:', error);
-            setIsLoading(false)
-        })
-    }
+		  .then(() => {
+			setIsLoading(false);
+		  })
+		  .catch((error) => {
+			console.error('Error fetching followers data:', error);
+			setIsLoading(false);
+		  });
+	  };
+	  
 
 	useEffect(() => {
 		fetchUsersFromApi()
