@@ -32,7 +32,12 @@ const stylesEditProfile = StyleSheet.create({
     },
     text:{
         color:colorText,
-    }
+    },
+    textInput: {
+        flex: 1,
+        color: 'white',
+        textAlignVertical: 'top',
+    },
 })
 
 export default stylesEditProfile

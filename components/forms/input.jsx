@@ -8,7 +8,9 @@ export default function Input({
         keyboardType,
         data,
         setData,
-        error
+        error,
+        numberOfLines=1,
+        multiline=false
     }) {
         return (
             <View style={styleInput.container}>
@@ -21,6 +23,8 @@ export default function Input({
                         keyboardType={keyboardType}
                         style={styleInput.textInput}
                         secureTextEntry={inputType}
+                        multiline={multiline}
+                        numberOfLines={numberOfLines}
                     />
                     {icon}
                 </View>

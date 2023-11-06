@@ -15,7 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 
-const EditPost = ({ navigation, content, picUri, hashtag}) => {
+const EditPost = ({ navigation }) => {
     const route = useRoute();
 	const { data } = route.params;
 

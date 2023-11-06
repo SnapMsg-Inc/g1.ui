@@ -1,4 +1,4 @@
-import { Animated, Text, View } from "react-native";
+import { Animated, Text, View, ScrollView } from "react-native";
 import React, { useEffect, useRef, useState } from 'react';
 import Input from "../../forms/input";
 import ProfileImage from '../profileImage';
@@ -11,6 +11,9 @@ import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../../styles/forms/input";
 import { PatchUser } from "../../connectivity/servicesUser";
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
+import { FloatingAction } from "react-native-floating-action";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -108,15 +111,16 @@ function EditProfile({navigation}) {
     },[])
 
     return (
-        <View style={stylesEditProfile.container}>
+        <ScrollView style={stylesEditProfile.container}>
             <View style={stylesEditProfile.header}>
                 <ProfileImage scrollY={scrollY} uri={data.pic}/>
+
             </View>
             <View style={stylesEditProfile.body}>
                 <Text style={stylesEditProfile.textTittle}>
                     Edit Your Profile
                 </Text>
-                <Input
+                {/* <Input
                     label={'Foto'}
                     data={pic}
                     setData={setPic}
@@ -128,7 +132,7 @@ function EditProfile({navigation}) {
                             onPress={getPermission}
                         />
                     }
-                />
+                /> */}
                 <Input
                     label={'Alias'}
                     data={alias}
@@ -183,18 +187,21 @@ function EditProfile({navigation}) {
                     label={'Interests'}
                     data={interestsList}
                     setData={setInterestsList}
-                    icon={<Icon   
-                        name={'map-marker'} 
+                    style={stylesEditProfile.textInput}
+                    icon={<Icon
+                        name={'eyedropper'} 
                         color={colorText} 
                         size={20} 
                     />}
+                    textAlignVertical="top"
+                    multiline={true}
                 />
             </View>
             <View style={stylesEditProfile.footer}>
                 <CancelButton navigation={navigation}/>
                 <AcceptButton accept={handleEdit} text={'Accept'}/>
             </View>
-        </View>   
+        </ScrollView>   
     );
 }
 export default EditProfile
