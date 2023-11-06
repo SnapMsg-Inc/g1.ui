@@ -23,8 +23,6 @@ export default function Discover({ navigation }) {
 	const { isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
 
     const route = useRoute();
-	 if (route) console.log("route: ", route)
-
 	const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
 
 	useFocusEffect(
