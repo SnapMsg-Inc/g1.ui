@@ -33,26 +33,23 @@ export default function Discover({ navigation }) {
 
 	return (
 		<View style={styles.container}>
-			{ isLoadingUserData ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
-				<Tabs.Container
-					tabContainerStyle={styles.tabContainer}
-					renderHeader={() => (
-						<DiscoverHeader navigation={navigation}/>
-					)}
-					pointerEvents={'box-none'}
-					allowHeaderOverscroll
-					renderTabBar={tabBar}
-					>
-					<Tabs.Tab name="For you" label="For you">
-                        <ForYouScreen searchQuery={searchQuery}/>
-					</Tabs.Tab>
+            <Tabs.Container
+                tabContainerStyle={styles.tabContainer}
+                renderHeader={() => (
+                    <DiscoverHeader navigation={navigation}/>
+                )}
+                pointerEvents={'box-none'}
+                allowHeaderOverscroll
+                renderTabBar={tabBar}
+                >
+                <Tabs.Tab name="For you" label="For you">
+                    <ForYouScreen searchQuery={searchQuery}/>
+                </Tabs.Tab>
 
-					<Tabs.Tab name="Trending" label="Trending">
-						<TrendingScreen/>
-					</Tabs.Tab>
-				</Tabs.Container>
-			)}
-
+                <Tabs.Tab name="Trending" label="Trending">
+                    <TrendingScreen/>
+                </Tabs.Tab>
+            </Tabs.Container>
 		</View>   
 	);
 };
