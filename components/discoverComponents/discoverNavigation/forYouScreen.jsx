@@ -1,37 +1,76 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, RefreshControl } from 'react-native';
 import RecommendedUserCard from '../../recommendedUser';
 import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
-import { GetFeedPosts, GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
+import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
+import PostButton from '../../buttons/buttonPost';
 
 const ForYouScreen = ({searchQuery=null}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const width = Dimensions.get('window').width;
 
-	
-	const [loading, setLoading] = useState(true)
-    const [posts, setPosts] = useState([])
-	
-    const fetchRecommendedPostsFromApi = async () => {
-		try {
-			// TODO: paginacion dependiendo del scroll
-            await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
-            setLoading(false)
+	// POSTS:
+	const [fullPosts, setFullPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [allDataLoaded, setAllDataLoaded] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const fetchPostsFromApi = async () => {
+        if (allDataLoaded || isLoading) {
+            return;
+        }
+        setLoading(true);
+        try {
+			// TODO: USAR end-point adecuado
+			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
+			let urlWithQueryParams;
+			searchQuery !== null ? 
+				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?text=${searchQuery}` :
+				// TODO: si search query == null entonces tengo que usar el endp de recommended users
+				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+
+            const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
+            if (newPosts.length > 0) {
+                setFullPosts([...fullPosts, ...newPosts]);
+                setCurrentPage(currentPage + 1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setLoading(false);
         } catch (error) {
-			console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
         }
     }
+
+    const handleRefresh = async () => {
+        if (isRefreshing) {
+            return;
+        }
+        setIsRefreshing(true);
+        setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
+		searchQuery = null;
+        await fetchPostsFromApi();
+        setIsRefreshing(false);
+    }
+
+    useEffect(() => {
+        fetchPostsFromApi();
+    }, [searchQuery]);
+
+    const renderLoader = () => {
+        return (
+            isLoading && !isRefreshing ? <ActivityIndicator size={'large'} color={'#1ed760'} /> : <></>
+        );
+    }
 	
-    useFocusEffect(
-		React.useCallback(() => {
-			fetchRecommendedPostsFromApi()
-        }, [])
-	);
-	
+	// USERS:
 	// TODO: CONECTAR CON SEARCH / USAR END POINT ADECUADO
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -59,88 +98,103 @@ const ForYouScreen = ({searchQuery=null}) => {
     }, [searchQuery])
 
 	return (
-		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-			<View style={styles.container}>
-				{
-					searchQuery ? (
-						users.length > 0 ? (
-							<Text style={styles.text}>
-								People
-							</Text>
-						) : <></>
-					) : (
-						users.length > 0 ? (
-							<Text style={styles.text}>
-								Who to follow
-							</Text>
-						) : <></>
-					)
-				}
-				{
-					isLoading ? <></> : (
-						users.length === 0 ? (
-							<View style={{marginVertical: 10}}>
-								{
-									posts.length === 0 ? (
-										<View>
-											<Text style={styles.text}>
-												No results for {searchQuery}
-											</Text>
-											<Text style={styles.textAlt}>
-												Try searching for something else!
-											</Text>
-										</View>
+		<View style={styles.scrollView}>
+			<Tabs.FlatList
+                data={fullPosts}
+				ListHeaderComponent={() => {
+					return (
+						<View style={styles.container}>
+							{
+								searchQuery ? (
+									users.length > 0 ? (
+										<Text style={styles.text}>
+											People
+										</Text>
 									) : <></>
-								}
-							</View>
-						) :
-							<View style={{marginVertical: 10}}>
-								<Carousel
-									loop={false}
-									width={width}
-									data={users}
-									height={180}
-									sliderWidth={300}
-									itemWidth={300}
-									scrollAnimationDuration={1000}
-									renderItem={({ item }) => (
-										<View style={{
-											backgroundColor:'black',
-											marginLeft: 5,
-											marginRight: 5, }}>
-											<RecommendedUserCard 
-												uid={item.uid}
-												alias={item.alias}
-												nick={item.nick}
-												interests={item.interests}
-												pic={item.pic}
+								) : (
+									users.length > 0 ? (
+										<Text style={styles.text}>
+											Who to follow
+										</Text>
+									) : <></>
+								)
+							}
+							{
+								isLoading ? <></> : (
+									users.length === 0 ? (
+										<View style={{marginVertical: 10}}>
+											{
+												fullPosts.length === 0 ? (
+													<View>
+														<Text style={styles.text}>
+															No results for {searchQuery}
+														</Text>
+														<Text style={styles.textAlt}>
+															Try searching for something else!
+														</Text>
+													</View>
+												) : <></>
+											}
+										</View>
+									) :
+										<View style={{marginVertical: 10}}>
+											<Carousel
+												loop={false}
+												width={width}
+												data={users}
+												height={180}
+												sliderWidth={300}
+												itemWidth={300}
+												scrollAnimationDuration={1000}
+												renderItem={({ item }) => (
+													<View style={{
+														backgroundColor:'black',
+														marginLeft: 5,
+														marginRight: 5, }}>
+														<RecommendedUserCard 
+															uid={item.uid}
+															alias={item.alias}
+															nick={item.nick}
+															interests={item.interests}
+															pic={item.pic}
+														/>
+													</View>
+												)}
 											/>
 										</View>
-									)}
-								/>
-							</View>
+								)
+							}
+						</View>
 					)
-				}
-			</View>
-			<View style={styles.container}>
-				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
-						posts.length === 0 ? <></> : (
-							posts.map((item, index) => (
-									<SnapMsg
-										key={item.pid}
-										uid={item.uid}
-										pid={item.pid}
-										username={item.nick}
-										content={item.text}
-										date={item.timestamp}
-										likes={item.likes}
-										picUri={item.media_uri}
-									/>
-							))
-						)
-					}
-			</View>
-		</Tabs.ScrollView>
+				  }}
+                renderItem={({ item }) =>
+                    <SnapMsg
+                        key={item.pid}
+                        uid={item.uid}
+                        pid={item.pid}
+                        username={item.nick}
+                        content={item.text}
+                        date={item.timestamp}
+                        likes={item.likes}
+                        picUri={item.media_uri}
+                    />
+                }
+                onEndReached={fetchPostsFromApi}
+                onEndReachedThreshold={0.10}
+                ListFooterComponent={renderLoader}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={"large"}
+                    />
+                }
+            />
+            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
+		</View>
 	);
 };
 
@@ -153,9 +207,6 @@ const styles = StyleSheet.create({
 	scrollView: {
 		flex: 1,
 		backgroundColor: 'black'
-	},
-	container: {
-		//marginTop: 10,
 	},
 	text: {
 		fontSize: 20,
