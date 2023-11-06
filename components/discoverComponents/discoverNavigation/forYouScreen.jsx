@@ -25,7 +25,6 @@ const ForYouScreen = ({searchQuery=null}) => {
 		setCurrentPage(0);
         setAllDataLoaded(false)
         setFullPosts([]);
-		console.log("fetching initial posts")
         try {
 			// TODO: USAR end-point adecuado
 			//await GetRecommendedPosts...
@@ -52,8 +51,7 @@ const ForYouScreen = ({searchQuery=null}) => {
             return;
         }
         setLoading(true);
-		
-		console.log("fetching MORE posts")
+
         try {
 			// TODO: USAR end-point adecuado
 			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)

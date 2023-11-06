@@ -20,7 +20,6 @@ export default function Feed({ navigation }) {
 		setCurrentPage(0);
         setAllDataLoaded(false)
         setFullPosts([]);
-		console.log("fetching initial posts")
         try {
             const newPosts = await GetFeedPosts(10, 0);
 			setFullPosts(newPosts);
@@ -42,8 +41,6 @@ export default function Feed({ navigation }) {
         setIsLoading(true);
         try {
             const newPosts = await GetFeedPosts(10, currentPage);
-            console.log("Posts recibidos:");
-            console.log(newPosts);
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
@@ -51,7 +48,6 @@ export default function Feed({ navigation }) {
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
-            console.log(currentPage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }

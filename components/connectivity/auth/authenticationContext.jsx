@@ -22,8 +22,6 @@ export const AuthenticationContextProvider = ({children}) => {
         setIsLoadingApp(true)
         getAuth(firebaseApp).onAuthStateChanged((userCredential) => {
             if (userCredential) {
-                console.log('creation: ', userCredential.metadata.creationTime)
-                console.log('sigintime: ', userCredential.metadata.lastSignInTime)
                 dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
                 setIsLoadingApp(false)
             } else {
