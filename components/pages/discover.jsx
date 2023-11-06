@@ -20,7 +20,7 @@ const tabBar = props => (
 );
 
 export default function Discover({ navigation }) {
-	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+	const { isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
 
     const route = useRoute();
 	 if (route) console.log("route: ", route)
@@ -28,10 +28,8 @@ export default function Discover({ navigation }) {
 	const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
 
 	useFocusEffect(
-        React.useCallback(() => {
-            //if(searchQuery)
-                
-          	// fetchUserDataFromApi()
+        React.useCallback(() => {              
+          	fetchUserDataFromApi()
         }, [])
     );
 
