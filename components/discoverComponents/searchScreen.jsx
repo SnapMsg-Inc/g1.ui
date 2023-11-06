@@ -7,19 +7,22 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserFollowersByUid, GetUsers } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import filter from 'lodash.filter';
+import { useNavigation } from '@react-navigation/native';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
+	const navigation = useNavigation();
 	const { userData } = useContext(LoggedUserContext)
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [fullData, setFullData] = useState([]);
-	const [searchQuery, setSearchQuery] = useState('');
+	const [searchQuery, setSearchQuery] = useState(null);
 	const [showFlatList, setShowFlatList] = useState(false);
 
-	const fetchDataFromApi = async () => {
+	const fetchDataFromApi = async (query) => {
         setIsLoading(true)
-		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
+		const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${query}&limit=100&page=0`;
+		GetUsers(setFullData, urlWithQueryParams)
         .then(() => {
             setIsLoading(false)
         })
@@ -30,14 +33,21 @@ const SearchScreen = ({ navigation }) => {
     }
 
 	const handleSearch = (query) => {
-		setSearchQuery(query);
-		setShowFlatList(query.length > 0)
-
-		if (query.length > 0) {
-			fetchDataFromApi();
+		const text = query.replace(/\s/g, '')
+		if (text == '') {
+			console.log("text sin espacio")
 		}
 
-		const formattedQuery = query.toLowerCase();
+		setSearchQuery(text);
+		setShowFlatList(text.length > 0)
+
+		
+		const formattedQuery = text.toLowerCase();
+		
+		if (formattedQuery.length == 1) {
+			fetchDataFromApi(formattedQuery);
+		}
+		
 		const filteredData = filter(fullData, (user) => {
 			return contains(user.alias, user.nick, formattedQuery)
 		})
@@ -52,8 +62,9 @@ const SearchScreen = ({ navigation }) => {
 	}
 
 	const handleSearchPress = () => {
-		// Realiza la búsqueda y pasa el valor de búsqueda
-		navigation.goBack({ searchQuery:searchQuery });
+		navigation.navigate('DiscoverScreen', {
+			searchQuery: searchQuery
+		});
 	};
 
 	return (
@@ -70,9 +81,12 @@ const SearchScreen = ({ navigation }) => {
 						placeholderTextColor={colorText}
 						autoCorrect={false}
 						value={searchQuery}
-						onChangeText={(query) => handleSearch(query)}
+						onChangeText={(query) => {
+								handleSearch(query)}
+						}
 						autoFocus
 						keyboardType='twitter'
+						onSubmitEditing={handleSearchPress}
 					/>
 				</View>
 				<TouchableHighlight
