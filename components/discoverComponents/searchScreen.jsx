@@ -33,11 +33,16 @@ const SearchScreen = () => {
     }
 
 	const handleSearch = (query) => {
-		setSearchQuery(query);
-		setShowFlatList(query.length > 0)
+		const text = query.replace(/\s/g, '')
+		if (text == '') {
+			console.log("text sin espacio")
+		}
+
+		setSearchQuery(text);
+		setShowFlatList(text.length > 0)
 
 		
-		const formattedQuery = query.toLowerCase();
+		const formattedQuery = text.toLowerCase();
 		
 		if (formattedQuery.length == 1) {
 			fetchDataFromApi(formattedQuery);
@@ -59,11 +64,6 @@ const SearchScreen = () => {
 	const handleSearchPress = () => {
 		// Realiza la búsqueda y pasa el valor de búsqueda
 		console.log("Query enviada: ", searchQuery)
-		// navigation.navigate('DiscoverScreen', { searchQuery:searchQuery });
-		// navigation.navigate('DiscoverScreen', {
-		// 	screen: 'ForYouScreen',
-		// 	searchQuery: searchQuery
-		// });
 		navigation.navigate('DiscoverScreen', {
 			searchQuery: searchQuery
 		});
@@ -83,7 +83,9 @@ const SearchScreen = () => {
 						placeholderTextColor={colorText}
 						autoCorrect={false}
 						value={searchQuery}
-						onChangeText={(query) => handleSearch(query)}
+						onChangeText={(query) => {
+								handleSearch(query)}
+						}
 						autoFocus
 						keyboardType='twitter'
 						onSubmitEditing={handleSearchPress}
