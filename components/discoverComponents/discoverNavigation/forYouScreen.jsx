@@ -4,7 +4,7 @@ import RecommendedUserCard from '../../recommendedUser';
 import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
-import { GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
+import { GetFeedPosts, GetRecommendedPosts, GetUserFollowersByUid, GetUsers } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapMsg from '../../SnapMsg';
 
@@ -63,61 +63,81 @@ const ForYouScreen = ({searchQuery=null}) => {
 			<View style={styles.container}>
 				{
 					searchQuery ? (
-						<Text style={styles.text}>
-							People
-						</Text>
+						users.length > 0 ? (
+							<Text style={styles.text}>
+								People
+							</Text>
+						) : <></>
 					) : (
-						<Text style={styles.text}>
-							Who to follow
-						</Text>
+						users.length > 0 ? (
+							<Text style={styles.text}>
+								Who to follow
+							</Text>
+						) : <></>
 					)
-
 				}
 				{
 					isLoading ? <></> : (
-						<View style={{marginVertical: 20}}>
-							<Carousel
-								loop={false}
-								width={width}
-								data={users}
-								height={180}
-								sliderWidth={300}
-              					itemWidth={300}
-								scrollAnimationDuration={1000}
-								renderItem={({ item }) => (
-									<View style={{
-										backgroundColor:'black',
-										marginLeft: 5,
-										marginRight: 5, }}>
-										<RecommendedUserCard 
-											uid={item.uid}
-											alias={item.alias}
-											nick={item.nick}
-											interests={item.interests}
-											pic={item.pic}
-										/>
-									</View>
-								)}
-							/>
-						</View>
+						users.length === 0 ? (
+							<View style={{marginVertical: 10}}>
+								{
+									posts.length === 0 ? (
+										<View>
+											<Text style={styles.text}>
+												No results for {searchQuery}
+											</Text>
+											<Text style={styles.textAlt}>
+												Try searching for something else!
+											</Text>
+										</View>
+									) : <></>
+								}
+							</View>
+						) :
+							<View style={{marginVertical: 10}}>
+								<Carousel
+									loop={false}
+									width={width}
+									data={users}
+									height={180}
+									sliderWidth={300}
+									itemWidth={300}
+									scrollAnimationDuration={1000}
+									renderItem={({ item }) => (
+										<View style={{
+											backgroundColor:'black',
+											marginLeft: 5,
+											marginRight: 5, }}>
+											<RecommendedUserCard 
+												uid={item.uid}
+												alias={item.alias}
+												nick={item.nick}
+												interests={item.interests}
+												pic={item.pic}
+											/>
+										</View>
+									)}
+								/>
+							</View>
 					)
 				}
 			</View>
-			 {/* VER ACA -> USAR DATA OBTENIDA DEL ENDPOINT (PREGUNTAR CUAL ES)*/}
 			<View style={styles.container}>
 				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
-						posts.map((item, index) => (
-								<SnapMsg
-									key={item.pid}
-									uid={item.uid}
-									pid={item.pid}
-									username={item.nick}
-									content={item.text}
-									date={item.timestamp}
-									likes={item.likes}
-									picUri={item.media_uri}
-								/>
-						))
+						posts.length === 0 ? <></> : (
+							posts.map((item, index) => (
+									<SnapMsg
+										key={item.pid}
+										uid={item.uid}
+										pid={item.pid}
+										username={item.nick}
+										content={item.text}
+										date={item.timestamp}
+										likes={item.likes}
+										picUri={item.media_uri}
+									/>
+							))
+						)
 					}
 			</View>
 		</Tabs.ScrollView>
@@ -135,7 +155,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'black'
 	},
 	container: {
-		marginTop: 10,
+		//marginTop: 10,
 	},
 	text: {
 		fontSize: 20,
@@ -143,6 +163,11 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		marginHorizontal: 10,
 	},
+	textAlt: {
+		fontSize: 16,
+		color: colorText,
+		marginHorizontal: 10,
+	}
 });
 
 export default ForYouScreen;

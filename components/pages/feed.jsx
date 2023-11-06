@@ -21,7 +21,7 @@ export default function Feed({ navigation }) {
         }
         setIsLoading(true);
         try {
-            const newPosts = await GetFeedPosts(6, currentPage);
+            const newPosts = await GetFeedPosts(10, currentPage);
             console.log("Posts recibidos:");
             console.log(newPosts);
             if (newPosts.length > 0) {
