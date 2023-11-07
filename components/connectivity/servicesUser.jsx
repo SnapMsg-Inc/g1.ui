@@ -9,6 +9,8 @@ export async function GetUsers(setState, url) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
+    console.log(token)
+    
     await axios({
         method: 'get',
         url: url,

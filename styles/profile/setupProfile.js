@@ -32,6 +32,40 @@ const stylesEditProfile = StyleSheet.create({
     },
     text:{
         color:colorText,
+    },
+    textInput: {
+        flex: 1,
+        color: 'white',
+        textAlignVertical: 'top',
+    },
+    imageButtonContainer: {
+        flexDirection: 'row',
+      },
+    imageButton: {
+        backgroundColor: colorApp,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 30,
+        height: 30,
+        marginLeft: 60,
+        marginTop: -25
+    },
+    image: {
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+    },
+    optionButtonContainer: {
+        marginLeft: 220,
+    },
+    optionButton: {
+        flexDirection: 'row',
+        padding: 5
+    },
+    optionButtonText: {
+        color: 'white',
+        marginLeft: 5,
     }
 })
 
