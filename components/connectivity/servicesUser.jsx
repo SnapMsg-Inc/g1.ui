@@ -172,25 +172,16 @@ export const postsUserFederate = (data, token) =>
         } 
     })
 
-export async function PatchUser(data) {
-    const auth = getAuth();
-    console.log('user pacth ', auth.currentUser)
-    const token = await getIdToken(auth.currentUser, true);
-    try {
-        await axios({
-            method: 'patch',
-            url: `${URL}/me`,
-            data: data,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-        return true
-    } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
-    }
-}
+export const PatchUser = (data, token) =>
+    axios({
+        method: 'patch',
+        url: `${URL}/me`,
+        data: data,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
 
 export async function deleteUserFollowByUid(uid) {
     const auth = getAuth();

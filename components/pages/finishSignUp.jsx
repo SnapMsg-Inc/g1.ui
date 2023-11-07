@@ -9,12 +9,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../styles/forms/input";
 import LocationSetup from "./location";
 import Preferences from "./preferences";
-import { PatchUser } from "../connectivity/servicesUser";
+import { GetToken, PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
 
 function FinishSignUp({ navigation }) {
-    const [country, setCountry] = useState('')
+    const [countryLocate, setCountryLocate] = useState('')
     const [locality, setLocality] = useState('')
     const [step, setStep] = useState(1); 
     const [interestsList, setInterestsList] = useState([])
@@ -22,22 +22,35 @@ function FinishSignUp({ navigation }) {
     const { markRegisterComplete } = useContext(AuthenticationContext)
 
     const handleAccept = async() => {
-        try {
-            const success = PatchUser({
-                                "zone": coordinates,
-                                "interests": interestsList,
-                                "pic": '',
-                            })
-            if (success)
+        GetToken()
+        .then((token) => {
+            PatchUser({"zone": coordinates,
+                        "interests": interestsList}, token)
+            .then((response) => {
                 markRegisterComplete()
-        } catch(error) {
-            console.log(error)
-        }
+            })
+            .catch((error) => {
+                console.log(error)
+            }) 
+        })
     }
 
     const handleNext = () => {
         if (step === 1)
-            GeocodeWithLocalityAndCountry(locality, country, setCoordinates)
+            GeocodeWithLocalityAndCountry(locality, countryLocate, setCoordinates)
+            .then((geocodeLocation)=> {
+                console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
+                console.log('lenght ', geocodeLocation.length)
+                if (geocodeLocation.length === 0)
+                    setCoordinates({ 'latitude': 0, 'longitude': 0})
+                else {
+                    setCoordinates({'latitude': geocodeLocation[0].latitude,
+                                    'longitude': geocodeLocation[0].longitude})
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         setStep(step + 1)
     };
 
@@ -45,21 +58,34 @@ function FinishSignUp({ navigation }) {
         setStep(step - 1);
     };
 
-    const setLocation = () => {
-        CurrentPosition({
-            accuracy: Location.Accuracy.High,
-            distanceInterval: 2
-        }).then((location) => {
-            const { coords } = location
-            const { latitude, longitude} = coords
-            setCoordinates({'latitude': latitude, 'longitude': longitude})
-            console.log(`longitude ${JSON.stringify(coordinates)} `)
-            ReverseGeocode(coordinates, setLocality, setCountry)
-        })  
+    
+    const setData = () => {
+        ReverseGeocode(coordinates)
+        .then((address)=> {
+            const { city, country } = address[0]
+            console.log(`city ${city} country ${country}`)
+            setLocality(city)
+            setCountryLocate(country)
+        }).catch((error) => {
+            console.log(error)
+        })
     }
-
+    
     useEffect(() => {
+        console.log('useEffect')
+        const setLocation = () => {
+            CurrentPosition({
+                accuracy: Location.Accuracy.High,
+                distanceInterval: 2
+            }).then((location) => {
+                const { coords } = location
+                const { latitude, longitude} = coords
+                setCoordinates({'latitude': latitude, 'longitude': longitude})
+                console.log(`longitude ${JSON.stringify(coordinates)} `)
+            })  
+        }
         GetPermission()
+        setLocation()
     },[])
 
     return(
@@ -68,11 +94,11 @@ function FinishSignUp({ navigation }) {
                 <Logo/>
             </View>
             {step === 1 ? 
-                (<LocationSetup country={country}
-                                setCountry={setCountry}
+                (<LocationSetup country={countryLocate}
+                                setCountry={setCountryLocate}
                                 locality={locality}
                                 setLocality={setLocality}
-                                getPermission={setLocation}
+                                getPermission={() => setData()}
                 />) :
                 (<Preferences list={interestsList} setList={setInterestsList}/>) 
             }
