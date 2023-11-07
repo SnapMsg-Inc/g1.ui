@@ -20,36 +20,36 @@ const tabBar = props => (
 );
 
 export default function Discover({ navigation }) {
-	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+	const { isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+
+    const route = useRoute();
+	const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
 
 	useFocusEffect(
-        React.useCallback(() => {
+        React.useCallback(() => {              
           	fetchUserDataFromApi()
         }, [])
     );
 
 	return (
 		<View style={styles.container}>
-			{ isLoadingUserData ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
-				<Tabs.Container
-					tabContainerStyle={styles.tabContainer}
-					renderHeader={() => (
-						<DiscoverHeader navigation={navigation}/>
-					)}
-					pointerEvents={'box-none'}
-					allowHeaderOverscroll
-					renderTabBar={tabBar}
-					>
-					<Tabs.Tab name="For you" label="For you">
-                        <ForYouScreen/>
-					</Tabs.Tab>
+            <Tabs.Container
+                tabContainerStyle={styles.tabContainer}
+                renderHeader={() => (
+                    <DiscoverHeader navigation={navigation}/>
+                )}
+                pointerEvents={'box-none'}
+                allowHeaderOverscroll
+                renderTabBar={tabBar}
+                >
+                <Tabs.Tab name="For you" label="For you">
+                    <ForYouScreen searchQuery={searchQuery}/>
+                </Tabs.Tab>
 
-					<Tabs.Tab name="Trending" label="Trending">
-						<TrendingScreen/>
-					</Tabs.Tab>
-				</Tabs.Container>
-			)}
-
+                <Tabs.Tab name="Trending" label="Trending">
+                    <TrendingScreen/>
+                </Tabs.Tab>
+            </Tabs.Container>
 		</View>   
 	);
 };

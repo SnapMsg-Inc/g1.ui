@@ -9,6 +9,8 @@ export async function GetUsers(setState, query) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
     console.log('token ', token)
+    console.log(token)
+    
     await axios({
         method: 'get',
         url: `${URL}${query}`,
@@ -290,9 +292,6 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     
     const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    console.log(token)
-
-    console.log("URL con QUERY: \n\n", urlWithQueryParams);
     try {
     const response = await axios({
         method: 'get',

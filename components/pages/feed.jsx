@@ -15,15 +15,32 @@ export default function Feed({ navigation }) {
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
+    const fetchInitialPostsFromApi = async () => {
+        setIsLoading(true);
+		setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
+        try {
+            const newPosts = await GetFeedPosts(10, 0);
+			setFullPosts(newPosts);
+            if (newPosts.length > 0) {
+                setCurrentPage(1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching initial posts:', error);
+        }
+    }
+
     const fetchDataFromApi = async () => {
         if (allDataLoaded || isLoading) {
             return;
         }
         setIsLoading(true);
         try {
-            const newPosts = await GetFeedPosts(6, currentPage);
-            console.log("Posts recibidos:");
-            console.log(newPosts);
+            const newPosts = await GetFeedPosts(10, currentPage);
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
@@ -31,7 +48,6 @@ export default function Feed({ navigation }) {
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
-            console.log(currentPage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -41,12 +57,8 @@ export default function Feed({ navigation }) {
         if (isRefreshing) {
             return;
         }
-        console.log("Entro")
         setIsRefreshing(true);
-        setCurrentPage(0);
-        setAllDataLoaded(false)
-        setFullPosts([]);
-        await fetchDataFromApi();
+        await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
     }
 

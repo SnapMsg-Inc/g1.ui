@@ -15,7 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 
-const EditPost = ({ navigation, content, picUri, hashtag}) => {
+const EditPost = ({ navigation }) => {
     const route = useRoute();
 	const { data } = route.params;
 
@@ -90,10 +90,6 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
             "media_uri": uri,
             "is_private": !isPublic,
         }
-        
-        console.log(postData)
-        
-        console.log("PID INVIADO: ", data.pid)
         try {
             const success = await PatchPostData(postData, data.pid);
             if (success) {
