@@ -1,11 +1,15 @@
-import { Animated, Text, View, ScrollView } from "react-native";
-import React, { useEffect, useRef, useState } from 'react';
+import {
+    View,
+    Text,
+    ScrollView,
+    Image,
+    Pressable,
+  } from "react-native";
+import React, { useEffect, useState } from 'react';
 import Input from "../../forms/input";
-import ProfileImage from '../profileImage';
 import stylesEditProfile from "../../../styles/profile/setupProfile";
 import AcceptButton from "../../buttons/buttonAcept";
 import CancelButton from "../../buttons/buttonCancel";
-import { TouchableHighlight } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -13,20 +17,110 @@ import { colorText } from "../../../styles/forms/input";
 import { PatchUser } from "../../connectivity/servicesUser";
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-import { FloatingAction } from "react-native-floating-action";
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { Octicons } from '@expo/vector-icons';
 
 function EditProfile({navigation}) {
     const route = useRoute();
 	const { data } = route.params;
-    const [pic, setPic] = useState(data.pic)
+
+    const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
     const [nick, setNick] = useState(data.nick)
     const [locality, setLocality] = useState('')
     const [country, setCountry] = useState('')
     const [coordinates, setCoordinates] = useState(data.zone)
     const [interestsList, setInterestsList] = useState(data.interests.toString().replace(/,/g, ', '))
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
 
-    const scrollY = useRef(new Animated.Value(0)).current;
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+    const takePhotoFromCamera = () => {
+        ImagePicker.openCamera({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        })
+        .then((image) => {
+            if (!image.cancelled) {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            }
+        })
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
+        });
+    };
+    
+    const choosePhotoFromGalery = () => {
+        ImagePicker.openPicker({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        })
+        .then((image) => {
+            if (!image.cancelled) {
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            }
+        })
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
+        });
+    };
+
+    const uploadImage = async () => {
+        if( image == null || image === data.pic) {
+            return null;
+        }
+        const uploadUri = image;
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+    
+        // Add timestamp to File Name
+        const extension = filename.split('.').pop(); 
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+    
+        setUploading(true);
+        setTransferred(0);
+        console.log("file: ", filename)
+        const storageRef = storage().ref(`photos/${filename}`);
+        const task = storageRef.putFile(uploadUri);
+    
+        // Set transferred state
+        task.on('state_changed', (taskSnapshot) => {
+        console.log(
+            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+    
+        setTransferred(
+            Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            100,
+        );
+        });
+    
+        try {
+            await task;
+        
+            const url = await storageRef.getDownloadURL();
+        
+            setUploading(false);
+
+            return url;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    
+    };
 
     const getPermission = async () => {
         let {status} = await Location.requestForegroundPermissionsAsync()
@@ -82,6 +176,9 @@ function EditProfile({navigation}) {
     }
 
     const handleEdit = async() => {
+        const imageUrl = await uploadImage();
+        const uri = imageUrl ? imageUrl : data.pic;
+
         try {
             geocode()
             const data ={
@@ -90,7 +187,7 @@ function EditProfile({navigation}) {
                 "zone": coordinates,
                 "interests": interestsList.split(','),
                 "ocupation": "",
-                "pic": pic
+                "pic": uri
             }
             console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
             const success = await PatchUser(data)
@@ -113,26 +210,47 @@ function EditProfile({navigation}) {
     return (
         <ScrollView style={stylesEditProfile.container}>
             <View style={stylesEditProfile.header}>
-                <ProfileImage scrollY={scrollY} uri={data.pic}/>
-
+                <Image source={{ uri: data.pic}} style={stylesEditProfile.image}/>
+                <Pressable
+                    onPress={() => {
+                        setIsMenuVisible(!isMenuVisible);
+                    }}
+                >
+                    <View style={stylesEditProfile.imageButton}>
+                        <Octicons name="plus" size={20} color={"white"} />
+                    </View>
+                </Pressable>
+                {
+                    isMenuVisible ? (
+                        <View style={stylesEditProfile.optionButtonContainer}>
+                            <Pressable
+                                onPress={() => {
+                                    takePhotoFromCamera();
+                                }}
+                            >
+                                <View style={stylesEditProfile.optionButton}>
+                                    <Icon name="camera" size={20} color={colorApp} />
+                                    <Text style={stylesEditProfile.optionButtonText}>Take Photo</Text>
+                                </View>
+                            </Pressable>
+                            <Pressable
+                                onPress={() => {
+                                    choosePhotoFromGalery()
+                                }}
+                            >
+                                <View style={stylesEditProfile.optionButton}>
+                                    <SimpleLineIcons name="picture" size={20} color={colorApp} />
+                                    <Text style={stylesEditProfile.optionButtonText}>Choose Photo</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    ) : <></>
+                }
             </View>
             <View style={stylesEditProfile.body}>
                 <Text style={stylesEditProfile.textTittle}>
                     Edit Your Profile
                 </Text>
-                {/* <Input
-                    label={'Foto'}
-                    data={pic}
-                    setData={setPic}
-                    icon={
-                        <Icon   
-                            name={'image'} 
-                            color={colorText} 
-                            size={20} 
-                            onPress={getPermission}
-                        />
-                    }
-                /> */}
                 <Input
                     label={'Alias'}
                     data={alias}
@@ -204,4 +322,8 @@ function EditProfile({navigation}) {
         </ScrollView>   
     );
 }
+
+const colorBackground = '#000'
+const colorApp = '#1ed760'
+
 export default EditProfile

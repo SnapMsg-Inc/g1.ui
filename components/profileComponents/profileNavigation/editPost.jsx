@@ -90,10 +90,6 @@ const EditPost = ({ navigation }) => {
             "media_uri": uri,
             "is_private": !isPublic,
         }
-        
-        console.log(postData)
-        
-        console.log("PID INVIADO: ", data.pid)
         try {
             const success = await PatchPostData(postData, data.pid);
             if (success) {
