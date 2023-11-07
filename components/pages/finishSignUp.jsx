@@ -2,11 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { Text, View } from "react-native";
 import * as Location from 'expo-location';
 import { TouchableHighlight } from "react-native";
-import Input from "../forms/input";
 import Logo from "../logo";
 import stylesSetup from "../../styles/forms/setup";
 import AcceptButton from "../buttons/buttonAcept";
-import InterestButton from '../buttons/buttonSelect';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../styles/forms/input";
 import LocationSetup from "./location";
@@ -14,12 +12,8 @@ import Preferences from "./preferences";
 import { PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
-import { getAuth, signInAnonymously } from "firebase/auth";
-import firebaseApp from "../connectivity/firebase";
-import { useRoute } from "@react-navigation/native";
-import { LoginAccount } from "../connectivity/authorization";
 
-function FinishSignUp({ navigation}) {
+function FinishSignUp({ navigation }) {
     const [country, setCountry] = useState('')
     const [locality, setLocality] = useState('')
     const [step, setStep] = useState(1); 
@@ -32,6 +26,7 @@ function FinishSignUp({ navigation}) {
             const success = PatchUser({
                                 "zone": coordinates,
                                 "interests": interestsList,
+                                "pic": '',
                             })
             if (success)
                 markRegisterComplete()

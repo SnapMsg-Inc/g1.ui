@@ -54,12 +54,12 @@ function SignUp({navigation}) {
                 "birthdate": date.toISOString().substring(0,10),
                 "ocupation": ''
             }
-            onRegister(data, password)
+            onRegister(data, password, () => navigation.navigate('Finish'))
         }
     }; 
 
     const signButtonFederate = () => {
-        onRegisterFederate()
+        onRegisterFederate(() => navigation.navigate('Finish'))
     }   
 
     return (

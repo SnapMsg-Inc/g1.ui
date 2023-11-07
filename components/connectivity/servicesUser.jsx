@@ -5,18 +5,19 @@ import axios from 'axios';
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
-export async function GetUsers(setState, url) {
+export async function GetUsers(setState, query) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-
+    console.log('token ', token)
     await axios({
         method: 'get',
-        url: url,
+        url: `${URL}${query}`,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     }).then((response) => {
+        console.log("reponse ", response.data)
         setState(response.data)
     })
     . catch((error) => {
@@ -158,10 +159,8 @@ export const postsUser = async (data) => {
     })
 }
 
-export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLogout) => {
-    const auth = getAuth()
-    const token = await getIdToken(auth.currentUser, true)
-    await axios({
+export const postsUserFederate = (data, token) =>
+    axios({
         method: 'post',
         url: URL,
         data: data,
@@ -170,22 +169,6 @@ export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLog
             'Content-Type': 'application/json'
         } 
     })
-    .then((response) => {
-        console.log(response.status)
-        setIsLoading(false)
-        setIsRegister(true)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-        if (error.response.status === 400) {
-            alert('Email already in use')
-            onLogout()
-        } else {
-            deleteUser(auth.currentUser)
-        } 
-        setIsLoading(false)
-    })
-}
 
 export async function PatchUser(data) {
     const auth = getAuth();
@@ -496,3 +479,16 @@ export async function PatchPostData(data, pid) {
         console.log(JSON.stringify(error.response, null, 2))
     }
 }
+
+export const GetToken = () => getIdToken(getAuth().currentUser, true) 
+
+export const GetMe = (token) => 
+    axios({
+        method: 'get',
+        url: `${URL}/me`,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+
