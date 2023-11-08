@@ -30,6 +30,11 @@ export default function Feed({ navigation }) {
             }
             setIsLoading(false);
         } catch (error) {
+            console.log(error.response.status)
+            // TODO: CATCHEAR ESTE ERROR (GATEWAY CAIDO) EN TODOS LADOS!!!!!!!
+            if (error.response.status === 502)
+                alert('Services not available.\nPlease retry again later')
+
             console.error('Error fetching initial posts:', error);
         }
     }

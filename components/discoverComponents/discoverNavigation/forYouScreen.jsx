@@ -94,7 +94,6 @@ const ForYouScreen = ({searchQuery=null}) => {
 	const fetchUsersFromApi = async (query=searchQuery) => {
 		setIsLoading(true);
 		let urlWithQueryParams;
-		console.log(query)
 		if (query !== null) {
 		  // Si searchQuery comienza con '#', quita el '#' y usa el resto como nick
 		  const nick = searchQuery.startsWith('#') ? searchQuery.slice(1) : searchQuery;

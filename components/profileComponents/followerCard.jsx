@@ -25,15 +25,17 @@ const FollowerCard = ({ uid, alias, nick, interests, pic }) => {
 	const [loading, setLoading] = useState(true)
 
 	const fetchDataFromApi = async () => {
-        setLoading(true)
-        checkIfUserFollows(setIsFollowing, userData.uid, uid)
-        .then(() => {
-            setLoading(false)
-        })
-        .catch((error) => {
-            console.error('Error fetching data when checking if user follows other:', error);
-            setLoading(false)
-        })
+		if (userData.uid !== uid) {
+			setLoading(true)
+			checkIfUserFollows(setIsFollowing, userData.uid, uid)
+			.then(() => {
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.error('Error fetching data when checking if user follows other:', error);
+				setLoading(false)
+			})
+		}
     }
 
 	useFocusEffect(

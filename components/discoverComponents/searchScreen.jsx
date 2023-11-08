@@ -20,16 +20,16 @@ const SearchScreen = () => {
 	const [showFlatList, setShowFlatList] = useState(false);
 
 	const fetchDataFromApi = async (query) => {
-        setIsLoading(true)
-		const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${query}&limit=100&page=0`;
+		setIsLoading(true)
+		const urlWithQueryParams = `?nick=${query}&limit=100&page=0`;
 		GetUsers(setFullData, urlWithQueryParams)
-        .then(() => {
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            console.error('Error fetching followers data:', error);
-            setIsLoading(false)
-        })
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching users data, SearchScreen:', error);
+			setIsLoading(false)
+		})
     }
 
 	const handleSearch = (query) => {

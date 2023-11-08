@@ -8,8 +8,8 @@ const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 export async function GetUsers(setState, query) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    console.log('token ', token)
-    console.log(token)
+    
+    // console.log("Bearer ", token);
     
     await axios({
         method: 'get',
@@ -19,7 +19,6 @@ export async function GetUsers(setState, query) {
             'Content-Type': 'application/json'
         }
     }).then((response) => {
-        console.log("reponse ", response.data)
         setState(response.data)
     })
     . catch((error) => {
