@@ -29,3 +29,6 @@ export const LogoutAccount = () =>
     
 export const SignInWithGoogle = () => 
     GoogleSignin.signIn()
+
+export const DeleteUserFirebase = () => 
+    deleteUser(firebase.getAuth(firebaseApp).currentUser)

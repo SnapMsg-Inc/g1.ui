@@ -14,11 +14,13 @@ import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colorText } from "../../../styles/forms/input";
-import { PatchUser } from "../../connectivity/servicesUser";
+import { GetToken, PatchUser } from "../../connectivity/servicesUser";
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Octicons } from '@expo/vector-icons';
+import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
+import { ValidateEdit } from "../../forms/validations";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -26,9 +28,11 @@ function EditProfile({navigation}) {
 
     const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
+    const [aliasError, setAliasError] = useState(null)
     const [nick, setNick] = useState(data.nick)
+    const [nickError, setNickError] = useState(null)
     const [locality, setLocality] = useState('')
-    const [country, setCountry] = useState('')
+    const [countryLocate, setCountryLocate] = useState('')
     const [coordinates, setCoordinates] = useState(data.zone)
     const [interestsList, setInterestsList] = useState(data.interests.toString().replace(/,/g, ', '))
     const [uploading, setUploading] = useState(false);
@@ -122,90 +126,78 @@ function EditProfile({navigation}) {
     
     };
 
-    const getPermission = async () => {
-        let {status} = await Location.requestForegroundPermissionsAsync()
-        if (status !== 'granted'){
-            return
-        }
-    }
-
-    const setLocation = async () => {
-        try {
-            getPermission()
-            await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.High,
-                distanceInterval: 2
-            }).then((location) => {
-                const {coords} = location
-                const {latitude, longitude} = coords
-                setCoordinates({'latitude': latitude, 'longitude': longitude})
-                console.log(`longitude ${JSON.stringify(coordinates)} `)
-                reverseGeocode() 
-            })  
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const geocode = () => {
-        Location.geocodeAsync(`${locality} ${country}`)
-        .then((geocodeLocation)=> {
-            console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-            if (geocodeLocation.length) {
-                setCoordinates({'latitude': geocodeLocation[0].latitude,
-                                'longitude': geocodeLocation[0].longitude})
-                console.log(coordinates)
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
-    }
-
-    const reverseGeocode = async () => {
-        await Location.reverseGeocodeAsync({
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude
-        }).then((address)=> {
-            const {city, country} = address[0]
-            setLocality(city)
-            setCountry(country)
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
-
     const handleEdit = async() => {
         const imageUrl = await uploadImage();
         const uri = imageUrl ? imageUrl : data.pic;
-
-        try {
-            geocode()
-            const data ={
-                "alias": alias,
-                "nick": nick,
-                "zone": coordinates,
-                "interests": interestsList.split(','),
-                "ocupation": "",
-                "pic": uri
-            }
-            console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
-            const success = await PatchUser(data)
-            if (success) {
-                setTimeout(() => navigation.goBack(), 500)
-            } else {
-                alert('error')
-            }  
-        } catch(error) {
-            console.log(error)
-        }
-        
+        GetToken()
+        .then((token) => {
+            GeocodeWithLocalityAndCountry(locality, countryLocate)
+            .then((geocodeLocation)=> {
+                console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
+                console.log('lenght ', geocodeLocation.length)
+                const data ={
+                    "alias": alias,
+                    "nick": nick,
+                    "zone": geocodeLocation.length !== 0 ? 
+                            { 'latitude':geocodeLocation[0].latitude,
+                            'longitude':geocodeLocation[0].longitude} : coordinates,
+                    "interests": interestsList.split(','),
+                    "ocupation": "",
+                    "pic": uri
+                }
+                console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
+                if (ValidateEdit(alias, setAliasError, nick, setNickError)) {
+                    PatchUser(data, token)
+                    .then((response) => {
+                        setTimeout(() => navigation.goBack(), 500)
+                    })
+                    .catch(() => {
+                        Alert('Error in edit profile')
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        })
     }
 
+    const setLocation = () => {
+        CurrentPosition({
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 2
+        }).then((location) => {
+            const { coords } = location
+            const { latitude, longitude} = coords
+            console.log(`longitude ${JSON.stringify(coords)} `)
+            ReverseGeocode({'latitude': latitude, 'longitude': longitude})
+            .then((address) => {
+                const { city, country } = address[0]
+                console.log(`city ${city} country ${country}`)
+                setLocality(city)
+                setCountryLocate(country)
+            }).catch((error) => {
+                console.log(error)
+            })
+        })  
+    }
+    
     useEffect(()=>{
-        setTimeout(()=> {getPermission()}, 1000)
-        reverseGeocode()
-    },[])
+        const setData = () => {
+            console.log('coordinates useEffect', coordinates)
+            ReverseGeocode(coordinates)
+            .then((address) => {
+                const { city, country } = address[0]
+                console.log(`city ${city} country ${country}`)
+                setLocality(city)
+                setCountryLocate(country)
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+        GetPermission()
+        setData()
+    }, [])
 
     return (
         <ScrollView style={stylesEditProfile.container}>
@@ -260,9 +252,9 @@ function EditProfile({navigation}) {
                             name={'id-card'} 
                             color={colorText} 
                             size={20} 
-                            onPress={getPermission}
                         />
-                    }          
+                    }
+                    error={nickError}
                 />
                 <Input
                     label={'Nick'}
@@ -273,20 +265,20 @@ function EditProfile({navigation}) {
                             name={'tag'} 
                             color={colorText} 
                             size={20} 
-                            onPress={getPermission}
                         />
-                    }          
+                    }
+                    error={nickError}          
                 />
                 <Input
                     label={'Country'}
-                    data={country}
-                    setData={setCountry}
+                    data={countryLocate}
+                    setData={setCountryLocate}
                     icon={
                         <Icon   
                         name={'flag'} 
                         color={colorText} 
                         size={20} 
-                        onPress={getPermission}
+                        onPress={() => setLocation()}
                         />
                     }
                 />
@@ -298,7 +290,7 @@ function EditProfile({navigation}) {
                         name={'map-marker'} 
                         color={colorText} 
                         size={20} 
-                        onPress={setLocation}
+                        onPress={() => setLocation()}
                     />}             
                 />
                 <Input

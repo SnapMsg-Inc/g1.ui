@@ -82,3 +82,21 @@ export const ValidationsSignUp = (  fullName, setFullNameError,
 
     return isValid
 };
+
+
+export const ValidateEdit = (alias, setAliasError, nick, setNickError) => {
+    let isValid = true;
+    if (!alias.trim()) {
+        setAliasError('Please enter a valid alias')
+        isValid = false;
+    } else {
+        setAliasError(null)
+    }
+    if (!isValidNick(nick)) {
+        setNickError('Nick is required.');
+        isValid = false;
+    } else {
+        setNickError(null);
+    }
+    return isValid
+}
