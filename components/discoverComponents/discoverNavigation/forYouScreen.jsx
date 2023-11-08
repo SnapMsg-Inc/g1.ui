@@ -98,10 +98,10 @@ const ForYouScreen = ({searchQuery=null}) => {
 		if (query !== null) {
 		  // Si searchQuery comienza con '#', quita el '#' y usa el resto como nick
 		  const nick = searchQuery.startsWith('#') ? searchQuery.slice(1) : searchQuery;
-		  urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?nick=${nick}&limit=10&page=0`;
+		  urlWithQueryParams = `?nick=${nick}&limit=10&page=0`;
 		} else {
 		  // TODO: si searchQuery == null entonces tengo que usar el endpoint de recommended users
-		  urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/users?limit=10&page=0`;
+		  urlWithQueryParams = `?limit=10&page=0`;
 		}
 	  
 		GetUsers(setUsers, urlWithQueryParams)

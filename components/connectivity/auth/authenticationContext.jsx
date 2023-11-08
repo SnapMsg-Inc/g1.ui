@@ -76,7 +76,11 @@ export const AuthenticationContextProvider = ({children}) => {
                         dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
                     })
                     .catch((error) => {
-                        alert('User not found.\nPlease create account.')
+                        console.log(error.response.status)
+                        if (error.response.status === 502)
+                            alert('Services not available.\nPlease retry again later')
+                        else
+                            alert('User not found.\nPlease create account.')
                         onLogout()
                         DeleteUserFirebase();
                         setLoginFederate(false)
@@ -132,29 +136,41 @@ export const AuthenticationContextProvider = ({children}) => {
                         setIsLoading(false)
                     })
                     .catch((error) => {
-                        const {user} = currentUser 
-                        user.givenName = user.givenName.replace(/ /g, '_')
-                        console.log(JSON.stringify(user,null,2))
-                        const today = new Date()
-                        postsUserFederate({
-                            "fullname": user.name,
-                            "alias" : `${user.givenName} ${user.familyName}`,
-                            "interests": [],
-                            "zone": {
-                                "latitude": 0,
-                                "longitude": 0
-                            },
-                            "ocupation": '',
-                            "pic": user.photo,
-                            "email": user.email,
-                            "nick": user.givenName,
-                            "birthdate": today.toISOString().substring(0,10),
-                        }, token)
-                        .then(() => {
-                            dispatchSignedIn({type: 'SIGN_UP'})
+                        console.log(error.response.status)
+                        if (error.response.status === 502){
+                            alert('Services not available.\nPlease retry again later')
+                            DeleteUserFirebase()
+                            onLogout()
                             setIsLoading(false)
-                            navigateTo()
-                        })
+                        } else {
+                            const {user} = currentUser 
+                            user.givenName = user.givenName.replace(/ /g, '_')
+                            console.log(JSON.stringify(user,null,2))
+                            const today = new Date()
+                            postsUserFederate({
+                                "fullname": user.name,
+                                "alias" : `${user.givenName} ${user.familyName}`,
+                                "interests": [],
+                                "zone": {
+                                    "latitude": 0,
+                                    "longitude": 0
+                                },
+                                "ocupation": '',
+                                "pic": user.photo,
+                                "email": user.email,
+                                "nick": user.givenName,
+                                "birthdate": today.toISOString().substring(0,10),
+                            }, token)
+                            .then(() => {
+                                dispatchSignedIn({type: 'SIGN_UP'})
+                                setIsLoading(false)
+                                navigateTo()
+                            }).catch((error) => {
+                                DeleteUserFirebase()
+                                onLogout()
+                                setIsLoading(false)
+                            })
+                        }
                     })
                 })
             })

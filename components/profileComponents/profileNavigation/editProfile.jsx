@@ -202,7 +202,7 @@ function EditProfile({navigation}) {
     return (
         <ScrollView style={stylesEditProfile.container}>
             <View style={stylesEditProfile.header}>
-                <Image source={{ uri: data.pic}} style={stylesEditProfile.image}/>
+                <Image source={{ uri: image }} style={stylesEditProfile.image}/>
                 <Pressable
                     onPress={() => {
                         setIsMenuVisible(!isMenuVisible);
@@ -254,7 +254,7 @@ function EditProfile({navigation}) {
                             size={20} 
                         />
                     }
-                    error={nickError}
+                    error={aliasError}
                 />
                 <Input
                     label={'Nick'}

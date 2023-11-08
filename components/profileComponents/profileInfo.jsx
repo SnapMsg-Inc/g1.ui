@@ -65,7 +65,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
                     marginBottom: 15, fontSize: 15 
                 }}
             >
-                {data.interests}
+                {data.interests.toString().replace(/,/g, ', ')}
             </Text>
 
             {/* Profile stats */}
