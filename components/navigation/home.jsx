@@ -1,9 +1,6 @@
 import React from 'react';
-import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { CommonActions } from '@react-navigation/native';
 
 import Profile from "../pages/profile";
 import Feed from "../pages/feed";
@@ -108,7 +105,6 @@ function DiscoverStackScreen() {
 }
 
 const Drawer = createDrawerNavigator();
-const iconColor = '#1ED760';
 
 export default function Home() {
 	return (
@@ -159,11 +155,6 @@ export default function Home() {
 			<Drawer.Screen
 			name="Notifications"
 			component={Notifications}
-			// options={{
-			//     drawerIcon: ({size }) => (
-			//     <Octicons name="bell" color={iconColor} size={size} />
-			//     ),
-			// }}
 			options={({ navigation }) => ({
 				headerShown: false,
 				drawerLabel: () => (
@@ -174,11 +165,6 @@ export default function Home() {
 			<Drawer.Screen
 			name="Messages"
 			component={Messages}
-			// options={{
-			//     drawerIcon: ({size }) => (
-			//     <FontAwesome5 name="envelope" color={iconColor} size={size} />
-			//     ),
-			// }}
 			options={({ navigation }) => ({
 				headerShown: false,
 				drawerLabel: () => (
