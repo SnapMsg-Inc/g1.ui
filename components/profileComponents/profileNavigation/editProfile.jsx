@@ -21,6 +21,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
+import { colorApp, colorBackground, colorText } from "../../../styles/appColors/appColors";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -314,8 +315,5 @@ function EditProfile({navigation}) {
         </ScrollView>   
     );
 }
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
 
 export default EditProfile
