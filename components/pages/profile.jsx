@@ -9,16 +9,18 @@ import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import PostButton from '../buttons/buttonPost';
+import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import styles from '../../styles/profile/profile';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
 const tabBar = props => (
 	<MaterialTabBar
 		{...props}
-		indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
+		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
 		style={styles.tabBar}
-		activeColor='#1ed760'
-		inactiveColor='#535353' 
+		activeColor={colorApp}
+		inactiveColor={colorText} 
 		labelStyle={styles.label}
 	/>
 );
@@ -42,7 +44,7 @@ const Profile = ({ navigation }) => {
 		<>
 			{ isLoadingUserData ? (
 				<View style={styles.container}>
-					<ActivityIndicator size={'large'} color={'#1ed760'}/>
+					<ActivityIndicator size={'large'} color={colorApp}/>
 					</View> 
 				) : (
 				
@@ -78,20 +80,5 @@ const Profile = ({ navigation }) => {
 		</>	  
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-        flex:1,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-    },
-	tabBar: {
-		backgroundColor: 'black',
-	},
-	label: {
-		fontSize: 16,
-		textTransform: 'none',
-	},
-});
 
 export default Profile;
