@@ -4,7 +4,7 @@ import RecommendedUserCard from '../../recommendedUser';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
 import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
-import SnapMsg from '../../SnapMsg';
+import SnapMsg from '../../common/SnapMsg';
 import styles from '../../../styles/discover/forYouScreen';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 

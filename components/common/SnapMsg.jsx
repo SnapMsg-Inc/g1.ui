@@ -2,11 +2,13 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, deletePost } from './connectivity/servicesUser';
-import { LoggedUserContext } from './connectivity/auth/loggedUserContext'
+import { GetUserByUid, deletePost } from '../connectivity/servicesUser';
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 import TwitterTextView from "react-native-twitter-textview";
+import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import styles from '../../styles/common/snapMsg';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -44,7 +46,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	const { userData } = useContext(LoggedUserContext)
 	const navigation = useNavigation();
 
-	const defaultImage = require('../assets/default_user_pic.png')
+	const defaultImage = require('../../assets/default_user_pic.png')
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [data, setData] = useState({
@@ -143,7 +145,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 									ref={optionsButtonRef}
 									onPress={showOptionsMenu}
 								>
-									<Feather name="more-horizontal" size={24} color="#535353" />
+									<Feather name="more-horizontal" size={24} color={colorText} />
 								</TouchableOpacity>
 							) : <></>
 						}
@@ -173,22 +175,22 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 					{/* Botones de acción */}
 					<View style={styles.actionButtons}>
 						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="comment" size={28} color='#535353' />
+							<EvilIconsI name="comment" size={28} color={colorText} />
 						</TouchableOpacity>
 						<Text style={styles.stats}>{comments}</Text>
 
 						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="retweet" size={28} color='#535353' />
+							<EvilIconsI name="retweet" size={28} color={colorText} />
 						</TouchableOpacity>
 						<Text style={styles.stats}>{reposts}</Text>
 
 						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="heart" size={28} color='#535353' />
+							<EvilIconsI name="heart" size={28} color={colorText} />
 						</TouchableOpacity>
 						<Text style={styles.stats}>{likes}</Text>
 
 						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="share-apple" size={28} color='#535353' />
+							<EvilIconsI name="share-apple" size={28} color={colorText} />
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -221,90 +223,3 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		</>
 	);
 };
-
-const colorApp = '#1ed760'
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	snapMsg: {
-		flexDirection: 'row',
-		paddingVertical: 10,
-		paddingHorizontal: 20,
-		borderTopWidth: StyleSheet.hairlineWidth,
-		borderTopColor: '#535353',
-	},
-	profilePicture: {
-		height: 50,
-		width: 50,
-		borderRadius: 25,
-		marginRight: 10,
-	},
-	nickname: {
-		fontWeight: 'bold',
-		fontSize: 15,
-		color: 'white',
-	},
-	username: {
-		color: '#535353',
-		fontWeight: 'normal',
-	},
-	text: {
-		fontSize: 15,
-		color: 'white',
-	},
-	stats: {
-		fontSize: 15,
-		color: '#535353',
-		marginRight: 35,
-		marginLeft: 3,
-		marginTop: 3,
-	},
-	actionButtons: {
-		flexDirection: 'row',
-		marginTop: 10,
-	},
-	actionButton: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	postPic: {
-		width: '100%',
-		aspectRatio: 16 / 9,
-		marginVertical: 10,
-		borderRadius: 15,
-	},
-	optionsMenuContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'rgba(0, 0, 0, 0.5)',
-	},
-	optionsMenu: {
-		position: 'absolute',
-		width: 200,
-		backgroundColor: 'rgba(0, 0, 0, 1)',
-		borderWidth: 1,
-		borderColor:  colorApp,
-		borderRadius: 15
-	},
-	optionItem: {
-		padding: 10,
-		//borderBottomWidth: 1,
-		//borderColor: colorApp,
-		alignItems: 'center',
-		flexDirection: 'row',
-		justifyContent: 'space-between'
-	},
-	optionText: {
-		marginLeft: 10,
-		color: 'white',
-	},
-	hashtagStyle: {
-		color: colorApp
-	},
-	mentionStyle: {
-		color: colorApp
-	}
-});

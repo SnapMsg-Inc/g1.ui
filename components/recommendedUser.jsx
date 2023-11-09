@@ -5,7 +5,6 @@ import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from './co
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from './connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
-import { colorApp, colorBackground, colorText } from '../styles/appColors/appColors';
 import styles from '../styles/common/recommendedUser';
 
 const MAX_INTEREST_LENGTH = 60;

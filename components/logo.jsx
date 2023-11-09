@@ -2,8 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import stylesLogo from "../styles/logo";
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-const colorApp = '#1ed760'
+import { colorApp } from "../styles/appColors/appColors";
 
 function Logo() {
     return (

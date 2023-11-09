@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import SnapMsg from '../../SnapMsg';
+import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 

@@ -9,6 +9,7 @@ import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import styles from '../../styles/feed/feed';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import SnapMsg from '../common/SnapMsg';
 
 export default function Feed({ navigation }) {
     const [fullPosts, setFullPosts] = useState([]);
