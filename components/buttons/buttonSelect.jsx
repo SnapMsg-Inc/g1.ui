@@ -17,9 +17,9 @@ const InterestButton = ({ title, list, setList}) => {
 
     return (
         <TouchableOpacity
-        style={[stylesSelect.button, 
-                selected ? stylesSelect.selectedButton : null]}
-        onPress={handlePress}
+            style={[stylesSelect.button, 
+                    selected ? stylesSelect.selectedButton : null]}
+            onPress={handlePress}
         >
             <Text style={selected ? stylesSelect.selectedText : stylesSelect.text}>{title}</Text>
         </TouchableOpacity>
