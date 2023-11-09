@@ -84,4 +84,3 @@ export function MessagesButton({ navigation }) {
 	</TouchableOpacity>
 	);
 }
-
