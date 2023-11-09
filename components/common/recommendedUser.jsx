@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import stylesFollow from '../styles/buttons/buttonFollow';
-import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from './connectivity/servicesUser'
+import stylesFollow from '../../styles/buttons/buttonFollow';
+import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from '../connectivity/servicesUser'
 import { useFocusEffect } from '@react-navigation/native';
-import { LoggedUserContext } from './connectivity/auth/loggedUserContext';
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/common/recommendedUser';
+import styles from '../../styles/common/recommendedUser';
 
 const MAX_INTEREST_LENGTH = 60;
 const MAX_ALIAS_LENGTH = 14;
@@ -85,7 +85,7 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 		setIsFollowing(!isFollowing);
 	};
 
-	const defaultImage = require('../assets/default_user_pic.png')
+	const defaultImage = require('../../assets/default_user_pic.png')
   
 	return (
 		<>

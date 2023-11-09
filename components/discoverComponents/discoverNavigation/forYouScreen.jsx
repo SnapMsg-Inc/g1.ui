@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, ActivityIndicator, RefreshControl } from 'react-native';
-import RecommendedUserCard from '../../recommendedUser';
+import RecommendedUserCard from '../../common/recommendedUser';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
 import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
