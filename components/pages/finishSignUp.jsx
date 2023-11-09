@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Text, View } from "react-native";
 import * as Location from 'expo-location';
 import { TouchableHighlight } from "react-native";
-import Logo from "../logo";
+import Logo from "../common/logo";
 import stylesSetup from "../../styles/forms/setup";
 import AcceptButton from "../buttons/buttonAcept";
 import Icon from 'react-native-vector-icons/FontAwesome';

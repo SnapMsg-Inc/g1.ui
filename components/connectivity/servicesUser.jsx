@@ -220,7 +220,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
             setIsFollowing(false)
         }
     } catch (error) {
-        if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
+        if (error.response.status === 404 && error.response.data.detail === 'follow does not exist') {
             setIsFollowing(false)
         } else {
             console.log(JSON.stringify(error.response, null, 2))

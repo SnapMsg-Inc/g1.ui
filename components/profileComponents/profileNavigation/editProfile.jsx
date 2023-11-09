@@ -13,7 +13,6 @@ import CancelButton from "../../buttons/buttonCancel";
 import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../../styles/forms/input";
 import { GetToken, PatchUser } from "../../connectivity/servicesUser";
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
@@ -21,6 +20,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
+import { colorApp, colorBackground, colorText } from "../../../styles/appColors/appColors";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -314,8 +314,5 @@ function EditProfile({navigation}) {
         </ScrollView>   
     );
 }
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
 
 export default EditProfile

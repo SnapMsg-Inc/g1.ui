@@ -8,6 +8,8 @@ import { GetUserFollowersByUid, GetUsers } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import filter from 'lodash.filter';
 import { useNavigation } from '@react-navigation/native';
+import styles from '../../styles/discover/searchScreen';
+import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 
 const SearchScreen = () => {
 	const navigation = useNavigation();
@@ -128,49 +130,5 @@ const SearchScreen = () => {
 		</View>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: 'black',
-		alignItems: 'center'
-	},
-	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	searchBox: {
-		flex: 1,
-		justifyContent: 'flex-start',
-        alignItems:'center',
-        flexDirection:'row',
-        paddingVertical:10,
-        borderWidth: 1,
-        borderColor: colorApp,
-        borderRadius: 10,
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        marginTop: 10,
-	},
-	text: {
-		color: colorText,
-		paddingVertical: 10,
-	},
-	textInput: {
-		flex: 1,
-		color: 'white',
-	},
-	cancelButton: {
-		color: colorText,
-		marginRight: 10,
-        marginTop: 10,
-		paddingVertical:10,
-		fontSize: 16,
-	}
-});
 
 export default SearchScreen;

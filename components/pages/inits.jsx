@@ -2,7 +2,7 @@ import { View, Text, TouchableHighlight, StatusBar, SafeAreaView } from "react-n
 import stylesInits from "../../styles/inits";
 import ButtonFederate from "../buttons/buttonFederate";
 import SignIn from "./signIn";
-import Logo from "../logo";
+import Logo from "../common/logo";
 
 function Inits({navigation}) {
 

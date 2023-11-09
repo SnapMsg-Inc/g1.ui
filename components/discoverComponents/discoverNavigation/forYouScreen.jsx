@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, ActivityIndicator, RefreshControl } from 'react-native';
-import RecommendedUserCard from '../../recommendedUser';
-import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
+import RecommendedUserCard from '../../common/recommendedUser';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
 import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
-import SnapMsg from '../../SnapMsg';
-import PostButton from '../../buttons/buttonPost';
+import SnapMsg from '../../common/SnapMsg';
+import styles from '../../../styles/discover/forYouScreen';
+import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 
 const ForYouScreen = ({searchQuery=null}) => {
 	const width = Dimensions.get('window').width;
@@ -86,7 +86,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 
     const renderLoader = () => {
         return (
-            isLoadingMorePosts && !isRefreshing ? <ActivityIndicator size={'large'} color={'#1ed760'} /> : <></>
+            isLoadingMorePosts && !isRefreshing ? <ActivityIndicator size={'large'} color={colorApp} /> : <></>
         );
     }
 	
@@ -124,7 +124,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 			{
 				isLoading ? (
 					<View style={styles.container}>
-						<ActivityIndicator size={'large'} color={'#1ed760'}/>
+						<ActivityIndicator size={'large'} color={colorApp}/>
 					</View>
 				) : (
 					<View style={styles.scrollView}>
@@ -174,7 +174,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 														scrollAnimationDuration={1000}
 														renderItem={({ item }) => (
 															<View style={{
-																backgroundColor:'black',
+																backgroundColor: colorBackground,
 																marginLeft: 5,
 																marginRight: 5, }}>
 																<RecommendedUserCard 
@@ -219,40 +219,11 @@ const ForYouScreen = ({searchQuery=null}) => {
 								/>
 							}
 						/>
-						<PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
 					</View>
 				)
 			}
 		</>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-
-const styles = StyleSheet.create({
-	scrollView: {
-		flex: 1,
-		backgroundColor: 'black'
-	},
-	container: {
-		flex:1,
-		backgroundColor: colorBackground,
-		justifyContent: 'center',
-	},
-	text: {
-		fontSize: 20,
-		color: 'white',
-		fontWeight: 'bold',
-		marginHorizontal: 10,
-	},
-	textAlt: {
-		fontSize: 16,
-		color: colorText,
-		marginHorizontal: 10,
-	}
-});
 
 export default ForYouScreen;

@@ -8,7 +8,7 @@ import ButtonFederate from "../buttons/buttonFederate";
 import CancelButton from "../buttons/buttonCancel";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from "../forms/input";
-import Logo from "../logo";
+import Logo from "../common/logo";
 import Separate from "../forms/separate";
 import stylesForms, { colorText } from "../../styles/SignForms";
 import Calendar from "../forms/calendar";

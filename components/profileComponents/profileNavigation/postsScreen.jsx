@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import SnapMsg from '../../SnapMsg';
+import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
-import PostButton from '../../buttons/buttonPost';
+import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
@@ -83,14 +83,9 @@ const PostsScreen = ({url}) => {
                     />
                 }
             />
-            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
         </View>
     )
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
 
 const styles = StyleSheet.create({
 	container: {

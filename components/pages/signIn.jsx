@@ -6,7 +6,7 @@ import ButtonFederate from '../buttons/buttonFederate';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Separate from '../forms/separate';
 import Input from '../forms/input';
-import Logo from '../logo';
+import Logo from '../common/logo';
 import stylesForms, { colorText } from '../../styles/SignForms';
 import { LoginAccount, SignFederate } from '../connectivity/authorization';
 import { ValidationsLogin } from '../forms/validations';
