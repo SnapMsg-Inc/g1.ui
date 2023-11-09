@@ -1,12 +1,10 @@
 import { StyleSheet } from "react-native";
-import { colorText } from "../SignForms";
-
-const colorApp = '#1ed760'
+import { colorText, colorApp, colorBackground, colorWhite } from "../appColors/appColors";
 
 const stylesEditProfile = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black' 
+        backgroundColor: colorBackground
     },
     header: {
         marginTop: 30,
@@ -35,7 +33,7 @@ const stylesEditProfile = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        color: 'white',
+        color: colorWhite,
         textAlignVertical: 'top',
     },
     imageButtonContainer: {
@@ -64,7 +62,7 @@ const stylesEditProfile = StyleSheet.create({
         padding: 5
     },
     optionButtonText: {
-        color: 'white',
+        color: colorWhite,
         marginLeft: 5,
     }
 })

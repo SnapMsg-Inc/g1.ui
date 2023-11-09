@@ -7,10 +7,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Separate from '../forms/separate';
 import Input from '../forms/input';
 import Logo from '../common/logo';
-import stylesForms, { colorText } from '../../styles/SignForms';
+import stylesForms from '../../styles/SignForms';
 import { LoginAccount, SignFederate } from '../connectivity/authorization';
 import { ValidationsLogin } from '../forms/validations';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
+import { colorApp, colorText } from '../../styles/appColors/appColors';
 
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
@@ -73,7 +74,7 @@ function SignIn({ navigation }) {
                 </View>
                 {isLoading ? 
                         <View style={stylesForms.bodyButtonsLoading}>
-                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                            <ActivityIndicator size={'large'} color={colorApp}/> 
                         </View>
                     :
                         <View style={stylesForms.bodyButtons}>

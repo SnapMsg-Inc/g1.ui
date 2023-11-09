@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 
 import BackButton from '../buttons/buttonBack';
+import { colorBackground, colorWhite } from '../../styles/appColors/appColors';
 
 export default function FollowersHeader({ navigation, fullname }) {
 
@@ -20,10 +21,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: 'black',
+        backgroundColor: colorBackground,
     },
     label: {
-        color: 'white',
+        color: colorWhite,
         fontSize: 18,
         fontWeight: 'bold',
         top: 10,

@@ -1,5 +1,6 @@
-import styleInput,{ colorText }  from "../../styles/forms/input";
+import styleInput from "../../styles/forms/input";
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import { colorText } from "../../styles/appColors/appColors";
 
 export default function Input({
         label,

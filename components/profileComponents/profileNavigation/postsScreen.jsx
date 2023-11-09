@@ -49,7 +49,7 @@ const PostsScreen = ({url}) => {
 
     const renderLoader = () => {
         return (
-            isLoading && !isRefreshing ? <ActivityIndicator size={'large'} color={'#1ed760'} /> : <></>
+            isLoading && !isRefreshing ? <ActivityIndicator size={'large'} color={colorApp} /> : <></>
         );
     }
 

@@ -1,9 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-const colorWhite = '#fff'
-const colorGray = '#535353'
+import { colorApp, colorBackground, colorText, colorWhite } from "./appColors/appColors";
 
 const stylesInit = StyleSheet.create({
     container: {
@@ -61,7 +57,7 @@ const stylesInit = StyleSheet.create({
         color: colorWhite
     },
     btnSignIn: {
-        backgroundColor: colorGray,
+        backgroundColor: colorText,
         alignItems:'center',
         justifyContent: 'center',
         marginHorizontal: 30,
@@ -92,7 +88,7 @@ const stylesInit = StyleSheet.create({
         alignItems: 'center'
     },
     footerText: {
-        color: colorGray,
+        color: colorText,
     }
 });
   

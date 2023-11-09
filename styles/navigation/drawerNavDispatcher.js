@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	text: {
-		color: 'white',
+		color: colorWhite,
 		marginLeft: 5,
 		fontSize: 15,
 	},

@@ -6,6 +6,7 @@ import SignIn from '../pages/signIn';
 import SignUp from '../pages/signUp';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
 import FinishSignUp from '../pages/finishSignUp';
+import { colorApp, colorBackground } from '../../styles/appColors/appColors';
 
 const Stack = createStackNavigator();
 
@@ -15,10 +16,10 @@ export default function InitNavigation() {
     return (
         <View style={styles.container}>
             <StatusBar
-                backgroundColor='black'
+                backgroundColor={colorBackground}
                 barStyle={"light-content"}
             />
-            { isLoadingApp ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
+            { isLoadingApp ? <ActivityIndicator size={'large'} color={colorApp}/> : (
                 <Stack.Navigator    
                         initialRouteName='Inits' 
                         screenOptions={{ headerShown: false }}>
@@ -35,7 +36,7 @@ export default function InitNavigation() {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: '#000',
+        backgroundColor: colorBackground,
         justifyContent: 'center',
     }
 })

@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorApp = '#1ed760'
+import { colorApp, colorWhite } from "../appColors/appColors";
 
 const stylesCancel = StyleSheet.create({
     container: {
@@ -11,7 +10,7 @@ const stylesCancel = StyleSheet.create({
         alignItems: 'center',
     },
     font: {
-        color: 'white',
+        color: colorWhite,
         fontSize: 22,
     }
 })

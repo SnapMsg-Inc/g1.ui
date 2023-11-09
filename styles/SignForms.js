@@ -1,8 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
+import { colorApp, colorBackground, colorText } from "./appColors/appColors";
 
 const stylesForms = StyleSheet.create({
     container: {

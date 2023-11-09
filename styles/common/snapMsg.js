@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	container: {
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 	nickname: {
 		fontWeight: 'bold',
 		fontSize: 15,
-		color: 'white',
+		color: colorWhite,
 	},
 	username: {
 		color: colorText,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 15,
-		color: 'white',
+		color: colorWhite,
 	},
 	stats: {
 		fontSize: 15,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
 	},
 	optionText: {
 		marginLeft: 10,
-		color: 'white',
+		color: colorWhite,
 	},
 	hashtagStyle: {
 		color: colorApp

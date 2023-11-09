@@ -1,10 +1,9 @@
 import { Dimensions, StyleSheet } from "react-native";
-
-const colorApp = '#1ed760'
+import { colorApp, colorText, colorWhite } from "../appColors/appColors";
 
 const stylesSelect = StyleSheet.create({
     button: {
-        backgroundColor: '#535353',
+        backgroundColor: colorText,
         padding: 10,
         borderRadius: 10,
         margin: 5,
@@ -22,7 +21,7 @@ const stylesSelect = StyleSheet.create({
     },
     selectedText: {
         fontSize: 18,
-        color: 'white',
+        color: colorWhite,
     },
 })
 

@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorBackground = '#000000'
-const colorApp = '#1ed760'
+import { colorApp, colorBackground } from "../appColors/appColors";
 
 const stylesSetUpProfile = StyleSheet.create({
     container: {

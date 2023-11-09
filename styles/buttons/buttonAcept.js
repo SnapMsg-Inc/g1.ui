@@ -1,11 +1,9 @@
 import { StyleSheet } from "react-native";
-
-const colorBackground = '#535353'
-const colorApp = '#1ed760'
+import { colorText, colorApp } from "../appColors/appColors";
 
 const stylesAccept = StyleSheet.create({
     container: {
-        backgroundColor: colorBackground,
+        backgroundColor: colorText,
         paddingHorizontal: 40,
         paddingVertical: 8,
         borderRadius: 10,

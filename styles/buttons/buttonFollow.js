@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colorApp, colorBackground, colorWhite } from "../appColors/appColors";
 
 const stylesFollow = StyleSheet.create({
 	followButton: {
@@ -16,26 +17,26 @@ const stylesFollow = StyleSheet.create({
 		borderRadius: 10,
 		paddingHorizontal: 15,
 		width: 110,
-		backgroundColor: '#1ed760',
+		backgroundColor: colorApp,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
 	followingButton: {
-		backgroundColor: 'black',
+		backgroundColor: colorBackground,
 		borderWidth: 0.8,
-		borderColor: '#1ed760'
+		borderColor: colorApp
 	},
 	notFollowingButton: {
-		backgroundColor: '#1ed760',
+		backgroundColor: colorApp,
 		borderWith: 0.8,
-		borderColor: '#1ed760'
+		borderColor: colorApp
 	},
 	followButtonText: {
-		color: 'white',
+		color: colorWhite,
 		fontWeight: 'bold',
 	},
 	followingButtonText: {
-		color: '#1ed760',
+		color: colorApp,
 		fontWeight: 'bold',
 	},
 });

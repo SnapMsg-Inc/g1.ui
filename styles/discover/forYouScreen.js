@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	scrollView: {
 		flex: 1,
-		backgroundColor: 'black'
+		backgroundColor: colorBackground
 	},
 	container: {
 		flex:1,
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 20,
-		color: 'white',
+		color: colorWhite,
 		fontWeight: 'bold',
 		marginHorizontal: 10,
 	},

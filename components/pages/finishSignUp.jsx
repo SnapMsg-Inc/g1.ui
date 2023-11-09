@@ -6,7 +6,7 @@ import Logo from "../common/logo";
 import stylesSetup from "../../styles/forms/setup";
 import AcceptButton from "../buttons/buttonAcept";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../styles/forms/input";
+import { colorText } from "../../styles/appColors/appColors";
 import LocationSetup from "./location";
 import Preferences from "./preferences";
 import { GetToken, PatchUser } from "../connectivity/servicesUser";

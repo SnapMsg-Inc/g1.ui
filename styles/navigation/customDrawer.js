@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
     scrollView: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
     },
     nickname: {
-		color: 'white',
+		color: colorWhite,
 		fontSize: 16,
 		fontWeight: 'bold',
     },
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
 		marginTop: 10,
     },
     followersCount: {
-		color: 'white',
+		color: colorWhite,
 		fontWeight: 'bold',
     },
     followingCount: {
-		color: 'white',
+		color: colorWhite,
 		fontWeight: 'bold',
     },
     signOutButton: {
