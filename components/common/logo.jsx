@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, View } from "react-native";
-import stylesLogo from "../styles/logo";
+import stylesLogo from "../../styles/logo";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorApp } from "../styles/appColors/appColors";
+import { colorApp } from "../../styles/appColors/appColors";
 
 function Logo() {
     return (
