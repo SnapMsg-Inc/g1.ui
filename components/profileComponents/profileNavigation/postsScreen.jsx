@@ -3,7 +3,6 @@ import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'r
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
-import PostButton from '../../buttons/buttonPost';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
@@ -83,7 +82,6 @@ const PostsScreen = ({url}) => {
                     />
                 }
             />
-            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
         </View>
     )
 };

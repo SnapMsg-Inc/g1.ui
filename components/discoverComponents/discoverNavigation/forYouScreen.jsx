@@ -5,7 +5,6 @@ import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
 import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
 import SnapMsg from '../../SnapMsg';
-import PostButton from '../../buttons/buttonPost';
 import styles from '../../../styles/discover/forYouScreen';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 
@@ -220,7 +219,6 @@ const ForYouScreen = ({searchQuery=null}) => {
 								/>
 							}
 						/>
-						<PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
 					</View>
 				)
 			}

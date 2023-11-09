@@ -7,6 +7,7 @@ import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useRoute } from '@react-navigation/native';
+import PostButton from '../buttons/buttonPost';
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -50,6 +51,7 @@ export default function Discover({ navigation }) {
                     <TrendingScreen/>
                 </Tabs.Tab>
             </Tabs.Container>
+            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
 		</View>   
 	);
 };
