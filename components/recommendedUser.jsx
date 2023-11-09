@@ -5,6 +5,8 @@ import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from './co
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from './connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
+import { colorApp, colorBackground, colorText } from '../styles/appColors/appColors';
+import styles from '../styles/common/recommendedUser';
 
 const MAX_INTEREST_LENGTH = 60;
 const MAX_ALIAS_LENGTH = 14;
@@ -122,56 +124,5 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 		</>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-    cardContainer: {
-        borderWidth: 0.5,
-        borderColor: colorText,
-        borderRadius: 10,
-        marginBottom: 10,   
-    },
-	container: {
-		flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        justifyContent: 'space-between'
-  },
-	profileImage: {
-		width: 45,
-		height: 45,
-		borderRadius: 40,
-        marginTop: -35,
-        marginLeft: 10,
-        marginBottom: -10,
-	},
-	infoContainer: {
-		flex: 1,
-	},
-	name: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: 'white',
-	},
-	nick: {
-		color: colorText,
-		fontSize: 16,
-	},
-    banner: {
-        height: 75,
-        resizeMode: 'cover',
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
-    },
-    interests: {
-        marginHorizontal: 10,
-        marginVertical: -5,
-        marginBottom: 10,
-        color: 'white',
-    }
-});
 
 export default RecommendedUserCard;

@@ -3,6 +3,7 @@ import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'r
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
+import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
@@ -85,10 +86,6 @@ const PostsScreen = ({url}) => {
         </View>
     )
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
 
 const styles = StyleSheet.create({
 	container: {
