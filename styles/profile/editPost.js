@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'black',
+		backgroundColor: colorBackground,
         padding: 10,
 	},
     header: {
         flexDirection: 'row',
         alignItems: 'flex-end',
-        backgroundColor: 'black',
+        backgroundColor: colorBackground,
         marginBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(255, 255, 255, 0.3)',
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     actionButtonIcon: {
         fontSize: 20,
         height: 22,
-        color: 'white',
+        color: colorWhite,
     },
     postButton: {
         position: 'absolute',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        color: 'white',
+        color: colorWhite,
         textAlignVertical: 'top',
     },
 	cancelButton: {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         top: 12,
 	},
     cancelButtonLabel: {
-        color: 'white',
+        color: colorWhite,
 		fontSize: 16,
     },
     postImage: {

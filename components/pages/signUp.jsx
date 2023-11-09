@@ -10,7 +10,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from "../forms/input";
 import Logo from "../common/logo";
 import Separate from "../forms/separate";
-import stylesForms, { colorText } from "../../styles/SignForms";
+import stylesForms from "../../styles/SignForms";
+import { colorApp, colorText } from "../../styles/appColors/appColors";
 import Calendar from "../forms/calendar";
 import CreateAccount, { SignFederate } from "../connectivity/authorization";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
@@ -161,7 +162,7 @@ function SignUp({navigation}) {
                 />
                 {isLoading ? 
                         <View style={stylesForms.bodyButtonsLoading}>
-                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                            <ActivityIndicator size={'large'} color={colorApp}/> 
                         </View> 
                     :
                         <View style={stylesForms.bodyButtons}>

@@ -79,10 +79,11 @@ export const AuthenticationContextProvider = ({children}) => {
                         console.log(error.response.status)
                         if (error.response.status === 502)
                             alert('Services not available.\nPlease retry again later')
-                        else
+                        else if (error.response.status === 404){
                             alert('User not found.\nPlease create account.')
+                            DeleteUserFirebase();
+                        }
                         onLogout()
-                        DeleteUserFirebase();
                         setLoginFederate(false)
                         setIsLoading(false)
                     })

@@ -122,55 +122,55 @@ export default function Home() {
 			}}
 			>
 			<Drawer.Screen
-			name="Profile"
-			component={ProfileStackScreen}
-			options={({ navigation }) => ({
-				headerShown: false,
-				drawerLabel: () => (
-				<ProfileButton navigation={navigation} />
-				),
-			})}
+				name="Profile"
+				component={ProfileStackScreen}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<ProfileButton navigation={navigation} />
+					),
+				})}
 			/>
 			<Drawer.Screen
-			name="Feed"
-			component={FeedStackScreen}
-			options={({ navigation }) => ({
-				headerShown: false,
-				drawerLabel: () => (
-				<FeedButton navigation={navigation} />
-				),
-			})}
+				name="Feed"
+				component={FeedStackScreen}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<FeedButton navigation={navigation} />
+					),
+				})}
 			/>
 			<Drawer.Screen
-			name="Discover"
-			component={DiscoverStackScreen}
-			initialParams={{data:"your props"}}
-			options={({ navigation }) => ({
-				headerShown: false,
-				drawerLabel: () => (
-				<DiscoverButton navigation={navigation} />
-				),
-			})}
+				name="Discover"
+				component={DiscoverStackScreen}
+				initialParams={{data:"your props"}}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<DiscoverButton navigation={navigation} />
+					),
+				})}
 			/>
 			<Drawer.Screen
-			name="Notifications"
-			component={Notifications}
-			options={({ navigation }) => ({
-				headerShown: false,
-				drawerLabel: () => (
-				<NotificationsButton navigation={navigation} />
-				),
-			})}
+				name="Notifications"
+				component={Notifications}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<NotificationsButton navigation={navigation} />
+					),
+				})}
 			/>
 			<Drawer.Screen
-			name="Messages"
-			component={Messages}
-			options={({ navigation }) => ({
-				headerShown: false,
-				drawerLabel: () => (
-				<MessagesButton navigation={navigation} />
-				),
-			})}
+				name="Messages"
+				component={Messages}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<MessagesButton navigation={navigation} />
+					),
+				})}
 			/>
 		</Drawer.Navigator>
 	)

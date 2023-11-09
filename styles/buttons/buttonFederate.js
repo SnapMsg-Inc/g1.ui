@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorWhite = '#fff'
+import { colorWhite } from "../appColors/appColors";
 
 const stylesButtonFederate = StyleSheet.create({
     btn: {

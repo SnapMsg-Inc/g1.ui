@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { colorWhite } from '../../../styles/appColors/appColors';
 
 const TrendingScreen = () => {
 	return (
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontSize: 20,
-		color: 'white'
+		color: colorWhite
 	},
 });
 

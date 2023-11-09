@@ -7,14 +7,15 @@ import { GetUserData } from '../../connectivity/servicesUser';
 import FollowersHeader from '../followersHeader';
 import FollowingScreen from './followingScreen';
 import FollowersScreen from './followersScreen';
+import { colorApp, colorBackground, colorText } from '../../../styles/appColors/appColors';
 
 const tabBar = props => (
     <MaterialTabBar
       {...props}
-      indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
+      indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
       style={styles.tabBar}
-      activeColor='#1ed760'
-      inactiveColor='#535353' 
+      activeColor={colorApp}
+      inactiveColor={colorText}
       labelStyle={styles.label}
     />
 );
@@ -45,7 +46,7 @@ const FollowingAndFollowersScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     tabBar: {
-      backgroundColor: 'black',
+      backgroundColor: colorBackground,
     },
     label: {
       fontSize: 16,

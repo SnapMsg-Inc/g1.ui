@@ -4,6 +4,7 @@ import ProfileImage from '../profileComponents/profileImage';
 import ProfileStats from '../profileComponents/profileStats';
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import ProfileBanner from './profileBanner';
+import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
 
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
@@ -14,7 +15,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
             style={{
                 flex: 1,
                 paddingHorizontal: 20,
-                backgroundColor: 'black',
+                backgroundColor: colorBackground,
             }}
         >
             {/* Banner */}
@@ -29,7 +30,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
         
              <Text
             style={{
-                color: 'white',
+                color: colorWhite,
                 fontSize: 24,
                 fontWeight: 'bold',
                 marginTop: 10,
@@ -40,9 +41,9 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
 
             <Text
                 style={{
-                    color: 'white',
+                    color: colorWhite,
                     fontSize: 15,
-                    color: '#535353',
+                    color: colorText,
                     marginBottom: 15,
                 }}
                 >
@@ -52,7 +53,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
             {/* {data.ocupation !== null ? {} : 
             (<Text
                 style={{
-                    color: 'white',
+                    color: colorWhite,
                     marginBottom: 15, fontSize: 15 
                 }}
             >
@@ -61,7 +62,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
             
             <Text
                 style={{
-                    color: 'white',
+                    color: colorWhite,
                     marginBottom: 15, fontSize: 15 
                 }}
             >

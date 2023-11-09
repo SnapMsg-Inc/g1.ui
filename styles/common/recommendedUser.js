@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
     cardContainer: {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 	name: {
 		fontSize: 16,
 		fontWeight: 'bold',
-		color: 'white',
+		color: colorWhite,
 	},
 	nick: {
 		color: colorText,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: -5,
         marginBottom: 10,
-        color: 'white',
+        color: colorWhite,
     }
 });
 

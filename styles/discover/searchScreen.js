@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	container: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		flex: 1,
-		color: 'white',
+		color: colorWhite,
 	},
 	cancelButton: {
 		color: colorText,

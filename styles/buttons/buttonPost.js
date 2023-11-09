@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorBackground = '#535353'
-const colorApp = '#1ed760'
+import { colorApp } from "../appColors/appColors";
 
 const stylesPost = StyleSheet.create({
     floatingButton: {

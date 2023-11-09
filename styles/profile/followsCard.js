@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorBackground, colorText, colorApp } from "../appColors/appColors";
+import { colorBackground, colorText, colorApp, colorWhite } from "../appColors/appColors";
 
 const styles = StyleSheet.create({
 	container: {
@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
 	name: {
 		fontSize: 16,
 		fontWeight: 'bold',
-		color: 'white',
+		color: colorWhite,
 	},
 	interests: {
 		fontSize: 14,
-		color: 'white',
+		color: colorWhite,
 	},
 	nick: {
 		color: colorText,

@@ -1,7 +1,7 @@
 import stylesSetup from "../../styles/forms/setup"
 import { Text, View } from "react-native"
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../styles/forms/input";
+import { colorText } from "../../styles/appColors/appColors";
 import Input from "../forms/input";
 import { useState, useEffect } from "react";
 
