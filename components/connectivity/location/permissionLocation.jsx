@@ -1,11 +1,7 @@
 import * as Location from 'expo-location';
 
-export const GetPermission = () => {
-    const { status } = Location.requestForegroundPermissionsAsync()
-    if (status !== 'granted'){
-        return
-    }
-}
+export const GetPermission = async () =>
+    await Location.requestForegroundPermissionsAsync()
 
 export const CurrentPosition = (configLocation) =>
     Location.getCurrentPositionAsync(configLocation)

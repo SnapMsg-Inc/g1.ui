@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import stylesSelect from '../../styles/buttons/buttonSelect';
 
 const InterestButton = ({ title, list, setList}) => {
-    const [selected, setIsSelected] = useState(false);
+    const [selected, setIsSelected] = useState(list.includes(title.toLowerCase()));
 
     const handlePress = () => {
         setIsSelected(!selected);

@@ -85,8 +85,18 @@ function FinishSignUp({ navigation }) {
             })  
         }
         GetPermission()
-        setLocation()
-    },[])
+        .then((location) => {
+            if (location.status !== 'granted')
+                Alert.alert(
+                    'Permission not granted',
+                    'Allow the app to use location service.',
+                    [{ text: 'OK' }],
+                    { cancelable: false }
+                );
+            else
+                setLocation()
+        })
+    },[GetPermission])
 
     return(
         <View style={stylesSetup.container}>

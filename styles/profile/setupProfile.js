@@ -20,7 +20,7 @@ const stylesEditProfile = StyleSheet.create({
         justifyContent: 'space-between'
     },
     body: {
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     textTittle: {
         color: colorApp,
@@ -28,8 +28,21 @@ const stylesEditProfile = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center'
     },
+    cancelInterests: {
+        marginHorizontal: 30,
+    },
     text:{
         color:colorText,
+        fontSize: 20,
+    },
+    interestsButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 30,
+        marginTop: 20,
+        marginBottom: 5,
     },
     textInput: {
         flex: 1,

@@ -1,10 +1,9 @@
 import { Text, View } from 'react-native';
 import InterestButton from '../buttons/buttonSelect';
 import stylesSetup from '../../styles/forms/setup';
-import { useState } from 'react';
 
 function Preferences({list, setList}) {
-
+    
     return (
         <View style={stylesSetup.bodyInterests}>
             <Text style={stylesSetup.textTitle}>

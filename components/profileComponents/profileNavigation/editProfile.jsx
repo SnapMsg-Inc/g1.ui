@@ -4,6 +4,7 @@ import {
     ScrollView,
     Image,
     Pressable,
+    Alert,
   } from "react-native";
 import React, { useEffect, useState } from 'react';
 import Input from "../../forms/input";
@@ -21,6 +22,8 @@ import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
 import { colorApp, colorBackground, colorText } from "../../../styles/appColors/appColors";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import Preferences from "../../pages/preferences";
 
 function EditProfile({navigation}) {
     const route = useRoute();
@@ -34,11 +37,14 @@ function EditProfile({navigation}) {
     const [locality, setLocality] = useState('')
     const [countryLocate, setCountryLocate] = useState('')
     const [coordinates, setCoordinates] = useState(data.zone)
-    const [interestsList, setInterestsList] = useState(data.interests.toString().replace(/,/g, ', '))
-    const [uploading, setUploading] = useState(false);
-    const [transferred, setTransferred] = useState(0);
+    const [interestsList, setInterestsList] = useState(data.interests.map(item => item.trim()))
+    const [uploading, setUploading] = useState(false)
+    const [transferred, setTransferred] = useState(0)
+    const [isMenuVisible, setIsMenuVisible] = useState(false)
+    const [isEditInterests, setIsEditInterests] = useState(false)
 
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const handleInterests = () =>
+        setIsEditInterests(!isEditInterests)
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -133,19 +139,16 @@ function EditProfile({navigation}) {
         .then((token) => {
             GeocodeWithLocalityAndCountry(locality, countryLocate)
             .then((geocodeLocation)=> {
-                console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-                console.log('lenght ', geocodeLocation.length)
                 const data ={
                     "alias": alias,
                     "nick": nick,
                     "zone": geocodeLocation.length !== 0 ? 
                             { 'latitude':geocodeLocation[0].latitude,
                             'longitude':geocodeLocation[0].longitude} : coordinates,
-                    "interests": interestsList.split(','),
+                    "interests": interestsList,
                     "ocupation": "",
                     "pic": uri
                 }
-                console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
                 if (ValidateEdit(alias, setAliasError, nick, setNickError)) {
                     PatchUser(data, token)
                     .then((response) => {
@@ -184,7 +187,6 @@ function EditProfile({navigation}) {
     
     useEffect(()=>{
         const setData = () => {
-            console.log('coordinates useEffect', coordinates)
             ReverseGeocode(coordinates)
             .then((address) => {
                 const { city, country } = address[0]
@@ -196,8 +198,18 @@ function EditProfile({navigation}) {
             })
         }
         GetPermission()
-        setData()
-    }, [])
+        .then((location) => {
+            if (location.status !== 'granted')
+                Alert.alert(
+                    'Permission not granted',
+                    'Allow the app to use location service.',
+                    [{ text: 'OK' }],
+                    { cancelable: false }
+                );
+            else
+                setData()
+        })
+    }, [GetPermission])
 
     return (
         <ScrollView style={stylesEditProfile.container}>
@@ -239,74 +251,84 @@ function EditProfile({navigation}) {
                     ) : <></>
                 }
             </View>
-            <View style={stylesEditProfile.body}>
-                <Text style={stylesEditProfile.textTittle}>
-                    Edit Your Profile
-                </Text>
-                <Input
-                    label={'Alias'}
-                    data={alias}
-                    setData={setAlias}
-                    icon={
-                        <Icon   
-                            name={'id-card'} 
-                            color={colorText} 
-                            size={20} 
+                {isEditInterests ?     
+                    <View style={stylesEditProfile.body}>
+                        <TouchableHighlight onPress={() => handleInterests()}>
+                            <View style={stylesEditProfile.cancelInterests}>
+                                <Icon name={'times'} color={colorText} size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <Preferences list={interestsList} setList={setInterestsList}/>
+                    </View> 
+                    :
+                    <View style={stylesEditProfile.body}>
+                        <Text style={stylesEditProfile.textTittle}>
+                            Edit Your Profile
+                        </Text>
+                        <Input
+                            label={'Alias'}
+                            data={alias}
+                            setData={setAlias}
+                            icon={
+                                <Icon   
+                                    name={'id-card'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            }
+                            error={aliasError}
                         />
-                    }
-                    error={aliasError}
-                />
-                <Input
-                    label={'Nick'}
-                    data={nick}
-                    setData={setNick}
-                    icon={
-                        <Icon   
-                            name={'tag'} 
-                            color={colorText} 
-                            size={20} 
+                        <Input
+                            label={'Nick'}
+                            data={nick}
+                            setData={setNick}
+                            icon={
+                                <Icon   
+                                    name={'tag'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            }
+                            error={nickError}          
                         />
-                    }
-                    error={nickError}          
-                />
-                <Input
-                    label={'Country'}
-                    data={countryLocate}
-                    setData={setCountryLocate}
-                    icon={
-                        <Icon   
-                        name={'flag'} 
-                        color={colorText} 
-                        size={20} 
-                        onPress={() => setLocation()}
+                        <Input
+                            label={'Country'}
+                            data={countryLocate}
+                            setData={setCountryLocate}
+                            icon={
+                                <Icon   
+                                name={'flag'} 
+                                color={colorText} 
+                                size={20} 
+                                onPress={() => setLocation()}
+                                />
+                            }
                         />
-                    }
-                />
-                <Input
-                    label={'Locality'}
-                    data={locality}
-                    setData={setLocality}
-                    icon={<Icon   
-                        name={'map-marker'} 
-                        color={colorText} 
-                        size={20} 
-                        onPress={() => setLocation()}
-                    />}             
-                />
-                <Input
-                    label={'Interests'}
-                    data={interestsList}
-                    setData={setInterestsList}
-                    style={stylesEditProfile.textInput}
-                    icon={<Icon
-                        name={'eyedropper'} 
-                        color={colorText} 
-                        size={20} 
-                    />}
-                    textAlignVertical="top"
-                    multiline={true}
-                />
-            </View>
+                        <Input
+                            label={'Locality'}
+                            data={locality}
+                            setData={setLocality}
+                            icon={<Icon   
+                                name={'map-marker'} 
+                                color={colorText} 
+                                size={20} 
+                                onPress={() => setLocation()}
+                            />}             
+                        />
+                        <TouchableHighlight onPress={() => handleInterests()}>
+                            <View style={stylesEditProfile.interestsButton}>
+                                <Text style={stylesEditProfile.text}>
+                                    Press for edit interests
+                                </Text>
+                                <Icon
+                                    name={'eyedropper'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                }
             <View style={stylesEditProfile.footer}>
                 <CancelButton navigation={navigation}/>
                 <AcceptButton accept={handleEdit} text={'Accept'}/>
