@@ -4,6 +4,7 @@ import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
@@ -20,9 +21,6 @@ const PostsScreen = ({url}) => {
         setAllDataLoaded(false)
         setFullPosts([]);
         try {
-			// TODO: USAR end-point adecuado
-			//await GetRecommendedPosts...
-
             const newPosts = await GetPosts(url, 10, 0)
 			setFullPosts(newPosts);
             if (newPosts.length > 0) {
@@ -43,8 +41,6 @@ const PostsScreen = ({url}) => {
         setIsLoadingMorePosts(true);
 
         try {
-			// TODO: USAR end-point adecuado
-			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
             const newPosts = await GetPosts(url, 10, currentPage)
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
@@ -74,9 +70,11 @@ const PostsScreen = ({url}) => {
         );
     }
 
-    useEffect(() => {
-		fetchInitialPostsFromApi();
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchInitialPostsFromApi();
+        }, [])
+    );
 
     return (
         <View style={styles.container}>
