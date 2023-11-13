@@ -23,6 +23,9 @@ const EditPost = ({ navigation }) => {
 
     const { userData } = useContext(LoggedUserContext)
 
+    const [originalText, setOriginalText] = useState(data.content);
+    const [originalImage, setOriginalImage] = useState(data.picUri[0]);
+
     const [text, setText] = useState(data.content);
     const [image, setImage] = useState(data.picUri[0]);
     const [uploading, setUploading] = useState(false);
@@ -83,15 +86,41 @@ const EditPost = ({ navigation }) => {
     };
 
     const submitPost = async () => {
-        const imageUrl = await uploadImage();
-        const uri = imageUrl ? [imageUrl] : [];
-    
-        const postData = {
-            "text": text,
-            "hashtags": hashtags,
-            "media_uri": uri,
-            "is_private": !isPublic,
+        const textChanged = text !== originalText;
+        const imageChanged = image !== originalImage;
+
+        if (!textChanged && !imageChanged) {
+            // Ningún cambio, no es necesario enviar una solicitud PATCH.
+            navigation.goBack();
+            return;
         }
+
+        const imageUrl = imageChanged ? await uploadImage() : null;
+        const uri = imageUrl ? [imageUrl] : [];
+
+        let postData = {};
+
+        if (textChanged && !imageChanged) {
+            postData = {
+                text: text,
+                hashtags: hashtags
+            };
+        }
+
+        if (!textChanged && imageChanged) {
+            postData = {
+                media_uri: uri
+            };
+        }
+
+        if (textChanged && imageChanged) {
+            postData = {
+                text: text,
+                hashtags: hashtags,
+                media_uri: uri
+            };
+        }
+
         try {
             const success = await PatchPostData(postData, data.pid);
             if (success) {
