@@ -8,26 +8,53 @@ import { colorApp, colorText, colorBackground } from '../../../styles/appColors/
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+
+	const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
+	const [isLoadingMorePosts, setIsLoadingMorePosts] = useState(false);
 
-    const fetchDataFromApi = async () => {
-        if (allDataLoaded || isLoading) {
+	const fetchInitialPostsFromApi = async () => {
+        setIsLoading(true);
+		setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
+        try {
+			// TODO: USAR end-point adecuado
+			//await GetRecommendedPosts...
+
+            const newPosts = await GetPosts(url, 10, 0)
+			setFullPosts(newPosts);
+            if (newPosts.length > 0) {
+                setCurrentPage(1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching initial posts:', error);
+        }
+    }
+
+    const fetchMorePostsFromApi = async () => {
+        if (allDataLoaded || isLoading || isRefreshing) {
             return;
         }
-        setIsLoading(true);
+        setIsLoadingMorePosts(true);
+
         try {
-            const newPosts = await GetPosts(url, 10, currentPage);
+			// TODO: USAR end-point adecuado
+			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
+            const newPosts = await GetPosts(url, 10, currentPage)
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
                 setAllDataLoaded(true);
             }
-            setIsLoading(false);
+            setIsLoadingMorePosts(false);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching more posts:', error);
         }
     }
 
@@ -36,22 +63,20 @@ const PostsScreen = ({url}) => {
             return;
         }
         setIsRefreshing(true);
-        setCurrentPage(0);
-        setAllDataLoaded(false)
-        setFullPosts([]);
-        await fetchDataFromApi();
+        await fetchInitialPostsFromApi(null);
+
         setIsRefreshing(false);
     }
 
-    useEffect(() => {
-        fetchDataFromApi();
-    }, []);
-
     const renderLoader = () => {
         return (
-            isLoading && !isRefreshing ? <ActivityIndicator size={'large'} color={colorApp} /> : <></>
+            isLoadingMorePosts && !isRefreshing ? <ActivityIndicator size={'large'} color={colorApp} /> : <></>
         );
     }
+
+    useEffect(() => {
+		fetchInitialPostsFromApi();
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -69,7 +94,7 @@ const PostsScreen = ({url}) => {
                         picUri={item.media_uri}
                     />
                 }
-                onEndReached={fetchDataFromApi}
+                onEndReached={fetchMorePostsFromApi}
                 onEndReachedThreshold={0.10}
                 ListFooterComponent={renderLoader}
                 refreshControl={
