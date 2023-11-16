@@ -7,12 +7,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserByUid, checkIfUserFollows } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
-import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
-import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import ButtonFollow from '../buttons/buttonFollow';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import styles from '../../styles/profile/otherProfile';
 import { colorApp, colorBackground, colorText } from '../../styles/appColors/appColors';
+import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
@@ -92,12 +91,8 @@ const OtherProfile = ({ navigation }) => {
 						}
 					</Tabs.Tab>
 
-					<Tabs.Tab name="Replies" label="Replies">
-						<RepliesScreen />
-					</Tabs.Tab>
-
-					<Tabs.Tab name="Likes" label="Likes">
-						<LikesScreen />
+					<Tabs.Tab name="Media" label="Media">
+						<MediaScreen />
 					</Tabs.Tab>
 				</Tabs.Container>
 		)}

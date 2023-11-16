@@ -4,13 +4,13 @@ import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
 import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
-import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/profile/profile';
+import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
@@ -66,11 +66,11 @@ const Profile = ({ navigation }) => {
 							<PostScreen url={getUrl()}/>
 						</Tabs.Tab>
 
-						<Tabs.Tab name="Replies" label="Replies">
-							<RepliesScreen />
+						<Tabs.Tab name="Media" label="Media">
+							<MediaScreen />
 						</Tabs.Tab>
 
-						<Tabs.Tab name="Likes" label="Likes">
+						<Tabs.Tab name="Favs" label="Favs">
 							<LikesScreen />
 						</Tabs.Tab>
 					</Tabs.Container>	

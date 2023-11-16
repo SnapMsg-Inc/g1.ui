@@ -70,9 +70,11 @@ export default function Feed({ navigation }) {
         setIsRefreshing(false);
     }
 
-    useEffect(() => {
-        fetchDataFromApi();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchInitialPostsFromApi();
+        }, [])
+    );
 
     const renderLoader = () => {
         return (

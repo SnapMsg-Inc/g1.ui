@@ -80,6 +80,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	useFocusEffect(
 		React.useCallback(() => {
 			fetchDataFromApi();
+			console.log(pid);
 		}, [])
 	);
 
@@ -122,104 +123,110 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 
 	return (
 		<>
-			<View style={styles.snapMsg}>
-				<Image
-					source={data.pic === '' || data.pic === 'none' ? defaultImage : { uri: data.pic }}
-					style={styles.profilePicture}
-				/>
+			{
+				isLoading ? <></> : (
+					<>	
+					<View style={styles.snapMsg}>
+						<Image
+							source={data.pic === '' || data.pic === 'none' ? defaultImage : { uri: data.pic }}
+							style={styles.profilePicture}
+						/>
 
-				<View style={styles.container}>
-					<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-						<View style={{ flexDirection: 'row' }}>
-							<Text style={styles.nickname}>
-								{truncateAlias(data.alias)}{' '}
-							</Text>
-							<Text style={styles.username}>
-								@{truncateNick(data.nick)} · {formatDateToDDMMYYYY(date)}
-							</Text>
-						</View>
+						<View style={styles.container}>
+							<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+								<View style={{ flexDirection: 'row' }}>
+									<Text style={styles.nickname}>
+										{truncateAlias(data.alias)}{' '}
+									</Text>
+									<Text style={styles.username}>
+										@{truncateNick(data.nick)} · {formatDateToDDMMYYYY(date)}
+									</Text>
+								</View>
 
-						{
-							uid === userData.uid ? (
-								<TouchableOpacity
-									ref={optionsButtonRef}
-									onPress={showOptionsMenu}
-								>
-									<Feather name="more-horizontal" size={24} color={colorText} />
+								{
+									uid === userData.uid ? (
+										<TouchableOpacity
+											ref={optionsButtonRef}
+											onPress={showOptionsMenu}
+										>
+											<Feather name="more-horizontal" size={24} color={colorText} />
+										</TouchableOpacity>
+									) : <></>
+								}
+								
+							</View>
+
+							{/* <Text style={styles.text}>{content}</Text> */}
+							{/* <SnapMsgText text={content}/> */}
+							<TwitterTextView
+								style={styles.text}
+								hashtagStyle={styles.hashtagStyle}
+								mentionStyle={styles.mentionStyle}
+								linkStyle={styles.linkStyle}
+								emailStyle={styles.emailStyle}
+							>
+								{content}
+							</TwitterTextView>
+							{
+								picUri.length > 0 ? (
+									<Image
+										source={{ uri: picUri[0] }}
+										style={styles.postPic}
+									/>
+								) : <></>
+							}
+
+							{/* Botones de acción */}
+							<View style={styles.actionButtons}>
+								<TouchableOpacity style={styles.actionButton}>
+									<EvilIconsI name="comment" size={28} color={colorText} />
 								</TouchableOpacity>
-							) : <></>
-						}
-						
-					</View>
+								<Text style={styles.stats}>{comments}</Text>
 
-					{/* <Text style={styles.text}>{content}</Text> */}
-					{/* <SnapMsgText text={content}/> */}
-					<TwitterTextView
-						style={styles.text}
-						hashtagStyle={styles.hashtagStyle}
-						mentionStyle={styles.mentionStyle}
-						linkStyle={styles.linkStyle}
-						emailStyle={styles.emailStyle}
-					>
-						{content}
-					</TwitterTextView>
-					{
-						picUri.length > 0 ? (
-							<Image
-								source={{ uri: picUri[0] }}
-								style={styles.postPic}
-							/>
-						) : <></>
-					}
+								<TouchableOpacity style={styles.actionButton}>
+									<EvilIconsI name="retweet" size={28} color={colorText} />
+								</TouchableOpacity>
+								<Text style={styles.stats}>{reposts}</Text>
 
-					{/* Botones de acción */}
-					<View style={styles.actionButtons}>
-						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="comment" size={28} color={colorText} />
-						</TouchableOpacity>
-						<Text style={styles.stats}>{comments}</Text>
+								<TouchableOpacity style={styles.actionButton}>
+									<EvilIconsI name="heart" size={28} color={colorText} />
+								</TouchableOpacity>
+								<Text style={styles.stats}>{likes}</Text>
 
-						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="retweet" size={28} color={colorText} />
-						</TouchableOpacity>
-						<Text style={styles.stats}>{reposts}</Text>
-
-						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="heart" size={28} color={colorText} />
-						</TouchableOpacity>
-						<Text style={styles.stats}>{likes}</Text>
-
-						<TouchableOpacity style={styles.actionButton}>
-							<EvilIconsI name="share-apple" size={28} color={colorText} />
-						</TouchableOpacity>
-					</View>
-				</View>
-			</View>
-
-			{/* Menú de opciones */}
-			<Modal
-				transparent={true}
-				visible={isOptionsMenuVisible}
-				onRequestClose={hideOptionsMenu}
-			>
-				<TouchableWithoutFeedback onPress={hideOptionsMenu}>
-					<View style={styles.optionsMenuContainer}>
-						<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175 }]}>
-							<TouchableOpacity style={styles.optionItem} onPress={deleteSnap}>
-								<Text style={[styles.optionText, {color: 'red'}]}>Delete Post</Text>
-								<Feather name="trash-2" size={20} color="red" />
-							</TouchableOpacity>
-							<TouchableOpacity style={styles.optionItem} onPress={editPost}>
-								<Text style={styles.optionText}>Edit Post</Text>
-								<Feather name="edit" size={20} color="white" />
-							</TouchableOpacity>
-							<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
-								<Text style={styles.optionText}>Cancel</Text>
-							</TouchableOpacity>
+								<TouchableOpacity style={styles.actionButton}>
+									<EvilIconsI name="share-apple" size={28} color={colorText} />
+								</TouchableOpacity>
+							</View>
 						</View>
 					</View>
-				</TouchableWithoutFeedback>
-			</Modal>
+
+					{/* Menú de opciones */}
+					<Modal
+						transparent={true}
+						visible={isOptionsMenuVisible}
+						onRequestClose={hideOptionsMenu}
+					>
+						<TouchableWithoutFeedback onPress={hideOptionsMenu}>
+							<View style={styles.optionsMenuContainer}>
+								<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175 }]}>
+									<TouchableOpacity style={styles.optionItem} onPress={deleteSnap}>
+										<Text style={[styles.optionText, {color: 'red'}]}>Delete Post</Text>
+										<Feather name="trash-2" size={20} color="red" />
+									</TouchableOpacity>
+									<TouchableOpacity style={styles.optionItem} onPress={editPost}>
+										<Text style={styles.optionText}>Edit Post</Text>
+										<Feather name="edit" size={20} color="white" />
+									</TouchableOpacity>
+									<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
+										<Text style={styles.optionText}>Cancel</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						</TouchableWithoutFeedback>
+					</Modal>
+					</>
+				)
+			}
 		</>
 	);
 };
