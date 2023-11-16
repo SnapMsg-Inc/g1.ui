@@ -10,6 +10,8 @@ import firebaseApp from "../firebase";
 import { GetMe, GetToken, postsUser, postsUserFederate } from "../servicesUser";
 import { SignInReducer } from "../reducer/authReducer";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as Location from 'expo-location'
+import { Alert } from "react-native";
 
 export const AuthenticationContext = createContext()
 
@@ -22,8 +24,22 @@ export const AuthenticationContextProvider = ({children}) => {
     const [signedIn, dispatchSignedIn] = useReducer(SignInReducer,{
         userToken:null,
     })
+    const [locationServiceEnabled, setLocationServiceEnabled] = useState(false)
 
     useEffect(() => {
+        const CheckIfLocationEnabled = async () => {
+            let enabled = await Location.hasServicesEnabledAsync();
+            if (!enabled)
+                Alert.alert(
+                    'Location Service not enabled',
+                    'Please enable your location services to continue',
+                    [{ text: 'OK' }],
+                    { cancelable: false }
+                ) 
+            else
+                setLocationServiceEnabled(enabled);
+        }
+
         const checkAuth = () => {
             setIsLoadingApp(true)
             getAuth(firebaseApp).onAuthStateChanged((currentUser) => {
@@ -39,6 +55,7 @@ export const AuthenticationContextProvider = ({children}) => {
                 setIsLoadingApp(false)
             })
         }
+        CheckIfLocationEnabled()
         checkAuth()
     },[])
 
@@ -100,10 +117,10 @@ export const AuthenticationContextProvider = ({children}) => {
 
     const onRegister = (data, password, navigateTo) => {
         setIsLoading(true)
+        setIsRegister(true)
         setError(false)
         CreateAccount(data.email, password)
         .then((userCredential) => {
-            setIsRegister(true)
             postsUser(data, false)
             dispatchSignedIn({type: 'SIGN_UP'})
             setIsLoading(false)
@@ -164,8 +181,8 @@ export const AuthenticationContextProvider = ({children}) => {
                             }, token)
                             .then(() => {
                                 dispatchSignedIn({type: 'SIGN_UP'})
-                                setIsLoading(false)
                                 navigateTo()
+                                setIsLoading(false)
                             }).catch((error) => {
                                 DeleteUserFirebase()
                                 onLogout()
@@ -205,7 +222,8 @@ export const AuthenticationContextProvider = ({children}) => {
                     onLogin,
                     onLoginFederate,
                     onLogout,
-                    markRegisterComplete
+                    markRegisterComplete,
+                    locationServiceEnabled
                 }
             } 
         >

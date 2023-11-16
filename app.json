@@ -16,7 +16,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ],
@@ -33,7 +33,6 @@
       },
       "package": "com.SnapMsg.app",
       "permissions": [
-        "LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ]
