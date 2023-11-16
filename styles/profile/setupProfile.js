@@ -43,6 +43,13 @@ const stylesEditProfile = StyleSheet.create({
         marginHorizontal: 30,
         marginTop: 20,
         marginBottom: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: colorText,
+        paddingHorizontal: 40,
+        paddingVertical: 8,
+        borderRadius: 10,
+        alignItems: 'center',
     },
     textInput: {
         flex: 1,
@@ -77,6 +84,18 @@ const stylesEditProfile = StyleSheet.create({
     optionButtonText: {
         color: colorWhite,
         marginLeft: 5,
+    },
+    preferencesContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colorBackground
+    },
+    fieldText: {
+        color: colorText,
+        fontSize: 18,
+        marginLeft: 30,
+        marginBottom: -10,
     }
 })
 

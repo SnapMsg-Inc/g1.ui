@@ -5,6 +5,9 @@ import {
     Image,
     Pressable,
     Alert,
+    Modal,
+    TouchableWithoutFeedback,
+    TouchableOpacity
   } from "react-native";
 import React, { useEffect, useState } from 'react';
 import Input from "../../forms/input";
@@ -21,7 +24,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
-import { colorApp, colorBackground, colorText } from "../../../styles/appColors/appColors";
+import { colorApp, colorBackground, colorText, colorWhite } from "../../../styles/appColors/appColors";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Preferences from "../../pages/preferences";
 
@@ -251,7 +254,7 @@ function EditProfile({navigation}) {
                     ) : <></>
                 }
             </View>
-                {isEditInterests ?     
+                {/* {isEditInterests ?     
                     <View style={stylesEditProfile.body}>
                         <TouchableHighlight onPress={() => handleInterests()}>
                             <View style={stylesEditProfile.cancelInterests}>
@@ -260,13 +263,17 @@ function EditProfile({navigation}) {
                         </TouchableHighlight>
                         <Preferences list={interestsList} setList={setInterestsList}/>
                     </View> 
-                    :
+                    : */}
                     <View style={stylesEditProfile.body}>
                         <Text style={stylesEditProfile.textTittle}>
                             Edit Your Profile
                         </Text>
+                        <Text style={stylesEditProfile.fieldText}>
+                            Alias
+                        </Text>
                         <Input
                             label={'Alias'}
+                            textColor={colorWhite}
                             data={alias}
                             setData={setAlias}
                             icon={
@@ -278,6 +285,9 @@ function EditProfile({navigation}) {
                             }
                             error={aliasError}
                         />
+                        <Text style={stylesEditProfile.fieldText}>
+                            Nick
+                        </Text>
                         <Input
                             label={'Nick'}
                             data={nick}
@@ -291,6 +301,9 @@ function EditProfile({navigation}) {
                             }
                             error={nickError}          
                         />
+                        <Text style={stylesEditProfile.fieldText}>
+                            Country
+                        </Text>
                         <Input
                             label={'Country'}
                             data={countryLocate}
@@ -304,6 +317,9 @@ function EditProfile({navigation}) {
                                 />
                             }
                         />
+                        <Text style={stylesEditProfile.fieldText}>
+                            Locality
+                        </Text>
                         <Input
                             label={'Locality'}
                             data={locality}
@@ -315,10 +331,13 @@ function EditProfile({navigation}) {
                                 onPress={() => setLocation()}
                             />}             
                         />
+                        <Text style={stylesEditProfile.fieldText}>
+                            Interests
+                        </Text>
                         <TouchableHighlight onPress={() => handleInterests()}>
                             <View style={stylesEditProfile.interestsButton}>
                                 <Text style={stylesEditProfile.text}>
-                                    Press for edit interests
+                                    Edit interests
                                 </Text>
                                 <Icon
                                     name={'eyedropper'} 
@@ -328,11 +347,26 @@ function EditProfile({navigation}) {
                             </View>
                         </TouchableHighlight>
                     </View>
-                }
+                {/* } */}
             <View style={stylesEditProfile.footer}>
                 <CancelButton navigation={navigation}/>
                 <AcceptButton accept={handleEdit} text={'Accept'}/>
             </View>
+            <Modal
+                transparent={true}
+                animationType="slide"
+                visible={isEditInterests}
+                onReqestClose={() => setIsEditInterests(false)}
+            >
+                <TouchableWithoutFeedback onPress={() => setIsEditInterests(false)}>
+                    <View style={stylesEditProfile.preferencesContainer}>
+                        <Preferences list={interestsList} setList={setInterestsList}/>
+                        <View style={stylesEditProfile.footer}>
+                            <AcceptButton onPress={() => setIsEditInterests(false)} text={'Accept'}/>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
         </ScrollView>   
     );
 }
