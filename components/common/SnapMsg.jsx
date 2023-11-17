@@ -127,7 +127,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	// TODO: USAR CHECK IF POST IS FAV
 	const [isFav, setIsFav] = useState(false);
 	const favIcon = isFav ? (
-		<MaterialCommunityIcon name="star-off-outline" size={30} color={colorText} />
+		<MaterialCommunityIcon name="star-off-outline" size={30} color={colorApp} />
 	) : (
 		<MaterialCommunityIcon name="star-plus-outline" size={30} color={colorText} />
 	);
