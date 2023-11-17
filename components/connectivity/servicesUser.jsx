@@ -297,29 +297,31 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     }
 }
 
-export async function GetFavPosts(setState) {
+export async function GetFavPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    await axios({
+    const urlWithQueryParams = `${URL_POST}/favs?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
         method: 'get',
-        url: `${URL_POST}/fav`, 
+        url: urlWithQueryParams,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-    })
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function addPostToFav(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
 
     try {
         await axios.post(urlWithQueryParams, null, {
@@ -337,7 +339,7 @@ export async function deletePostFromFav(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
   
-    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
 
     try {
         await axios.delete(urlWithQueryParams, {
@@ -356,7 +358,7 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, true);
     
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
-    // console.log(token)
+     console.log(token)
     try {
     const response = await axios({
         method: 'get',

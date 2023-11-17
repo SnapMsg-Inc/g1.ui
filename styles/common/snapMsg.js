@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 	},
 	actionButtons: {
 		flexDirection: 'row',
+		justifyContent: 'space-around',
 		marginTop: 10,
 	},
 	actionButton: {
