@@ -92,7 +92,13 @@ const OtherProfile = ({ navigation }) => {
 					</Tabs.Tab>
 
 					<Tabs.Tab name="Media" label="Media">
-						<MediaScreen />
+						{	
+							// To ensure that data is already loaded
+							data.nick.length > 0 ? (
+								<MediaScreen url={getUrl()}/>
+							) : <></>
+						}
+						
 					</Tabs.Tab>
 				</Tabs.Container>
 		)}
