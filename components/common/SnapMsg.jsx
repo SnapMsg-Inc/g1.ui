@@ -80,7 +80,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	useFocusEffect(
 		React.useCallback(() => {
 			fetchDataFromApi();
-			console.log(pid);
+			// console.log(pid);
 		}, [])
 	);
 

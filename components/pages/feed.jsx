@@ -24,11 +24,12 @@ export default function Feed({ navigation }) {
         setAllDataLoaded(false)
         setFullPosts([]);
         try {
-            const newPosts = await GetFeedPosts(10, 0);
+            const newPosts = await GetFeedPosts(20, 0);
 			setFullPosts(newPosts);
             if (newPosts.length > 0) {
                 setCurrentPage(1);
             } else {
+                console.log("All data loaded")
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
@@ -48,7 +49,7 @@ export default function Feed({ navigation }) {
         }
         setIsLoading(true);
         try {
-            const newPosts = await GetFeedPosts(10, currentPage);
+            const newPosts = await GetFeedPosts(20, currentPage);
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);

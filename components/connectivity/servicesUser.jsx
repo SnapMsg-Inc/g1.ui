@@ -356,7 +356,7 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, true);
     
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
-
+    // console.log(token)
     try {
     const response = await axios({
         method: 'get',
