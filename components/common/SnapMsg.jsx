@@ -2,13 +2,15 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, deletePost } from '../connectivity/servicesUser';
+import { GetUserByUid, addPostToFav, deletePost, deletePostFromFav } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 import TwitterTextView from "react-native-twitter-textview";
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/common/snapMsg';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -121,6 +123,20 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		});
 	};
 
+	// Actions:
+	// TODO: USAR CHECK IF POST IS FAV
+	const [isFav, setIsFav] = useState(false);
+	const favIcon = isFav ? (
+		<MaterialCommunityIcon name="star-off-outline" size={30} color={colorApp} />
+	) : (
+		<MaterialCommunityIcon name="star-plus-outline" size={30} color={colorText} />
+	);
+
+	const handleToggleFav = () => {
+		isFav ? deletePostFromFav(pid) : addPostToFav(pid);
+		setIsFav(!isFav);
+	};
+
 	return (
 		<>
 			{
@@ -178,23 +194,27 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 
 							{/* Botones de acción */}
 							<View style={styles.actionButtons}>
-								<TouchableOpacity style={styles.actionButton}>
-									<EvilIconsI name="comment" size={28} color={colorText} />
+								{/* <TouchableOpacity style={styles.actionButton}>
+									<MaterialCommunityIcon name="star-off-outline" size={28} color={colorText} />
 								</TouchableOpacity>
-								<Text style={styles.stats}>{comments}</Text>
+								<Text style={styles.stats}>{comments}</Text> */}
 
-								<TouchableOpacity style={styles.actionButton}>
-									<EvilIconsI name="retweet" size={28} color={colorText} />
-								</TouchableOpacity>
-								<Text style={styles.stats}>{reposts}</Text>
+								<View style={{flexDirection: 'row'}}>
+									<TouchableOpacity style={styles.actionButton}>
+										<FontAwesome5 name="retweet" size={24} color={colorText} />
+									</TouchableOpacity>
+									<Text style={styles.stats}>{reposts}</Text>
+								</View>
+								
+								<View style={{flexDirection: 'row'}}>
+									<TouchableOpacity style={styles.actionButton}>
+										<MaterialCommunityIcon name="heart-outline" size={27} color={colorText} />
+									</TouchableOpacity>
+									<Text style={styles.stats}>{likes}</Text>
+								</View>
 
-								<TouchableOpacity style={styles.actionButton}>
-									<EvilIconsI name="heart" size={28} color={colorText} />
-								</TouchableOpacity>
-								<Text style={styles.stats}>{likes}</Text>
-
-								<TouchableOpacity style={styles.actionButton}>
-									<EvilIconsI name="share-apple" size={28} color={colorText} />
+								<TouchableOpacity style={styles.actionButton} onPress={handleToggleFav}>
+									{favIcon}
 								</TouchableOpacity>
 							</View>
 						</View>

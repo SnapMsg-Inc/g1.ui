@@ -3,7 +3,6 @@ import { Animated, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
-import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
@@ -11,6 +10,7 @@ import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/profile/profile';
 import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
+import FavsScreen from '../profileComponents/profileNavigation/favsScreen';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
@@ -71,7 +71,7 @@ const Profile = ({ navigation }) => {
 						</Tabs.Tab>
 
 						<Tabs.Tab name="Favs" label="Favs">
-							<LikesScreen />
+							<FavsScreen />
 						</Tabs.Tab>
 					</Tabs.Container>	
 					<PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
