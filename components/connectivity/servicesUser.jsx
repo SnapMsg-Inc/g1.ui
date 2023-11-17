@@ -378,7 +378,7 @@ export async function likePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
 
     try {
         await axios.post(urlWithQueryParams, null, {
@@ -396,7 +396,7 @@ export async function unlikePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
   
-    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
 
     try {
         await axios.delete(urlWithQueryParams, {

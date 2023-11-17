@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, addPostToFav, deletePost, deletePostFromFav } from '../connectivity/servicesUser';
+import { GetUserByUid, addPostToFav, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
@@ -137,6 +137,23 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		setIsFav(!isFav);
 	};
 
+	
+	// TODO: USAR CHECK IF POST IS LIKED
+	const [isLiked, setIsLiked] = useState(false);
+	const [likesAmount, setLikesAmount] = useState(likes);
+
+	const likeIcon = isLiked ? (
+		<MaterialCommunityIcon name="heart" size={27} color={colorApp} />
+	) : (
+		<MaterialCommunityIcon name="heart-outline" size={27} color={colorText} />
+	);
+
+	const handleToggleLike = () => {
+		isLiked ? unlikePost(pid) : likePost(pid);
+		isLiked ? setLikesAmount(likesAmount - 1) : setLikesAmount(likesAmount + 1);
+		setIsLiked(!isLiked);
+	};
+
 	return (
 		<>
 			{
@@ -207,10 +224,10 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 								</View>
 								
 								<View style={{flexDirection: 'row'}}>
-									<TouchableOpacity style={styles.actionButton}>
-										<MaterialCommunityIcon name="heart-outline" size={27} color={colorText} />
+									<TouchableOpacity style={styles.actionButton} onPress={handleToggleLike}>
+										{likeIcon}
 									</TouchableOpacity>
-									<Text style={styles.stats}>{likes}</Text>
+									<Text style={styles.stats}>{likesAmount}</Text>
 								</View>
 
 								<TouchableOpacity style={styles.actionButton} onPress={handleToggleFav}>
