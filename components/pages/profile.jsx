@@ -67,7 +67,7 @@ const Profile = ({ navigation }) => {
 						</Tabs.Tab>
 
 						<Tabs.Tab name="Media" label="Media">
-							<MediaScreen />
+							<MediaScreen url={getUrl()}/>
 						</Tabs.Tab>
 
 						<Tabs.Tab name="Favs" label="Favs">
