@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableHighlight } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colorWhite } from '../../styles/appColors/appColors';
 
 function BackButton({ onPress }) {
   const insets = useSafeAreaInsets();
@@ -22,7 +23,7 @@ function BackButton({ onPress }) {
         justifyContent: 'center',
       }}
     >
-      <Feather name="chevron-left" color="white" size={26} />
+      <Feather name="chevron-left" color={colorWhite} size={26} />
     </TouchableHighlight>
   );
 }

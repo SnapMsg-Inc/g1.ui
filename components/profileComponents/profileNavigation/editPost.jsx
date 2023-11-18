@@ -14,7 +14,7 @@ import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
-import { colorApp, colorBackground, colorText } from '../../../styles/appColors/appColors';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
 import styles from '../../../styles/profile/editPost';
 
 const EditPost = ({ navigation }) => {
@@ -188,14 +188,14 @@ const EditPost = ({ navigation }) => {
     const actions = [
         {
           text: "Take Photo",
-          icon: <Icon name="camera" size={25} color="white" />,
+          icon: <Icon name="camera" size={25} color={colorWhite} />,
           color: colorApp,
           name: "bt_take_photo",
           position: 1,
         },
         {
           text: "Choose Photo",
-          icon: <SimpleLineIcons name="picture" size={25} color="white" />,
+          icon: <SimpleLineIcons name="picture" size={25} color={colorWhite} />,
           color: colorApp,
           name: "bt_choose_photo",
           position: 2
@@ -285,7 +285,7 @@ const EditPost = ({ navigation }) => {
                 iconHeight={30}
                 iconWidth={30} 
                 floatingIcon={(
-                    <SimpleLineIcons name="paper-clip" size={28} color="white" />
+                    <SimpleLineIcons name="paper-clip" size={28} color={colorWhite} />
                 )}
             />
 		</View>

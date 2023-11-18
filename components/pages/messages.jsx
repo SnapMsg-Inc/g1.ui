@@ -19,6 +19,7 @@ import styles from '../../styles/feed/feed';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import SnapMsg from '../common/SnapMsg';
 import { FontAwesome5 } from 'react-native-vector-icons';
+import NewMessageButton from '../buttons/buttonNewMessage';
 
 export default function Messages({ navigation }) {
     return (
@@ -39,7 +40,7 @@ export default function Messages({ navigation }) {
                     <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
-            <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
+            <NewMessageButton onPress={() => navigation.navigate('CreatePostScreen')}/>
         </View>
     )
 }

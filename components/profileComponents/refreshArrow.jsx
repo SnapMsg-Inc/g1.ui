@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colorWhite } from '../../styles/appColors/appColors';
 
 export default function RefreshArrow({ scrollY }) {
     const insets = useSafeAreaInsets();
@@ -30,7 +31,7 @@ export default function RefreshArrow({ scrollY }) {
                 ],
             }}
             >
-            <Feather name="arrow-down" color="white" size={25} />
+            <Feather name="arrow-down" color={colorWhite} size={25} />
         </Animated.View>
     );
 }

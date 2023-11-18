@@ -7,7 +7,7 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
 import TwitterTextView from "react-native-twitter-textview";
-import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/appColors/appColors';
 import styles from '../../styles/common/snapMsg';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -252,7 +252,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 									</TouchableOpacity>
 									<TouchableOpacity style={styles.optionItem} onPress={editPost}>
 										<Text style={styles.optionText}>Edit Post</Text>
-										<Feather name="edit" size={20} color="white" />
+										<Feather name="edit" size={20} color={colorWhite} />
 									</TouchableOpacity>
 									<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
 										<Text style={styles.optionText}>Cancel</Text>
