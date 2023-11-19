@@ -24,49 +24,55 @@ import MessageCard from '../messagesComponents/messageCard';
 
 const MOCK_MESSAGES = [
     {
-      uid: '1',
-      userName: 'Jenny Doe',
-      userImg: require('../../assets/default_user_pic.png'),
-      messageTime: '4 mins ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+        uid: '1',
+        alias: 'Jenny Doe',
+        nick: 'la jenny',
+        pic: '',
+        messageTime: '4 mins ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
     },
     {
-      uid: '2',
-      userName: 'John Doe',
-      userImg: require('../../assets/default_user_pic.png'),
-      messageTime: '2 hours ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+        uid: '2',
+        alias: 'John Doe',
+        nick: 'lil jhon',
+        pic: '',
+        messageTime: '2 hours ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
     },
     {
-      uid: '3',
-      userName: 'Ken William',
-      userImg: require('../../assets/default_user_pic.png'),
-      messageTime: '1 hours ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+        uid: '3',
+        alias: 'Ken William',
+        nick: 'ken',
+        pic: '',
+        messageTime: '1 hours ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
     },
     {
-      uid: '4',
-      userName: 'Selina Paul',
-      userImg: require('../../assets/default_user_pic.png'),
-      messageTime: '1 day ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+        uid: '4',
+        alias: 'Selina Paul',
+        nick: 'seli',
+        pic: '',
+        messageTime: '1 day ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
     },
     {
-      uid: '5',
-      userName: 'Christy Alex',
-      userImg: require('../../assets/default_user_pic.png'),
-      messageTime: '2 days ago',
-      messageText:
-        'Hey there, this is my test for a post of my social app in React Native.',
+        uid: '5',
+        alias: 'Christy Alex',
+        nick: 'chris',
+        pic: '',
+        messageTime: '2 days ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
     },
     {
         uid: '6',
-        userName: 'Gaston',
-        userImg: require('../../assets/default_user_pic.png'),
+        alias: 'Gaston',
+        nick: 'pela',
+        pic: '',
         messageTime: '2 days ago',
         messageText:
           'Hey there, this is my test for a post of my social app in React Native.',

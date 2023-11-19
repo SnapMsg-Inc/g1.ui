@@ -21,7 +21,7 @@ const MessageCard = ({ data }) => {
                 isLoading ? <></> : (
                     <TouchableOpacity onPress={handleMessagePress}>
                         <View style={stylesMessages.card}>
-                            <Text style={{color: 'red'}}>{data.userName}</Text>
+                            <Text style={{color: 'red'}}>{data.alias}</Text>
                         </View>
                     </TouchableOpacity>
                     )
