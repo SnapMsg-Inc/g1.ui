@@ -104,6 +104,29 @@ function DiscoverStackScreen() {
 	);
 }
 
+const MessagesStack = createStackNavigator();
+
+function MessagesStackScreen() {
+	return (
+		<MessagesStack.Navigator initialRouteName="MessagesScreen">
+			<MessagesStack.Screen name="MessagesScreen"
+				component={Messages}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			{/* <MessagesStack.Screen name="ChatScreen"
+				component={ChatScreen}
+				options={{
+					headerShown: false,
+				}}
+			/> */}
+		</MessagesStack.Navigator>
+	);
+}
+
+
 const Drawer = createDrawerNavigator();
 
 export default function Home() {
@@ -164,7 +187,7 @@ export default function Home() {
 			/>
 			<Drawer.Screen
 				name="Messages"
-				component={Messages}
+				component={MessagesStackScreen}
 				options={({ navigation }) => ({
 					headerShown: false,
 					drawerLabel: () => (
