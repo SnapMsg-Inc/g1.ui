@@ -40,7 +40,7 @@ export default function Messages({ navigation }) {
                     <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
-            <NewMessageButton onPress={() => navigation.navigate('CreatePostScreen')}/>
+            <NewMessageButton onPress={() => navigation.navigate('ChatScreen')}/>
         </View>
     )
 }

@@ -15,6 +15,7 @@ import SearchScreen from '../discoverComponents/searchScreen';
 import CreatePostScreen from '../common/createPost';
 import EditPost from '../profileComponents/profileNavigation/editPost';
 import { DiscoverButton, FeedButton, MessagesButton, NotificationsButton, ProfileButton } from './drawerNavigationDispatcher';
+import ChatScreen from '../messagesComponents/chatScreen';
 
 const FeedStack = createStackNavigator();
 
@@ -116,12 +117,12 @@ function MessagesStackScreen() {
 				}}
 			/>
 
-			{/* <MessagesStack.Screen name="ChatScreen"
+			<MessagesStack.Screen name="ChatScreen"
 				component={ChatScreen}
 				options={{
 					headerShown: false,
 				}}
-			/> */}
+			/>
 		</MessagesStack.Navigator>
 	);
 }
