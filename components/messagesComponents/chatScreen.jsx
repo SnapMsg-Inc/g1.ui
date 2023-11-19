@@ -4,12 +4,16 @@ import {
     View,
     Text,
 } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
-export default function ChatScreen({ navigation, uid }) {
+export default function ChatScreen({ navigation }) {
+    const route = useRoute();
+	const { data } = route.params;
+
     return (
         <View style={styles.body}>
             <Text style={styles.text}>
-                Chat to {uid}
+                Chat to {data.userName}
             </Text>
         </View>
     )
