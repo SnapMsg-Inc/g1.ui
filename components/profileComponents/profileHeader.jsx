@@ -6,7 +6,7 @@ import { DrawerActions, CommonActions } from '@react-navigation/native';
 import ProfileInfo from './profileInfo';
 
 
-export default function ProfileHeader({ scrollY , navigation, data, headerButton }) {
+export default function ProfileHeader({ scrollY , navigation, data, location, headerButton }) {
     return (
        <Animated.View>
             {/* Back button */}
@@ -28,7 +28,7 @@ export default function ProfileHeader({ scrollY , navigation, data, headerButton
             {/* <RefreshArrow scrollY={scrollY} /> */}
             
             {/* Profile Info / Nav Bar */}
-			<ProfileInfo scrollY={scrollY} navigation={navigation} data={data} headerButton={headerButton}/>
+			<ProfileInfo scrollY={scrollY} navigation={navigation} data={data} headerButton={headerButton} location={location}/>
        	</Animated.View>
     );
 }
