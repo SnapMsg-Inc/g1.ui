@@ -97,25 +97,47 @@ export async function GetUserByUid(setState, uid) {
     });
 }
 
-export async function GetUserFollowersByUid(setState, uid) {
+// export async function GetUserFollowersByUid(setState, uid) {
+//     const auth = getAuth();
+//     const token = await getIdToken(auth.currentUser, true);
+  
+// 	const urlWithQueryParams = `${URL}/${uid}/followers`
+
+//     await axios({
+//       method: 'get',
+//       url: urlWithQueryParams,
+//       headers: {
+//         'Authorization': `Bearer ${token}`,
+//         'Content-Type': 'application/json'
+//       }
+//     }).then((response) => {
+//       setState(response.data);
+//     })
+//     . catch((error) => {
+//         console.log(JSON.stringify(error.response, null, 2))
+//     });
+// }
+
+export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-  
-	const urlWithQueryParams = `${URL}/${uid}/followers`
 
-    await axios({
-      method: 'get',
-      url: urlWithQueryParams,
-      headers: {
+    const urlWithQueryParams = `${URL}/${uid}/followers?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      setState(response.data);
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        }
     });
+    console.log(response.data)
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function GetUserFollowsByUid(setState, uid) {
