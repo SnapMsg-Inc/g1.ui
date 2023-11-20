@@ -34,7 +34,7 @@ export default function ChatScreen({ navigation }) {
             user: {
             _id: 2,
             name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
+            avatar: data.pic,
             },
         },
         {
@@ -157,6 +157,8 @@ export default function ChatScreen({ navigation }) {
             {/* MESSAGES */}
             <GiftedChat
                 messages={messages}
+                showAvatarForEveryMessage={false}
+                showUserAvatar={false}
                 onSend={(messages) => onSend(messages)}
                 user={{
                     _id: 1,
