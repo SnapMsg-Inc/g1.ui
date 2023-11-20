@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { Animated, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { Text, Animated, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
@@ -11,6 +11,9 @@ import { colorApp, colorText, colorBackground } from '../../styles/appColors/app
 import styles from '../../styles/profile/profile';
 import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
 import FavsScreen from '../profileComponents/profileNavigation/favsScreen';
+import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from '../connectivity/location/permissionLocation';
+import * as Location from 'expo-location'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
@@ -27,15 +30,44 @@ const tabBar = props => (
 
 const Profile = ({ navigation }) => {
 	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+	const [coordinates, setCoordinates] = useState(userData.zone)
+	const [locality, setLocality] = useState('')
+    const [countryLocate, setCountryLocate] = useState('')
 
+	useEffect(()=>{
+        const setData = () => {
+            ReverseGeocode(coordinates)
+            .then((address) => {
+                const { city, country } = address[0]
+                console.log(`city ${city} country ${country}`)
+                setLocality(city)
+                setCountryLocate(country)
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+        GetPermission()
+        .then((location) => {
+            if (location.status !== 'granted')
+                Alert.alert(
+                    'Permission not granted',
+                    'Allow the app to use location service.',
+                    [{ text: 'OK' }],
+                    { cancelable: false }
+                );
+            else
+                setData()
+        })
+    }, [GetPermission])
+	
 	useFocusEffect(
         React.useCallback(() => {
           	fetchUserDataFromApi()
         }, [])
     );
-
+	
 	const scrollY = useRef(new Animated.Value(0)).current;
-
+	
 	const getUrl = () => {
 		return `${URL_POST}/me?`;
 	}
@@ -55,6 +87,16 @@ const Profile = ({ navigation }) => {
 							<ProfileHeader scrollY={scrollY}
 											navigation={navigation}
 											data={userData}
+											// location={`${countryLocate}, ${locality}`}
+											location={
+												<View style={{flexDirection: 'row'}}>
+													<Icon name={'map-marker'}  color={colorText} size={20}/>
+													{/* Location -> private data */}
+													<Text style={{color: colorText, marginBottom: 15, fontSize: 15, marginLeft: 10}}>
+														{`${countryLocate}, ${locality}`}
+													</Text>
+												</View>
+											}
 											headerButton={<SetUpProfileButton navigation={navigation} 
 																				data={userData}/>}/>
 						)}

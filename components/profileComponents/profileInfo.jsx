@@ -9,7 +9,7 @@ import { colorBackground, colorText, colorWhite } from '../../styles/appColors/a
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
-const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
+const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
 	return (
         <View
             style={{
@@ -68,7 +68,9 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton }) => {
             >
                 {data.interests.toString().replace(/,/g, ', ')}
             </Text>
-
+            
+            {location}
+            
             {/* Profile stats */}
             <ProfileStats navigation={navigation} data={data} />
         </View>

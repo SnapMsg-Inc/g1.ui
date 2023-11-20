@@ -224,7 +224,7 @@ function EditProfile({navigation}) {
                     }}
                 >
                     <View style={stylesEditProfile.imageButton}>
-                        <Octicons name="plus" size={20} color={"white"} />
+                        <Octicons name="plus" size={20} color={colorWhite} />
                     </View>
                 </Pressable>
                 {

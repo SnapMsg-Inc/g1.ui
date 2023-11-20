@@ -1,18 +1,18 @@
-import { Octicons } from '@expo/vector-icons';
+import { Octicons, Entypo } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import stylesPost from '../../styles/buttons/buttonPost';
 import { Pressable } from 'react-native';
 import { colorWhite } from '../../styles/appColors/appColors';
 
-function PostButton({ onPress }) {  
+function NewMessageButton({ onPress }) {  
     return (
         <Pressable
             style={stylesPost.floatingButton}
             onPress={onPress}
         >
-            <Octicons name="plus" size={24} color={colorWhite} />
+            <Entypo name="new-message" size={24} color={colorWhite}/>
         </Pressable>
     );
   }
   
-  export default PostButton;
+  export default NewMessageButton;
