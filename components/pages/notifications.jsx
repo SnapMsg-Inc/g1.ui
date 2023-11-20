@@ -45,7 +45,7 @@ export default function Discover({ navigation }) {
                     {/* <TrendingScreen/> */}
                 </Tabs.Tab>
 
-                <Tabs.Tab name="Mentions" label="For you">
+                <Tabs.Tab name="Mentions" label="Mentions">
                     {/* <ForYouScreen searchQuery={searchQuery}/> */}
                 </Tabs.Tab>
             </Tabs.Container>
