@@ -3,10 +3,12 @@ import {
     StyleSheet,
     View,
     Text,
+    Modal,
     Pressable,
     TouchableOpacity,
     ActivityIndicator,
     RefreshControl,
+    TouchableWithoutFeedback,
     FlatList } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -77,9 +79,56 @@ const MOCK_MESSAGES = [
         messageText:
           'Hey there, this is my test for a post of my social app in React Native.',
       },
+      {
+        uid: '2',
+        alias: 'John Doe',
+        nick: 'lil jhon',
+        pic: '',
+        messageTime: '2 hours ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
+    },
+    {
+        uid: '3',
+        alias: 'Ken William',
+        nick: 'ken',
+        pic: '',
+        messageTime: '1 hours ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
+    },
+    {
+        uid: '4',
+        alias: 'Selina Paul',
+        nick: 'seli',
+        pic: '',
+        messageTime: '1 day ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
+    },
+    {
+        uid: '5',
+        alias: 'Christy Alex',
+        nick: 'chris',
+        pic: '',
+        messageTime: '2 days ago',
+        messageText:
+            'Hey there, this is my test for a post of my social app in React Native.',
+    },
+    {
+        uid: '6',
+        alias: 'Gaston',
+        nick: 'pela',
+        pic: '',
+        messageTime: '2 days ago',
+        messageText:
+          'Hey there, this is my test for a post of my social app in React Native.',
+      },
   ];
 
 export default function Messages({ navigation }) {
+    const [searchUser,  setSearchUser] = useState(false);
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -121,7 +170,7 @@ export default function Messages({ navigation }) {
                     // }
                 />
             </View>
-            <NewMessageButton onPress={() => navigation.navigate('ChatScreen')}/>
+            <NewMessageButton onPress={() => navigation.navigate('SearchUserScreen')}/>
         </View>
     )
 }
@@ -133,5 +182,22 @@ const stylesMessages = StyleSheet.create({
         paddingRight: 20,
         alignItems: 'center', 
         backgroundColor: colorBackground,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+    },
+    modalContent: {
+        backgroundColor: colorBackground,
+        padding: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    cancelButton: {
+        backgroundColor: colorApp,
+        padding: 15,
+        alignItems: 'center',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
 });
