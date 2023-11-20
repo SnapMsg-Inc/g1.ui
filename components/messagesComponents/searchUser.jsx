@@ -84,7 +84,6 @@ const SearchUserScreen = () => {
 								handleSearch(query)}
 						}
 						autoFocus
-						keyboardType='none'
 						onSubmitEditing={handleSearchPress}
 					/>
 				</View>

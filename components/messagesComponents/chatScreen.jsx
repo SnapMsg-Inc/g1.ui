@@ -1,24 +1,130 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import {
     StyleSheet,
     View,
     Text,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+    Button, 
+    ScrollView
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
-import BackButton from '../buttons/buttonBack';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
 import { Feather } from '@expo/vector-icons';
+import {Bubble, GiftedChat, Send, InputToolbar} from 'react-native-gifted-chat';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 
 export default function ChatScreen({ navigation }) {
     const route = useRoute();
 	const { data } = route.params;
-
+	const { userData } = useContext(LoggedUserContext)
+    
     const defaultImage = require('../../assets/default_user_pic.png')
+
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        setMessages([
+        {
+            _id: 1,
+            text: 'Hello developer',
+            createdAt: new Date(),
+            user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+            },
+        },
+        {
+            _id: 2,
+            text: 'Hello world',
+            createdAt: new Date(),
+            user: {
+            _id: 1,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+            },
+        },
+        ]);
+    }, []);
+
+    const onSend = useCallback((messages = []) => {
+        setMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, messages),
+        );
+    }, []);
+
+    const renderSend = (props) => {
+        return (
+        <Send {...props}>
+            <View>
+            <MaterialCommunityIcons
+                name="send-circle"
+                style={{marginBottom: 5, marginRight: 5}}
+                size={32}
+                color={colorApp}
+            />
+            </View>
+        </Send>
+        );
+    };
+
+    const renderBubble = (props) => {
+        return (
+        <Bubble
+            {...props}
+            wrapperStyle={{
+            right: {
+                backgroundColor: colorApp,
+            },
+            }}
+            textStyle={{
+            right: {
+                color: colorWhite,
+            },
+            }}
+        />
+        );
+    };
+
+    const renderInputToolbar = (props) => {
+        return (
+          <InputToolbar
+            {...props}
+            containerStyle={{
+                backgroundColor: colorBackground,
+            }}
+            primaryStyle={{ alignItems: 'center' }}
+            textInputStyle={{ color: colorWhite }}
+          />
+        );
+      };
+
+    const scrollToBottomComponent = () => {
+        return(
+            <FontAwesome name='angle-double-down' size={22} color='#333' />
+        );
+    }
+
+    const handleProfilePress = () => {
+		if (data.uid !== userData.uid) {
+			navigation.navigate('Profile', {
+				screen: 'OtherProfileScreen',
+				initial: false,
+				params: {id:data.uid}
+			  });
+		} else {
+			navigation.navigate('Profile', {
+				screen: 'ProfileScreen',
+			  });
+		}
+  	};
 
     return (
         <View style={styles.container}>
+            {/* HEADER */}
             <View style={styles.header}>
                 {/* Back button */}
                 {/* <BackButton onPress={() => {navigation.goBack()}}/> */}
@@ -38,19 +144,30 @@ export default function ChatScreen({ navigation }) {
                     >
                     <Feather name="chevron-left" color={colorWhite} size={36} />
                 </TouchableHighlight>
-                <View style={styles.userInfo}>
-                <Image source={( data.pic == 'none') || (data.pic === '') ? defaultImage : { uri: data.pic}} style={styles.image} />
-                    <View>
-                        <Text style={styles.alias}>{data.alias}</Text>
-                        <Text style={styles.nick}>{`@${data.nick}`}</Text>
+                <TouchableHighlight onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
+                    <View  style={styles.userInfo}>
+                        <Image source={(data.pic == 'none') || (data.pic === '') ? defaultImage : { uri: data.pic }} style={styles.image} />
+                        <View>
+                            <Text style={styles.alias}>{data.alias}</Text>
+                            <Text style={styles.nick}>{`@${data.nick}`}</Text>
+                        </View>
                     </View>
-
-                </View>
+                </TouchableHighlight>
             </View>
-            
-            <Text style={styles.text}>
-                Chat to {data.alias}
-            </Text>
+            {/* MESSAGES */}
+            <GiftedChat
+                messages={messages}
+                onSend={(messages) => onSend(messages)}
+                user={{
+                    _id: 1,
+                }}
+                renderBubble={renderBubble}
+                alwaysShowSend
+                renderSend={renderSend}
+                scrollToBottom
+                scrollToBottomComponent={scrollToBottomComponent}
+                renderInputToolbar={renderInputToolbar}
+                />
         </View>
     )
 }
