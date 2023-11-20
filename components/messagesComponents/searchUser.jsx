@@ -10,10 +10,10 @@ import filter from 'lodash.filter';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/messages/searchPeopleScreen';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import SearchedUserCard from './searchedUserCard';
 
 const SearchUserScreen = () => {
 	const navigation = useNavigation();
-	const { userData } = useContext(LoggedUserContext)
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [data, setData] = useState([]);
@@ -64,7 +64,6 @@ const SearchUserScreen = () => {
 	}
 
 	const handleSearchPress = () => {
-
 	};
 
 	return (
@@ -114,14 +113,7 @@ const SearchUserScreen = () => {
 							data={data}
 							keyExtractor={(item) => item.uid.toString()}
 							renderItem={({item}) => (
-								<FollowerCard
-									uid={item.uid}
-									alias={item.alias}
-									nick={item.nick}
-									interests={item.interests}
-									pic={item.pic}
-									key={item.uid}
-								/>
+								<SearchedUserCard data={item}/>
 							)}
 						/>
 					</View>
