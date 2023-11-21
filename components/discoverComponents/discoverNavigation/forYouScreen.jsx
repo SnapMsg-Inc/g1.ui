@@ -33,7 +33,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?text=${encodeURIComponent(query)}` :
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
-            const newPosts = await GetPosts(urlWithQueryParams, 5, 0);
+            const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
 			setFullPosts(newPosts);
             if (newPosts.length > 0) {
                 setCurrentPage(1);
@@ -61,7 +61,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 				// TODO: si search query == null entonces tengo que usar el endp de recommended users
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
-            const newPosts = await GetPosts(urlWithQueryParams, 5, currentPage);
+            const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
             if (newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
