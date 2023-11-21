@@ -505,3 +505,61 @@ export const GetMe = (token) =>
         }
     })
 
+
+export async function checkIfUserLiked(setIsLiked, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsLiked(true)
+        } else {
+            setIsLiked(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsLiked(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsLiked(false)
+        }
+    }
+}
+
+export async function checkIfUserFaved(setIsFaved, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsFaved(true)
+        } else {
+            setIsFaved(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsFaved(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsFaved(false)
+        }
+    }
+}
