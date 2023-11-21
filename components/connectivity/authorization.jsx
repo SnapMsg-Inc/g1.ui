@@ -1,10 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { useState } from 'react';
-import { getAuth,
-        createUserWithEmailAndPassword,
-        signInWithEmailAndPassword, signOut,
-        deleteUser, getIdToken } from 'firebase/auth'
-import GetLogin, { postsUser } from './servicesUser';
+import { createUserWithEmailAndPassword,
+        signInWithEmailAndPassword, sendPasswordResetEmail,
+        deleteUser } from 'firebase/auth'
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import Config from "react-native-config";  
@@ -32,3 +28,6 @@ export const SignInWithGoogle = () =>
 
 export const DeleteUserFirebase = () => 
     deleteUser(firebase.getAuth(firebaseApp).currentUser)
+
+export const ResetPassword = (email) =>
+    sendPasswordResetEmail(firebase.getAuth(firebaseApp), email)
