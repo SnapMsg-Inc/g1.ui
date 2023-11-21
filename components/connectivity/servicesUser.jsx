@@ -534,3 +534,32 @@ export async function checkIfUserLiked(setIsLiked, pid) {
         }
     }
 }
+
+export async function checkIfUserFaved(setIsFaved, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsFaved(true)
+        } else {
+            setIsFaved(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsFaved(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsFaved(false)
+        }
+    }
+}

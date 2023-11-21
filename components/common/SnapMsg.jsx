@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, addPostToFav, checkIfUserLiked, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
+import { GetUserByUid, addPostToFav, checkIfUserFaved, checkIfUserLiked, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
@@ -105,7 +105,6 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	};
 
 	// Actions:
-	// TODO: USAR CHECK IF POST IS FAV
 	const [isFav, setIsFav] = useState(false);
 	const favIcon = isFav ? (
 		<MaterialCommunityIcon name="star-off-outline" size={30} color={colorApp} />
@@ -119,7 +118,6 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	};
 
 	
-	// TODO: USAR CHECK IF POST IS LIKED
 	const [isLiked, setIsLiked] = useState(false);
 	const [likesAmount, setLikesAmount] = useState(likes);
 
@@ -150,7 +148,15 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user follows other:', error);
+			console.error('Error fetching data when checking if user liked post:', error);
+			setIsLoading(false)
+		})
+		checkIfUserFaved(setIsFav, pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user faved post:', error);
 			setIsLoading(false)
 		})
 	};
@@ -161,7 +167,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 			console.log(pid);
 		}, [])
 	);
-	
+
 	return (
 		<>
 			{
