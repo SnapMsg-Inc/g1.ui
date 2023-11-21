@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, addPostToFav, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
+import { GetUserByUid, addPostToFav, checkIfUserLiked, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
@@ -66,25 +66,6 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	// Agregar una referencia al botón de los tres puntos
 	const optionsButtonRef = useRef(null);
 	const [optionsPosition, setOptionsPosition] = useState({ x: 0, y: 0 });
-
-	const fetchDataFromApi = async () => {
-		setIsLoading(true);
-		GetUserByUid(setData, uid)
-			.then(() => {
-				setIsLoading(false);
-			})
-			.catch((error) => {
-				console.error('Error fetching other user data:', error);
-				setIsLoading(false);
-			});
-	};
-
-	useFocusEffect(
-		React.useCallback(() => {
-			fetchDataFromApi();
-			console.log(pid);
-		}, [])
-	);
 
 	const showOptionsMenu = () => {
 		// Obtener las coordenadas del botón de los tres puntos
@@ -154,6 +135,33 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		setIsLiked(!isLiked);
 	};
 
+	const fetchDataFromApi = async () => {
+		setIsLoading(true);
+		GetUserByUid(setData, uid)
+			.then(() => {
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error('Error fetching other user data:', error);
+				setIsLoading(false);
+			});
+		checkIfUserLiked(setIsLiked, pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user follows other:', error);
+			setIsLoading(false)
+		})
+	};
+
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchDataFromApi();
+			console.log(pid);
+		}, [])
+	);
+	
 	return (
 		<>
 			{
