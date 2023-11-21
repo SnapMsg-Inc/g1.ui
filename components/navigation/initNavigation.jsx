@@ -7,6 +7,7 @@ import SignUp from '../pages/signUp';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
 import FinishSignUp from '../pages/finishSignUp';
 import { colorApp, colorBackground } from '../../styles/appColors/appColors';
+import ForgotPassword from '../pages/forgot';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function InitNavigation() {
                     <Stack.Screen name="SignIn" component={SignIn}/>
                     <Stack.Screen name="SignUp" component={SignUp}/>
                     <Stack.Screen name="Finish" component={FinishSignUp}/>
+                    <Stack.Screen name="Forgot" component={ForgotPassword}/>
                 </Stack.Navigator>
             )}
         </View>
