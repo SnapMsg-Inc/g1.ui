@@ -8,6 +8,8 @@ import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/discover/discover';
 import NotificationHeader from '../notificationComponents/notificationHeader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AllNotificationScreen from '../notificationComponents/notificationNavigation/allNotifications';
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -41,8 +43,8 @@ export default function Discover({ navigation }) {
                 renderTabBar={tabBar}
                 >
 
-                <Tabs.Tab name="Trending" label="Trending">
-                    {/* <TrendingScreen/> */}
+                <Tabs.Tab name="All" label="All">
+                    <AllNotificationScreen/>
                 </Tabs.Tab>
 
                 <Tabs.Tab name="Mentions" label="Mentions">

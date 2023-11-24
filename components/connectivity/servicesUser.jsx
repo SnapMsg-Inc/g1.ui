@@ -563,3 +563,19 @@ export async function checkIfUserFaved(setIsFaved, pid) {
         }
     }
 }
+
+const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net/register-token'
+
+
+export const RegisterTokenDevice = (token) => {
+    const auth = getAuth()
+    axios({
+        method: 'post',
+        url: URL_NOT,
+        data:  {
+            "user_id": auth.currentUser.uid,
+            "token": token
+        }
+    })
+}
+
