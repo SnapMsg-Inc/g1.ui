@@ -34,8 +34,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+            if (newPosts && newPosts.length > 0) {
+				setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 setAllDataLoaded(true);
@@ -62,7 +62,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
-            if (newPosts.length > 0) {
+            if (newPosts && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
@@ -135,13 +135,13 @@ const ForYouScreen = ({searchQuery=null}) => {
 									<View>
 										{
 											searchQuery ? (
-												users.length > 0 ? (
+												users && users.length > 0 ? (
 													<Text style={styles.text}>
 														People
 													</Text>
 												) : <></>
 											) : (
-												users.length > 0 ? (
+												users && users.length > 0 ? (
 													<Text style={styles.text}>
 														Who to follow
 													</Text>
@@ -149,8 +149,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 											)
 										}
 										{
-											users.length === 0 ? (
-												fullPosts.length === 0 ? (
+											users && users.length === 0 ? (
+												fullPosts && fullPosts.length === 0 ? (
 													<View style={{marginVertical: 10}}>
 														<View>
 															<Text style={styles.text}>
