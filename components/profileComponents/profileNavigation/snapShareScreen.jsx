@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import SnapMsg from '../../common/SnapMsg';
-import { GetPosts } from '../../connectivity/servicesUser';
+import { GetSnapSharedPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
+import SnapShare from '../../common/snapShare';
 
-const MediaScreen = ({url}) => {
-  const [fullPosts, setFullPosts] = useState([]);
+const SnapShareScreen = () => {
+	const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ const MediaScreen = ({url}) => {
         setAllDataLoaded(false)
         setFullPosts([]);
         try {
-            const newPosts = await GetPosts(url, 10, 0)
+            const newPosts = await GetSnapSharedPosts(10, 0)
             if (newPosts !== undefined && newPosts.length > 0) {
                 setFullPosts(newPosts);
                 setCurrentPage(1);
@@ -41,7 +41,7 @@ const MediaScreen = ({url}) => {
         setIsLoadingMorePosts(true);
 
         try {
-            const newPosts = await GetPosts(url, 10, currentPage)
+            const newPosts = await GetSnapSharedPosts(10, currentPage)
             if (newPosts !== undefined && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
@@ -81,18 +81,13 @@ const MediaScreen = ({url}) => {
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                item.media_uri && item.media_uri.length > 0 ? (
-                      <SnapMsg
-                          key={item.pid}
-                          uid={item.uid}
-                          pid={item.pid}
-                          username={item.nick}
-                          content={item.text}
-                          date={item.timestamp}
-                          likes={item.likes}
-                          picUri={item.media_uri}
-                      />
-                    ) : (<></>)
+                    <SnapShare
+                        key={item.pid}
+                        uid={item.uid}
+                        pid={item.pid}
+                        post={item.post}
+                        date={item.timestamp}
+                    />
                 }
                 onEndReached={fetchMorePostsFromApi}
                 onEndReachedThreshold={0.10}
@@ -113,10 +108,14 @@ const MediaScreen = ({url}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+	container: {
 		flex: 1,
-		backgroundColor: colorBackground,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	text: {
+		fontSize: 20,
 	},
 });
 
-export default MediaScreen;
+export default SnapShareScreen;

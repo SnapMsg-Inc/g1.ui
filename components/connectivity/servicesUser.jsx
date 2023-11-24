@@ -563,3 +563,89 @@ export async function checkIfUserFaved(setIsFaved, pid) {
         }
     }
 }
+
+export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
+}
+
+export async function snapSharePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function deletePostFromSnapshared(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function checkIfUserSnapShared(setIsSnapshared, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsSnapshared(true)
+        } else {
+            setIsSnapshared(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsSnapshared(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsSnapshared(false)
+        }
+    }
+}

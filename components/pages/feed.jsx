@@ -24,9 +24,9 @@ export default function Feed({ navigation }) {
         setAllDataLoaded(false)
         setFullPosts([]);
         try {
-            const newPosts = await GetFeedPosts(20, 0);
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+            const newPosts = await GetFeedPosts(10, 0);
+            if (newPosts && newPosts.length > 0) {
+                setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 console.log("All data loaded")
@@ -49,8 +49,8 @@ export default function Feed({ navigation }) {
         }
         setIsLoading(true);
         try {
-            const newPosts = await GetFeedPosts(20, currentPage);
-            if (newPosts.length > 0) {
+            const newPosts = await GetFeedPosts(10, currentPage);
+            if (newPosts && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
@@ -106,16 +106,26 @@ export default function Feed({ navigation }) {
             <FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                    <SnapMsg
-                        key={item.pid}
-                        uid={item.uid}
-                        pid={item.pid}
-                        username={item.nick}
-                        content={item.text}
-                        date={item.timestamp}
-                        likes={item.likes}
-                        picUri={item.media_uri}
-                    />
+                    "post" in item ? (
+                        <SnapShare 
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            post={item.post}
+                            date={item.timestamp}
+                        />
+                    ) : (
+                        <SnapMsg
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            username={item.nick}
+                            content={item.text}
+                            date={item.timestamp}
+                            likes={item.likes}
+                            picUri={item.media_uri}
+                        />
+                    )
                 }
                 onEndReached={fetchDataFromApi}
                 onEndReachedThreshold={0.10}
