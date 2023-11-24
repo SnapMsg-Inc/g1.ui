@@ -22,8 +22,8 @@ const PostsScreen = ({url}) => {
         setFullPosts([]);
         try {
             const newPosts = await GetPosts(url, 10, 0)
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+            if (newPosts !== undefined && newPosts.length > 0) {
+                setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 setAllDataLoaded(true);
@@ -42,7 +42,7 @@ const PostsScreen = ({url}) => {
 
         try {
             const newPosts = await GetPosts(url, 10, currentPage)
-            if (newPosts.length > 0) {
+            if (newPosts !== undefined && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
