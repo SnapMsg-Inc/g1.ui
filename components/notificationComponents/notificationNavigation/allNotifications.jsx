@@ -25,9 +25,10 @@ export default function AllNotificationScreen({ navigation }) {
               console.error('Error al obtener las notificaciones:', error);
             }
           };
-      
-          // Llama a la función para obtener las notificaciones cuando el componente se monta
+          
+            // Llama a la función para obtener las notificaciones cuando el componente se monta
         getNotifications();
+        console.log(notifications)
     }, [])
 
     return (
@@ -44,6 +45,7 @@ export default function AllNotificationScreen({ navigation }) {
 
 const stylesMessages = StyleSheet.create({
     container: {
+        marginTop: 100,
         flex: 1,
         justifyContent: 'flex-start', 
         backgroundColor: colorBackground,

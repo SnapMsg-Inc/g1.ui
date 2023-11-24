@@ -264,6 +264,8 @@ export async function followUserByUid(uid) {
                 'Content-Type': 'application/json'
             }
         });
+        SendNotificationFollow(uid)
+        .catch((error) => console.log(error.response))
     } catch (error) {
         console.log(JSON.stringify(error.response, null, 2))
     }
@@ -564,14 +566,14 @@ export async function checkIfUserFaved(setIsFaved, pid) {
     }
 }
 
-const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net/register-token'
+const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net'
 
 
 export const RegisterTokenDevice = (token) => {
     const auth = getAuth()
     axios({
         method: 'post',
-        url: URL_NOT,
+        url: `${URL_NOT}/register-token`,
         data:  {
             "user_id": auth.currentUser.uid,
             "token": token
@@ -579,3 +581,9 @@ export const RegisterTokenDevice = (token) => {
     })
 }
 
+export const SendNotificationFollow = (uid) => {
+    axios({
+        method: 'post',
+        url: `${URL}/notify-follow/${'New%Follow'}/${uid}/`,
+    })
+}

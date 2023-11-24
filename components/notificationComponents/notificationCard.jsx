@@ -59,7 +59,6 @@ const NotificationCard = ({ data }) => {
 
 const stylesMessages = StyleSheet.create({
     card: {
-        paddingTop: 100,
         width: '100%',
         borderBottomWidth: 1,
         borderBottomColor: colorText
