@@ -16,17 +16,17 @@ const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
 
 const truncateAlias = (alias) => {
-	if (alias.length <= MAX_ALIAS_LENGTH) {
+	if (alias && (alias.length <= MAX_ALIAS_LENGTH)) {
 		return alias;
-	} else {
+	} else if (alias) {
 		return alias.slice(0, MAX_NICK_LENGTH) + '...';
 	}
 };
 
 const truncateNick = (nick) => {
-	if (nick.length <= MAX_NICK_LENGTH) {
+	if (nick && (nick.length <= MAX_NICK_LENGTH)) {
 		return nick;
-	} else {
+	} else if (nick) {
 		return nick.slice(0, MAX_NICK_LENGTH) + '...';
 	}
 };
@@ -242,6 +242,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 								{content}
 							</TwitterTextView>
 							{
+								picUri &&
 								picUri.length > 0 ? (
 									<Image
 										source={{ uri: picUri[0] }}
@@ -261,7 +262,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 									<TouchableOpacity style={styles.actionButton} onPress={handleToggleSnapShare}>
 										{snapShareIcon}
 									</TouchableOpacity>
-									<Text style={styles.stats}>{reposts}</Text>
+									<Text style={styles.stats}>{snapShareAmount}</Text>
 								</View>
 								
 								<View style={{flexDirection: 'row'}}>

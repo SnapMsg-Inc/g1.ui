@@ -165,59 +165,59 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 		setIsSnapshared(!isSnapShared);
 	};
 
-	// const fetchDataFromApi = async () => {
-	// 	setIsLoading(true);
+	const fetchDataFromApi = async () => {
+		setIsLoading(true);
 
-    //     // GET DATA OF AUTHOR OF SNAPSHARE
-    //     GetUserByUid(setSharerData, uid)
-	// 		.then(() => {
-	// 			setIsLoading(false);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error('Error fetching other user data:', error);
-	// 			setIsLoading(false);
-	// 		});
+        // GET DATA OF AUTHOR OF SNAPSHARE
+        GetUserByUid(setSharerData, uid)
+			.then(() => {
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error('Error fetching other user data:', error);
+				setIsLoading(false);
+			});
 
-    //     // GET DATA OF AUTHOR OF SNAPMSG
-	// 	GetUserByUid(setData, post.uid)
-	// 		.then(() => {
-	// 			setIsLoading(false);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error('Error fetching other user data:', error);
-	// 			setIsLoading(false);
-	// 		});
-	// 	checkIfUserLiked(setIsLiked, post.pid)
-	// 	.then(() => {
-	// 		setIsLoading(false)
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error('Error fetching data when checking if user liked post:', error);
-	// 		setIsLoading(false)
-	// 	})
-	// 	checkIfUserFaved(setIsFav, post.pid)
-	// 	.then(() => {
-	// 		setIsLoading(false)
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error('Error fetching data when checking if user faved post:', error);
-	// 		setIsLoading(false)
-	// 	})
-	// 	checkIfUserSnapShared(setIsSnapshared, post.pid)
-	// 	.then(() => {
-	// 		setIsLoading(false)
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error('Error fetching data when checking if user snapshared post:', error);
-	// 		setIsLoading(false)
-	// 	})
-	// };
+        // GET DATA OF AUTHOR OF SNAPMSG
+		GetUserByUid(setData, post.uid)
+			.then(() => {
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error('Error fetching other user data:', error);
+				setIsLoading(false);
+			});
+		checkIfUserLiked(setIsLiked, post.pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user liked post:', error);
+			setIsLoading(false)
+		})
+		checkIfUserFaved(setIsFav, post.pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user faved post:', error);
+			setIsLoading(false)
+		})
+		checkIfUserSnapShared(setIsSnapshared, post.pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user snapshared post:', error);
+			setIsLoading(false)
+		})
+	};
 
-	// useFocusEffect(
-	// 	React.useCallback(() => {
-	// 		fetchDataFromApi();
-	// 	}, [])
-	// );
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchDataFromApi();
+		}, [])
+	);
 
 	return (
 		<>
@@ -226,7 +226,10 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 					<>
                     <View style={{borderTopWidth: StyleSheet.hairlineWidth,
 		                          borderTopColor: colorText,}}>
-                        <Text style={{color: colorText}}> {sharerData.nick}ESTO ES UN SNAPSHARE PA!!</Text>
+						<View style={styles.snapSharedBy}>
+							<FontAwesome5 name="retweet" size={18} color={colorText} />
+                        	<Text style={{color: colorText, fontSize: 15}}> {sharerData.nick} Snapshared</Text>
+						</View>
                         <View style={styles.snapShare}>
                             <Image
                                 source={data.pic === '' || data.pic === 'none' ? defaultImage : { uri: data.pic }}
@@ -266,7 +269,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                     linkStyle={styles.linkStyle}
                                     emailStyle={styles.emailStyle}
                                 >
-                                    {post.content}
+                                    {post.text}
                                 </TwitterTextView>
                                 {
                                     post.media_uri.length > 0 ? (
@@ -288,7 +291,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                         <TouchableOpacity style={styles.actionButton} onPress={handleToggleSnapShare}>
                                             {snapShareIcon}
                                         </TouchableOpacity>
-                                        <Text style={styles.stats}>{post.reposts}</Text>
+                                        <Text style={styles.stats}>{post.snapshares}</Text>
                                     </View>
                                     
                                     <View style={{flexDirection: 'row'}}>

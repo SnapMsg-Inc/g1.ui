@@ -80,7 +80,12 @@ const styles = StyleSheet.create({
 	},
 	mentionStyle: {
 		color: colorApp
-	}
+	},
+	snapSharedBy: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginHorizontal: 20,
+	},
 });
 
 export default styles;

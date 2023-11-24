@@ -564,14 +564,11 @@ export async function checkIfUserFaved(setIsFaved, pid) {
     }
 }
 
-////
-
-
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    const urlWithQueryParams = `${URL_POST}/snapshares/me?limit=${maxResults}&page=${page}`;
+    const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
 
     try {
     const response = await axios({

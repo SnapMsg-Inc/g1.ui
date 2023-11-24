@@ -22,8 +22,8 @@ const MediaScreen = ({url}) => {
         setFullPosts([]);
         try {
             const newPosts = await GetPosts(url, 10, 0)
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+            if (newPosts !== undefined && newPosts.length > 0) {
+                setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 setAllDataLoaded(true);
@@ -42,7 +42,7 @@ const MediaScreen = ({url}) => {
 
         try {
             const newPosts = await GetPosts(url, 10, currentPage)
-            if (newPosts.length > 0) {
+            if (newPosts !== undefined && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
@@ -81,7 +81,7 @@ const MediaScreen = ({url}) => {
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                    item.media_uri.length > 0 ? (
+                item.media_uri && item.media_uri.length > 0 ? (
                       <SnapMsg
                           key={item.pid}
                           uid={item.uid}
