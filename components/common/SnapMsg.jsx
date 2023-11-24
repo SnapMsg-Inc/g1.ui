@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import EvilIconsI from 'react-native-vector-icons/EvilIcons'
 import { useFocusEffect } from '@react-navigation/native';
-import { GetUserByUid, addPostToFav, checkIfUserFaved, checkIfUserLiked, deletePost, deletePostFromFav, likePost, unlikePost } from '../connectivity/servicesUser';
+import { GetUserByUid, addPostToFav, checkIfUserFaved, checkIfUserLiked, checkIfUserSnapShared, deletePost, deletePostFromFav, deletePostFromSnapshared, likePost, snapSharePost, unlikePost } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext'
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/native';
@@ -105,6 +105,8 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	};
 
 	// Actions:
+
+	// FAV
 	const [isFav, setIsFav] = useState(false);
 	const favIcon = isFav ? (
 		<MaterialCommunityIcon name="star-off-outline" size={30} color={colorApp} />
@@ -117,7 +119,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		setIsFav(!isFav);
 	};
 
-	
+	// LIKE
 	const [isLiked, setIsLiked] = useState(false);
 	const [likesAmount, setLikesAmount] = useState(likes);
 
@@ -131,6 +133,23 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		isLiked ? unlikePost(pid) : likePost(pid);
 		isLiked ? setLikesAmount(likesAmount - 1) : setLikesAmount(likesAmount + 1);
 		setIsLiked(!isLiked);
+	};
+
+	// SNAPSHARE
+	const [isSnapShared, setIsSnapshared] = useState(false);
+	// TODO: BACK - END SUPPORT FOR SNAPSHARE COUNT
+	const [snapShareAmount, setSnapShareAmount] = useState(reposts);
+
+	const snapShareIcon = isSnapShared ? (
+		<FontAwesome5 name="retweet" size={24} color={colorApp} />
+	) : (
+		<FontAwesome5 name="retweet" size={24} color={colorText} />
+	);
+
+	const handleToggleSnapShare = () => {
+		isSnapShared ? deletePostFromSnapshared(pid) : snapSharePost(pid);
+		isSnapShared ? setSnapShareAmount(snapShareAmount - 1) : setSnapShareAmount(snapShareAmount + 1);
+		setIsSnapshared(!isSnapShared);
 	};
 
 	const fetchDataFromApi = async () => {
@@ -157,6 +176,14 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 		})
 		.catch((error) => {
 			console.error('Error fetching data when checking if user faved post:', error);
+			setIsLoading(false)
+		})
+		checkIfUserSnapShared(setIsSnapshared, pid)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching data when checking if user snapshared post:', error);
 			setIsLoading(false)
 		})
 	};
@@ -231,8 +258,8 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 								<Text style={styles.stats}>{comments}</Text> */}
 
 								<View style={{flexDirection: 'row'}}>
-									<TouchableOpacity style={styles.actionButton}>
-										<FontAwesome5 name="retweet" size={24} color={colorText} />
+									<TouchableOpacity style={styles.actionButton} onPress={handleToggleSnapShare}>
+										{snapShareIcon}
 									</TouchableOpacity>
 									<Text style={styles.stats}>{reposts}</Text>
 								</View>

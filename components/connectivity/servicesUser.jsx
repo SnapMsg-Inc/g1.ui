@@ -623,3 +623,32 @@ export async function deletePostFromSnapshared(pid) {
         console.log(JSON.stringify(error.response, null, 2))
     }
 }
+
+export async function checkIfUserSnapShared(setIsSnapshared, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsSnapshared(true)
+        } else {
+            setIsSnapshared(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsSnapshared(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsSnapshared(false)
+        }
+    }
+}

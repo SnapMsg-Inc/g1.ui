@@ -114,6 +114,7 @@ export default function Feed({ navigation }) {
                         content={item.text}
                         date={item.timestamp}
                         likes={item.likes}
+                        reposts={item.snapshares}
                         picUri={item.media_uri}
                     />
                 }
