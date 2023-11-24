@@ -7,6 +7,7 @@ import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/serv
 import SnapMsg from '../../common/SnapMsg';
 import styles from '../../../styles/discover/forYouScreen';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
+import SnapShare from '../../common/snapShare';
 
 const ForYouScreen = ({searchQuery=null}) => {
 	const width = Dimensions.get('window').width;
@@ -34,8 +35,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+            if (newPosts && newPosts.length > 0) {
+				setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 setAllDataLoaded(true);
@@ -62,7 +63,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
-            if (newPosts.length > 0) {
+            if (newPosts && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
@@ -135,13 +136,13 @@ const ForYouScreen = ({searchQuery=null}) => {
 									<View>
 										{
 											searchQuery ? (
-												users.length > 0 ? (
+												users && users.length > 0 ? (
 													<Text style={styles.text}>
 														People
 													</Text>
 												) : <></>
 											) : (
-												users.length > 0 ? (
+												users && users.length > 0 ? (
 													<Text style={styles.text}>
 														Who to follow
 													</Text>
@@ -149,8 +150,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 											)
 										}
 										{
-											users.length === 0 ? (
-												fullPosts.length === 0 ? (
+											users && users.length === 0 ? (
+												fullPosts && fullPosts.length === 0 ? (
 													<View style={{marginVertical: 10}}>
 														<View>
 															<Text style={styles.text}>
@@ -194,16 +195,26 @@ const ForYouScreen = ({searchQuery=null}) => {
 								)
 							}}
 							renderItem={({ item }) =>
-								<SnapMsg
-									key={item.pid}
-									uid={item.uid}
-									pid={item.pid}
-									username={item.nick}
-									content={item.text}
-									date={item.timestamp}
-									likes={item.likes}
-									picUri={item.media_uri}
-								/>
+								"post" in item ? (
+									<SnapShare
+										key={item.pid}
+										uid={item.uid}
+										pid={item.pid}
+										post={item.post}
+										date={item.timestamp}
+									/>
+								) : (
+									<SnapMsg
+										key={item.pid}
+										uid={item.uid}
+										pid={item.pid}
+										username={item.nick}
+										content={item.text}
+										date={item.timestamp}
+										likes={item.likes}
+										picUri={item.media_uri}
+									/>
+								)
 							}
 							onEndReached={fetchMorePostsFromApi}
 							onEndReachedThreshold={0.10}
