@@ -106,17 +106,26 @@ export default function Feed({ navigation }) {
             <FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                    <SnapMsg
-                        key={item.pid}
-                        uid={item.uid}
-                        pid={item.pid}
-                        username={item.nick}
-                        content={item.text}
-                        date={item.timestamp}
-                        likes={item.likes}
-                        reposts={item.snapshares}
-                        picUri={item.media_uri}
-                    />
+                    "post" in item ? (
+                        <SnapShare 
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            post={item.post}
+                            date={item.timestamp}
+                        />
+                    ) : (
+                        <SnapMsg
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            username={item.nick}
+                            content={item.text}
+                            date={item.timestamp}
+                            likes={item.likes}
+                            picUri={item.media_uri}
+                        />
+                    )
                 }
                 onEndReached={fetchDataFromApi}
                 onEndReachedThreshold={0.10}

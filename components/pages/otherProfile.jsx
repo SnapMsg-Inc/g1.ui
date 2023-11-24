@@ -98,7 +98,6 @@ const OtherProfile = ({ navigation }) => {
 								<MediaScreen url={getUrl()}/>
 							) : <></>
 						}
-						
 					</Tabs.Tab>
 				</Tabs.Container>
 		)}
