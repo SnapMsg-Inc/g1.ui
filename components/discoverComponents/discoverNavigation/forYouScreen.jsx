@@ -7,6 +7,7 @@ import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/serv
 import SnapMsg from '../../common/SnapMsg';
 import styles from '../../../styles/discover/forYouScreen';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
+import SnapShare from '../../common/snapShare';
 
 const ForYouScreen = ({searchQuery=null}) => {
 	const width = Dimensions.get('window').width;
@@ -194,16 +195,26 @@ const ForYouScreen = ({searchQuery=null}) => {
 								)
 							}}
 							renderItem={({ item }) =>
-								<SnapMsg
-									key={item.pid}
-									uid={item.uid}
-									pid={item.pid}
-									username={item.nick}
-									content={item.text}
-									date={item.timestamp}
-									likes={item.likes}
-									picUri={item.media_uri}
-								/>
+								"post" in item ? (
+									<SnapShare
+										key={item.pid}
+										uid={item.uid}
+										pid={item.pid}
+										post={item.post}
+										date={item.timestamp}
+									/>
+								) : (
+									<SnapMsg
+										key={item.pid}
+										uid={item.uid}
+										pid={item.pid}
+										username={item.nick}
+										content={item.text}
+										date={item.timestamp}
+										likes={item.likes}
+										picUri={item.media_uri}
+									/>
+								)
 							}
 							onEndReached={fetchMorePostsFromApi}
 							onEndReachedThreshold={0.10}
