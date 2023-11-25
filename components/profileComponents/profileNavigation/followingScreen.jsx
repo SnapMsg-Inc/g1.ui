@@ -4,6 +4,7 @@ import { Tabs } from 'react-native-collapsible-tab-view';
 import FollowsCard from '../followsCard';
 import { GetUserFollowsByUid } from '../../connectivity/servicesUser';
 import { useFocusEffect } from '@react-navigation/native';
+import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 
 const FollowingScreen = ({ navigation, uid }) => {
 
@@ -34,7 +35,7 @@ const FollowingScreen = ({ navigation, uid }) => {
 	return (
 		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
-				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> : 
+				{loading ? <ActivityIndicator size={'large'} color={colorApp} style={{padding: 10}}/> : 
 					follows.map((item) => (
 						<FollowsCard
 							key={item.uid}
@@ -54,7 +55,7 @@ const FollowingScreen = ({ navigation, uid }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'black',
+		backgroundColor: colorBackground,
 	},
 	text: {
 		fontSize: 20,

@@ -3,6 +3,7 @@ import { AuthenticationContextProvider } from './components/connectivity/auth/au
 import firebaseApp from './components/connectivity/firebase';
 import { Navigation } from './components/navigation/navigation';
 import { LoggedUserContextProvider } from './components/connectivity/auth/loggedUserContext';
+import { colorBackground } from './styles/appColors/appColors';
 
 export default function App() {
     return (
@@ -19,6 +20,6 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black'
+        backgroundColor: colorBackground
     }
 })

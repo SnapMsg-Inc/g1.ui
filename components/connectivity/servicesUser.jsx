@@ -5,13 +5,15 @@ import axios from 'axios';
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
-export async function GetUsers(setState, url) {
+export async function GetUsers(setState, query) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-
+    
+    // console.log("Bearer ", token);
+    
     await axios({
         method: 'get',
-        url: url,
+        url: `${URL}${query}`,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -95,25 +97,47 @@ export async function GetUserByUid(setState, uid) {
     });
 }
 
-export async function GetUserFollowersByUid(setState, uid) {
+// export async function GetUserFollowersByUid(setState, uid) {
+//     const auth = getAuth();
+//     const token = await getIdToken(auth.currentUser, true);
+  
+// 	const urlWithQueryParams = `${URL}/${uid}/followers`
+
+//     await axios({
+//       method: 'get',
+//       url: urlWithQueryParams,
+//       headers: {
+//         'Authorization': `Bearer ${token}`,
+//         'Content-Type': 'application/json'
+//       }
+//     }).then((response) => {
+//       setState(response.data);
+//     })
+//     . catch((error) => {
+//         console.log(JSON.stringify(error.response, null, 2))
+//     });
+// }
+
+export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-  
-	const urlWithQueryParams = `${URL}/${uid}/followers`
 
-    await axios({
-      method: 'get',
-      url: urlWithQueryParams,
-      headers: {
+    const urlWithQueryParams = `${URL}/${uid}/followers?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      setState(response.data);
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        }
     });
+    console.log(response.data)
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function GetUserFollowsByUid(setState, uid) {
@@ -158,10 +182,8 @@ export const postsUser = async (data) => {
     })
 }
 
-export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLogout) => {
-    const auth = getAuth()
-    const token = await getIdToken(auth.currentUser, true)
-    await axios({
+export const postsUserFederate = (data, token) =>
+    axios({
         method: 'post',
         url: URL,
         data: data,
@@ -170,42 +192,17 @@ export const postsUserFederate = async (data, setIsRegister, setIsLoading, onLog
             'Content-Type': 'application/json'
         } 
     })
-    .then((response) => {
-        console.log(response.status)
-        setIsLoading(false)
-        setIsRegister(true)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-        if (error.response.status === 400) {
-            alert('Email already in use')
-            onLogout()
-        } else {
-            deleteUser(auth.currentUser)
-        } 
-        setIsLoading(false)
-    })
-}
 
-export async function PatchUser(data) {
-    const auth = getAuth();
-    console.log('user pacth ', auth.currentUser)
-    const token = await getIdToken(auth.currentUser, true);
-    try {
-        await axios({
-            method: 'patch',
-            url: `${URL}/me`,
-            data: data,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        })
-        return true
-    } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
-    }
-}
+export const PatchUser = (data, token) =>
+    axios({
+        method: 'patch',
+        url: `${URL}/me`,
+        data: data,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
 
 export async function deleteUserFollowByUid(uid) {
     const auth = getAuth();
@@ -245,7 +242,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
             setIsFollowing(false)
         }
     } catch (error) {
-        if (error.response.status === 404 && error.response.data.detail === 'follow not found') {
+        if (error.response.status === 404 && error.response.data.detail === 'follow does not exist') {
             setIsFollowing(false)
         } else {
             console.log(JSON.stringify(error.response, null, 2))
@@ -301,48 +298,52 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
     })
 }
 
-export async function GetPosts(setState, url) {
+export async function GetPosts(url, maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
+    
+    const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    await axios({
+    try {
+    const response = await axios({
         method: 'get',
-        url: url,
+        url: urlWithQueryParams,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
     });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
-export async function GetFavPosts(setState) {
+export async function GetFavPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-    await axios({
+    const urlWithQueryParams = `${URL_POST}/favs?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
         method: 'get',
-        url: `${URL_POST}/fav`, 
+        url: urlWithQueryParams,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-    })
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function addPostToFav(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
 
     try {
         await axios.post(urlWithQueryParams, null, {
@@ -360,7 +361,7 @@ export async function deletePostFromFav(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
   
-    const urlWithQueryParams = `${URL_POST}/fav/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
 
     try {
         await axios.delete(urlWithQueryParams, {
@@ -374,39 +375,32 @@ export async function deletePostFromFav(pid) {
     }
 }
 
-export async function GetFeedPosts(setState, maxResults=100, page=0) {
+export async function GetFeedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
-
-    console.log(token)
-     // URL base sin parámetros obligatorios
-     let url = `${URL_POST}/feed?`;
- 
-    url += `limit=${maxResults}`;
-    url += `&page=${page}`;
-
-     console.log(url)
-    await axios({
+    
+    const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
+     console.log(token)
+    try {
+    const response = await axios({
         method: 'get',
         url: url,
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
-        console.log(response.data)
-    })
-    . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
-    })
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
 }
 
 export async function likePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
 
-    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
 
     try {
         await axios.post(urlWithQueryParams, null, {
@@ -424,7 +418,7 @@ export async function unlikePost(pid) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, true);
   
-    const urlWithQueryParams = `${URL_POST}/like/${pid}`;
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
 
     try {
         await axios.delete(urlWithQueryParams, {
@@ -496,5 +490,183 @@ export async function PatchPostData(data, pid) {
         return true
     } catch (error) {
         console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export const GetToken = () => getIdToken(getAuth().currentUser, true) 
+
+export const GetMe = (token) => 
+    axios({
+        method: 'get',
+        url: `${URL}/me`,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+
+
+export async function checkIfUserLiked(setIsLiked, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsLiked(true)
+        } else {
+            setIsLiked(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsLiked(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsLiked(false)
+        }
+    }
+}
+
+export async function checkIfUserFaved(setIsFaved, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsFaved(true)
+        } else {
+            setIsFaved(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsFaved(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsFaved(false)
+        }
+    }
+}
+
+export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
+}
+
+export async function snapSharePost(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        await axios.post(urlWithQueryParams, null, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function deletePostFromSnapshared(pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+  
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        await axios.delete(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2))
+    }
+}
+
+export async function checkIfUserSnapShared(setIsSnapshared, pid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200) {
+            setIsSnapshared(true)
+        } else {
+            setIsSnapshared(false)
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            setIsSnapshared(false)
+        } else {
+            console.log(JSON.stringify(error.response, null, 2))
+            setIsSnapshared(false)
+        }
+    }
+}
+
+export async function GetTrendings(maxResults = 100, page = 0) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, true);
+
+    const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/trendings?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }
+    });
+    return response.data;
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
     }
 }

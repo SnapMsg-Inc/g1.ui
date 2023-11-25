@@ -7,37 +7,49 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserFollowersByUid, GetUsers } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import filter from 'lodash.filter';
+import { useNavigation } from '@react-navigation/native';
+import styles from '../../styles/discover/searchScreen';
+import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
+	const navigation = useNavigation();
 	const { userData } = useContext(LoggedUserContext)
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [fullData, setFullData] = useState([]);
-	const [searchQuery, setSearchQuery] = useState('');
+	const [searchQuery, setSearchQuery] = useState(null);
 	const [showFlatList, setShowFlatList] = useState(false);
 
-	const fetchDataFromApi = async () => {
-        setIsLoading(true)
-		GetUsers(setFullData, 'https://api-gateway-marioax.cloud.okteto.net/users?limit=100&page=0')
-        .then(() => {
-            setIsLoading(false)
-        })
-        .catch((error) => {
-            console.error('Error fetching followers data:', error);
-            setIsLoading(false)
-        })
+	const fetchDataFromApi = async (query) => {
+		setIsLoading(true)
+		const urlWithQueryParams = `?nick=${query}&limit=100&page=0`;
+		GetUsers(setFullData, urlWithQueryParams)
+		.then(() => {
+			setIsLoading(false)
+		})
+		.catch((error) => {
+			console.error('Error fetching users data, SearchScreen:', error);
+			setIsLoading(false)
+		})
     }
 
 	const handleSearch = (query) => {
-		setSearchQuery(query);
-		setShowFlatList(query.length > 0)
-
-		if (query.length > 0) {
-			fetchDataFromApi();
+		const text = query.replace(/\s/g, '')
+		if (text == '') {
+			console.log("text sin espacio")
 		}
 
-		const formattedQuery = query.toLowerCase();
+		setSearchQuery(text);
+		setShowFlatList(text.length > 0)
+
+		
+		const formattedQuery = text.toLowerCase();
+		
+		if (formattedQuery.length == 1) {
+			fetchDataFromApi(formattedQuery);
+		}
+		
 		const filteredData = filter(fullData, (user) => {
 			return contains(user.alias, user.nick, formattedQuery)
 		})
@@ -52,8 +64,9 @@ const SearchScreen = ({ navigation }) => {
 	}
 
 	const handleSearchPress = () => {
-		// Realiza la búsqueda y pasa el valor de búsqueda
-		navigation.goBack({ searchQuery:searchQuery });
+		navigation.navigate('DiscoverScreen', {
+			searchQuery: searchQuery
+		});
 	};
 
 	return (
@@ -70,9 +83,12 @@ const SearchScreen = ({ navigation }) => {
 						placeholderTextColor={colorText}
 						autoCorrect={false}
 						value={searchQuery}
-						onChangeText={(query) => handleSearch(query)}
+						onChangeText={(query) => {
+								handleSearch(query)}
+						}
 						autoFocus
 						keyboardType='twitter'
+						onSubmitEditing={handleSearchPress}
 					/>
 				</View>
 				<TouchableHighlight
@@ -114,49 +130,5 @@ const SearchScreen = ({ navigation }) => {
 		</View>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: 'black',
-		alignItems: 'center'
-	},
-	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	searchBox: {
-		flex: 1,
-		justifyContent: 'flex-start',
-        alignItems:'center',
-        flexDirection:'row',
-        paddingVertical:10,
-        borderWidth: 1,
-        borderColor: colorApp,
-        borderRadius: 10,
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        marginTop: 10,
-	},
-	text: {
-		color: colorText,
-		paddingVertical: 10,
-	},
-	textInput: {
-		flex: 1,
-		color: 'white',
-	},
-	cancelButton: {
-		color: colorText,
-		marginRight: 10,
-        marginTop: 10,
-		paddingVertical:10,
-		fontSize: 16,
-	}
-});
 
 export default SearchScreen;

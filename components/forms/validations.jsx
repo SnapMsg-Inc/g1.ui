@@ -29,7 +29,6 @@ export const ValidationsLogin = (email, password, setEmailError, setPasswordErro
     return isValid
 }
 
-
 export const ValidationsSignUp = (  fullName, setFullNameError, 
                                     alias, setAliasError, 
                                     nick, setNickError, 
@@ -65,7 +64,7 @@ export const ValidationsSignUp = (  fullName, setFullNameError,
     } else {
         setEmailError(null);
     }
-
+    
     if (!isValidPassword(password)) {
         setPasswordError('Password should be at least 6 characters long.');
         isValid = false;
@@ -79,6 +78,34 @@ export const ValidationsSignUp = (  fullName, setFullNameError,
     } else {
         setConfirmPasswordError(null);
     }
-
+    
     return isValid
 };
+
+export const ValidateEdit = (alias, setAliasError, nick, setNickError) => {
+    let isValid = true;
+    if (!alias.trim()) {
+        setAliasError('Please enter a valid alias')
+        isValid = false;
+    } else {
+        setAliasError(null)
+    }
+    if (!isValidNick(nick)) {
+        setNickError('Nick is required.');
+        isValid = false;
+    } else {
+        setNickError(null);
+    }
+    return isValid
+}
+
+export const ValidateForgot = (email, setEmailError) => {
+    let isValid = true
+    if (!isValidEmail(email)) {
+        setEmailError('Please enter a valid email.');
+        isValid = false
+    } else {
+        setEmailError(null)
+    }
+    return isValid
+}

@@ -1,66 +1,131 @@
 import React, { useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, StyleSheet, Image, ScrollView, Animated, ActivityIndicator } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import SnapMsg from '../../SnapMsg';
+import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
+import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
+import { useFocusEffect } from '@react-navigation/native';
+import SnapShare from '../../common/snapShare';
 
 const PostsScreen = ({url}) => {
-	const [loading, setLoading] = useState(true)
+	const [fullPosts, setFullPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
 
-    const [posts, setPosts] = useState([])
+	const [isLoading, setIsLoading] = useState(false);
+    const [allDataLoaded, setAllDataLoaded] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+	const [isLoadingMorePosts, setIsLoadingMorePosts] = useState(false);
 
-    const fetchDataFromApi = async () => {
+	const fetchInitialPostsFromApi = async () => {
+        setIsLoading(true);
+		setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullPosts([]);
         try {
-            // TODO: paginacion dependiendo del scroll
-            //await GetPosts(setPosts, nick, '', 100, 0)
-			console.log("URL RECIBIDA: \n\n", url);
-			await GetPosts(setPosts, url)
-            setLoading(false)
+            const newPosts = await GetPosts(url, 10, 0)
+
+            if (newPosts !== undefined && newPosts.length > 0) {
+                setFullPosts(newPosts);
+                setCurrentPage(1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoading(false);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching initial posts:', error);
         }
+    }
+
+    const fetchMorePostsFromApi = async () => {
+        if (allDataLoaded || isLoading || isRefreshing) {
+            return;
+        }
+        setIsLoadingMorePosts(true);
+
+        try {
+            const newPosts = await GetPosts(url, 10, currentPage)
+            if (newPosts !== undefined && newPosts.length > 0) {
+                setFullPosts([...fullPosts, ...newPosts]);
+                setCurrentPage(currentPage + 1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoadingMorePosts(false);
+        } catch (error) {
+            console.error('Error fetching more posts:', error);
+        }
+    }
+
+    const handleRefresh = async () => {
+        if (isRefreshing) {
+            return;
+        }
+        setIsRefreshing(true);
+        await fetchInitialPostsFromApi(null);
+
+        setIsRefreshing(false);
+    }
+
+    const renderLoader = () => {
+        return (
+            isLoadingMorePosts && !isRefreshing ? <ActivityIndicator size={'large'} color={colorApp} /> : <></>
+        );
     }
 
     useFocusEffect(
         React.useCallback(() => {
-            fetchDataFromApi()
+            fetchInitialPostsFromApi();
         }, [])
     );
 
-	return (
-		<Tabs.ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-			<View style={styles.container}>
-				{loading ? <ActivityIndicator size={'large'} color={'#1ed760'} style={{padding: 10}}/> :
-					posts.map((item, index) => (
-						<SnapMsg
-							key={item.pid}
-							uid={item.uid}
-							pid={item.pid}
-							username={item.nick}
-							content={item.text}
-							date={item.timestamp}
-							likes={item.likes}
-							picUri={item.media_uri}
-						/>
-					))
-				}
-			</View>
-		</Tabs.ScrollView>
-	);
+    return (
+        <View style={styles.container}>
+            <Tabs.FlatList
+                data={fullPosts}
+                renderItem={({ item }) =>
+                    "post" in item ? (
+                        <SnapShare 
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            post={item.post}
+                            date={item.timestamp}
+                        />
+                    ) : (
+                        <SnapMsg
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            username={item.nick}
+                            content={item.text}
+                            date={item.timestamp}
+                            likes={item.likes}
+                            picUri={item.media_uri}
+                        />
+                    )
+                }
+                onEndReached={fetchMorePostsFromApi}
+                onEndReachedThreshold={0.10}
+                ListFooterComponent={renderLoader}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={"large"}
+                    />
+                }
+            />
+        </View>
+    )
 };
 
 const styles = StyleSheet.create({
-	scrollView: {
-		flex: 1,
-		backgroundColor: 'black'
-	},
 	container: {
 		flex: 1,
-	},
-	text: {
-		color: 'white',
+		backgroundColor: colorBackground,
 	},
 });
 

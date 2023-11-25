@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StatusBar, StyleSheet, ActivityIndicator } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Inits from '../pages/inits';
 import SignIn from '../pages/signIn';
 import SignUp from '../pages/signUp';
-import FinishSignUp from '../pages/finishSignUp';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
-import { getAuth, signOut } from "firebase/auth";
-import firebaseApp from '../connectivity/firebase';
+import FinishSignUp from '../pages/finishSignUp';
+import { colorApp, colorBackground } from '../../styles/appColors/appColors';
+import ForgotPassword from '../pages/forgot';
 
 const Stack = createStackNavigator();
 
@@ -18,16 +17,18 @@ export default function InitNavigation() {
     return (
         <View style={styles.container}>
             <StatusBar
-                backgroundColor='black'
+                backgroundColor={colorBackground}
                 barStyle={"light-content"}
             />
-            { isLoadingApp ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
+            { isLoadingApp ? <ActivityIndicator size={'large'} color={colorApp}/> : (
                 <Stack.Navigator    
                         initialRouteName='Inits' 
                         screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="Inits" component={Inits}/>
                     <Stack.Screen name="SignIn" component={SignIn}/>
                     <Stack.Screen name="SignUp" component={SignUp}/>
+                    <Stack.Screen name="Finish" component={FinishSignUp}/>
+                    <Stack.Screen name="Forgot" component={ForgotPassword}/>
                 </Stack.Navigator>
             )}
         </View>
@@ -37,7 +38,7 @@ export default function InitNavigation() {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: '#000',
+        backgroundColor: colorBackground,
         justifyContent: 'center',
     }
 })

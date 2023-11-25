@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-
-export const colorText = '#535353'
-const colorApp = '#1ed760'
+import { colorApp, colorText, colorBackground } from "../appColors/appColors";
 
 const stylesCalendar = StyleSheet.create({
     container: {
@@ -29,7 +27,7 @@ const stylesCalendar = StyleSheet.create({
         marginHorizontal: 30,
     },
     calendar: {
-        backgroundColor: 'black', // Color de fondo
+        backgroundColor: colorBackground,
     }
 })
 

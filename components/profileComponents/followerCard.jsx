@@ -6,6 +6,7 @@ import { checkIfUserFollows, deleteUserFollowByUid, followUserByUid } from '../c
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
+import styles from '../../styles/profile/followerCard';
 
 const MAX_INTEREST_LENGTH = 40;
 
@@ -25,15 +26,17 @@ const FollowerCard = ({ uid, alias, nick, interests, pic }) => {
 	const [loading, setLoading] = useState(true)
 
 	const fetchDataFromApi = async () => {
-        setLoading(true)
-        checkIfUserFollows(setIsFollowing, userData.uid, uid)
-        .then(() => {
-            setLoading(false)
-        })
-        .catch((error) => {
-            console.error('Error fetching data when checking if user follows other:', error);
-            setLoading(false)
-        })
+		if (userData.uid !== uid) {
+			setLoading(true)
+			checkIfUserFollows(setIsFollowing, userData.uid, uid)
+			.then(() => {
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.error('Error fetching data when checking if user follows other:', error);
+				setLoading(false)
+			})
+		}
     }
 
 	useFocusEffect(
@@ -97,36 +100,5 @@ const FollowerCard = ({ uid, alias, nick, interests, pic }) => {
 	);
 };
 
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: '#ccc',
-  },
-	profileImage: {
-		width: 60,
-		height: 60,
-		borderRadius: 40,
-		marginRight: 10,
-	},
-	infoContainer: {
-		flex: 1,
-	},
-	name: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: 'white',
-	},
-	nick: {
-		color: colorText,
-		fontSize: 15,
-	}
-});
-
 export default FollowerCard;
+

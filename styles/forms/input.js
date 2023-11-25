@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-
-export const colorText = '#535353'
-const colorApp = '#1ed760'
+import { colorApp, colorText } from "../appColors/appColors";
 
 const styleInput = StyleSheet.create({
     container: {

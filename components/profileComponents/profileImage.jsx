@@ -1,5 +1,6 @@
 import React from 'react';
 import { Animated } from 'react-native';
+import { colorBackground } from '../../styles/appColors/appColors';
 
 const HEADER_HEIGHT_EXPANDED = 75;
  
@@ -16,7 +17,7 @@ const ProfileImage = ({ scrollY, uri}) => {
                 height: 75,
                 borderRadius: 40,
                 borderWidth: 4,
-                borderColor: 'black',
+                borderColor: colorBackground,
                 marginTop: -30,
                 transform: [
                 {

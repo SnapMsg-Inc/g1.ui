@@ -14,12 +14,17 @@ import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
+import styles from '../../../styles/profile/editPost';
 
-const EditPost = ({ navigation, content, picUri, hashtag}) => {
+const EditPost = ({ navigation }) => {
     const route = useRoute();
 	const { data } = route.params;
 
     const { userData } = useContext(LoggedUserContext)
+
+    const [originalText, setOriginalText] = useState(data.content);
+    const [originalImage, setOriginalImage] = useState(data.picUri[0]);
 
     const [text, setText] = useState(data.content);
     const [image, setImage] = useState(data.picUri[0]);
@@ -81,19 +86,41 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
     };
 
     const submitPost = async () => {
-        const imageUrl = await uploadImage();
-        const uri = imageUrl ? [imageUrl] : [];
-    
-        const postData = {
-            "text": text,
-            "hashtags": hashtags,
-            "media_uri": uri,
-            "is_private": !isPublic,
+        const textChanged = text !== originalText;
+        const imageChanged = image !== originalImage;
+
+        if (!textChanged && !imageChanged) {
+            // Ningún cambio, no es necesario enviar una solicitud PATCH.
+            navigation.goBack();
+            return;
         }
-        
-        console.log(postData)
-        
-        console.log("PID INVIADO: ", data.pid)
+
+        const imageUrl = imageChanged ? await uploadImage() : null;
+        const uri = imageUrl ? [imageUrl] : [];
+
+        let postData = {};
+
+        if (textChanged && !imageChanged) {
+            postData = {
+                text: text,
+                hashtags: hashtags
+            };
+        }
+
+        if (!textChanged && imageChanged) {
+            postData = {
+                media_uri: uri
+            };
+        }
+
+        if (textChanged && imageChanged) {
+            postData = {
+                text: text,
+                hashtags: hashtags,
+                media_uri: uri
+            };
+        }
+
         try {
             const success = await PatchPostData(postData, data.pid);
             if (success) {
@@ -161,14 +188,14 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
     const actions = [
         {
           text: "Take Photo",
-          icon: <Icon name="camera" size={25} color="white" />,
+          icon: <Icon name="camera" size={25} color={colorWhite} />,
           color: colorApp,
           name: "bt_take_photo",
           position: 1,
         },
         {
           text: "Choose Photo",
-          icon: <SimpleLineIcons name="picture" size={25} color="white" />,
+          icon: <SimpleLineIcons name="picture" size={25} color={colorWhite} />,
           color: colorApp,
           name: "bt_choose_photo",
           position: 2
@@ -258,93 +285,11 @@ const EditPost = ({ navigation, content, picUri, hashtag}) => {
                 iconHeight={30}
                 iconWidth={30} 
                 floatingIcon={(
-                    <SimpleLineIcons name="paper-clip" size={28} color="white" />
+                    <SimpleLineIcons name="paper-clip" size={28} color={colorWhite} />
                 )}
             />
 		</View>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: 'black',
-        padding: 10,
-	},
-    header: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        backgroundColor: 'black',
-        marginBottom: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-        height: 50,
-    },
-    text: {
-		color: colorText,
-		paddingVertical: 10,
-	},
-    inputContainer: {
-        flex: 1,
-        flexDirection: 'row',
-    },
-    image: {
-        width: 50,
-        aspectRatio: 1,
-        borderRadius: 50,
-        marginRight: 10,
-    },
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-    },
-    postButton: {
-        position: 'absolute',
-        right: 10,
-        top: 10,
-        borderWidth: 1,
-        borderColor: colorApp,
-        borderRadius: 15,
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: 30,
-		paddingHorizontal: 15,
-    },
-    postButtonLabel: {
-        color: colorApp,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    textInput: {
-        flex: 1,
-        color: 'white',
-        textAlignVertical: 'top',
-    },
-	cancelButton: {
-		position: 'absolute',
-        left: 50,
-        top: 12,
-	},
-    cancelButtonLabel: {
-        color: 'white',
-		fontSize: 16,
-    },
-    postImage: {
-        borderRadius: 15,
-        width: '%100',
-        height: 250,
-        marginVertical: 10,
-    },
-    statusWrapper: {
-        position: 'absolute',
-        right: 10,
-        top: -15,
-    }
-});
 
 export default EditPost;

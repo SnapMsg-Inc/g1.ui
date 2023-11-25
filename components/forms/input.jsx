@@ -1,5 +1,6 @@
-import styleInput,{ colorText }  from "../../styles/forms/input";
+import styleInput from "../../styles/forms/input";
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import { colorText } from "../../styles/appColors/appColors";
 
 export default function Input({
         label,
@@ -8,7 +9,9 @@ export default function Input({
         keyboardType,
         data,
         setData,
-        error
+        error,
+        numberOfLines=1,
+        multiline=false
     }) {
         return (
             <View style={styleInput.container}>
@@ -21,6 +24,8 @@ export default function Input({
                         keyboardType={keyboardType}
                         style={styleInput.textInput}
                         secureTextEntry={inputType}
+                        multiline={multiline}
+                        numberOfLines={numberOfLines}
                     />
                     {icon}
                 </View>

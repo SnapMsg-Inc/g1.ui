@@ -1,200 +1,374 @@
-import { Animated, Text, View } from "react-native";
-import React, { useEffect, useRef, useState } from 'react';
+import {
+    View,
+    Text,
+    ScrollView,
+    Image,
+    Pressable,
+    Alert,
+    Modal,
+    TouchableWithoutFeedback,
+    TouchableOpacity
+  } from "react-native";
+import React, { useEffect, useState } from 'react';
 import Input from "../../forms/input";
-import ProfileImage from '../profileImage';
 import stylesEditProfile from "../../../styles/profile/setupProfile";
 import AcceptButton from "../../buttons/buttonAcept";
 import CancelButton from "../../buttons/buttonCancel";
-import { TouchableHighlight } from "react-native";
 import { useRoute } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { colorText } from "../../../styles/forms/input";
-import { PatchUser } from "../../connectivity/servicesUser";
+import { GetToken, PatchUser } from "../../connectivity/servicesUser";
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { Octicons } from '@expo/vector-icons';
+import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
+import { ValidateEdit } from "../../forms/validations";
+import { colorApp, colorBackground, colorText, colorWhite } from "../../../styles/appColors/appColors";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import Preferences from "../../pages/preferences";
 
 function EditProfile({navigation}) {
     const route = useRoute();
 	const { data } = route.params;
-    const [pic, setPic] = useState(data.pic)
+
+    const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
+    const [aliasError, setAliasError] = useState(null)
     const [nick, setNick] = useState(data.nick)
+    const [nickError, setNickError] = useState(null)
     const [locality, setLocality] = useState('')
-    const [country, setCountry] = useState('')
+    const [countryLocate, setCountryLocate] = useState('')
     const [coordinates, setCoordinates] = useState(data.zone)
-    const [interestsList, setInterestsList] = useState(data.interests.toString().replace(/,/g, ', '))
+    const [interestsList, setInterestsList] = useState(data.interests.map(item => item.trim()))
+    const [uploading, setUploading] = useState(false)
+    const [transferred, setTransferred] = useState(0)
+    const [isMenuVisible, setIsMenuVisible] = useState(false)
+    const [isEditInterests, setIsEditInterests] = useState(false)
 
-    const scrollY = useRef(new Animated.Value(0)).current;
+    const handleInterests = () =>
+        setIsEditInterests(!isEditInterests)
 
-    const getPermission = async () => {
-        let {status} = await Location.requestForegroundPermissionsAsync()
-        if (status !== 'granted'){
-            return
-        }
-    }
-
-    const setLocation = async () => {
-        try {
-            getPermission()
-            await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.High,
-                distanceInterval: 2
-            }).then((location) => {
-                const {coords} = location
-                const {latitude, longitude} = coords
-                setCoordinates({'latitude': latitude, 'longitude': longitude})
-                console.log(`longitude ${JSON.stringify(coordinates)} `)
-                reverseGeocode() 
-            })  
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const geocode = () => {
-        Location.geocodeAsync(`${locality} ${country}`)
-        .then((geocodeLocation)=> {
-            console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-            if (geocodeLocation.length) {
-                setCoordinates({'latitude': geocodeLocation[0].latitude,
-                                'longitude': geocodeLocation[0].longitude})
-                console.log(coordinates)
+    const takePhotoFromCamera = () => {
+        ImagePicker.openCamera({
+            width: 1200,
+            height: 780,
+            cropping: true,
+        })
+        .then((image) => {
+            if (!image.cancelled) {
+                console.log(image);
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
             }
         })
-        .catch((error) => {
-            console.log(error)
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
+        });
+    };
+    
+    const choosePhotoFromGalery = () => {
+        ImagePicker.openPicker({
+            width: 1200,
+            height: 780,
+            cropping: true,
         })
-    }
+        .then((image) => {
+            if (!image.cancelled) {
+                const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+                setImage(imageUri);
+            }
+        })
+        .catch(error => {
+            if (error.message === 'User cancelled image selection') {
+            } else {
+                console.error(error);
+            }
+        });
+    };
 
-    const reverseGeocode = async () => {
-        await Location.reverseGeocodeAsync({
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude
-        }).then((address)=> {
-            const {city, country} = address[0]
-            setLocality(city)
-            setCountry(country)
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
+    const uploadImage = async () => {
+        if( image == null || image === data.pic) {
+            return null;
+        }
+        const uploadUri = image;
+        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+    
+        // Add timestamp to File Name
+        const extension = filename.split('.').pop(); 
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+    
+        setUploading(true);
+        setTransferred(0);
+        console.log("file: ", filename)
+        const storageRef = storage().ref(`photos/${filename}`);
+        const task = storageRef.putFile(uploadUri);
+    
+        // Set transferred state
+        task.on('state_changed', (taskSnapshot) => {
+        console.log(
+            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+    
+        setTransferred(
+            Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+            100,
+        );
+        });
+    
+        try {
+            await task;
+        
+            const url = await storageRef.getDownloadURL();
+        
+            setUploading(false);
+
+            return url;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    
+    };
 
     const handleEdit = async() => {
-        try {
-            geocode()
-            const data ={
-                "alias": alias,
-                "nick": nick,
-                "zone": coordinates,
-                "interests": interestsList.split(','),
-                "ocupation": "",
-                "pic": pic
-            }
-            console.log(`data a enviar ${JSON.stringify(data, null, 2)}`)
-            const success = await PatchUser(data)
-            if (success) {
-                setTimeout(() => navigation.goBack(), 500)
-            } else {
-                alert('error')
-            }  
-        } catch(error) {
-            console.log(error)
-        }
-        
+        const imageUrl = await uploadImage();
+        const uri = imageUrl ? imageUrl : data.pic;
+        GetToken()
+        .then((token) => {
+            GeocodeWithLocalityAndCountry(locality, countryLocate)
+            .then((geocodeLocation)=> {
+                const data ={
+                    "alias": alias,
+                    "nick": nick,
+                    "zone": geocodeLocation.length !== 0 ? 
+                            { 'latitude':geocodeLocation[0].latitude,
+                            'longitude':geocodeLocation[0].longitude} : coordinates,
+                    "interests": interestsList,
+                    "ocupation": "",
+                    "pic": uri
+                }
+                if (ValidateEdit(alias, setAliasError, nick, setNickError)) {
+                    PatchUser(data, token)
+                    .then((response) => {
+                        setTimeout(() => navigation.goBack(), 500)
+                    })
+                    .catch(() => {
+                        Alert('Error in edit profile')
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        })
     }
 
+    const setLocation = () => {
+        CurrentPosition({
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 2
+        }).then((location) => {
+            const { coords } = location
+            const { latitude, longitude} = coords
+            console.log(`longitude ${JSON.stringify(coords)} `)
+            ReverseGeocode({'latitude': latitude, 'longitude': longitude})
+            .then((address) => {
+                const { city, country } = address[0]
+                console.log(`city ${city} country ${country}`)
+                setLocality(city)
+                setCountryLocate(country)
+            }).catch((error) => {
+                console.log(error)
+            })
+        })  
+    }
+    
     useEffect(()=>{
-        setTimeout(()=> {getPermission()}, 1000)
-        reverseGeocode()
-    },[])
+        const setData = () => {
+            ReverseGeocode(coordinates)
+            .then((address) => {
+                const { city, country } = address[0]
+                console.log(`city ${city} country ${country}`)
+                setLocality(city)
+                setCountryLocate(country)
+            }).catch((error) => {
+                console.log(error)
+            })
+        }
+        GetPermission()
+        .then((location) => {
+            if (location.status !== 'granted')
+                Alert.alert(
+                    'Permission not granted',
+                    'Allow the app to use location service.',
+                    [{ text: 'OK' }],
+                    { cancelable: false }
+                );
+            else
+                setData()
+        })
+    }, [GetPermission])
 
     return (
-        <View style={stylesEditProfile.container}>
+        <ScrollView style={stylesEditProfile.container}>
             <View style={stylesEditProfile.header}>
-                <ProfileImage scrollY={scrollY} uri={data.pic}/>
+                <Image source={{ uri: image }} style={stylesEditProfile.image}/>
+                <Pressable
+                    onPress={() => {
+                        setIsMenuVisible(!isMenuVisible);
+                    }}
+                >
+                    <View style={stylesEditProfile.imageButton}>
+                        <Octicons name="plus" size={20} color={colorWhite} />
+                    </View>
+                </Pressable>
+                {
+                    isMenuVisible ? (
+                        <View style={stylesEditProfile.optionButtonContainer}>
+                            <Pressable
+                                onPress={() => {
+                                    takePhotoFromCamera();
+                                }}
+                            >
+                                <View style={stylesEditProfile.optionButton}>
+                                    <Icon name="camera" size={20} color={colorApp} />
+                                    <Text style={stylesEditProfile.optionButtonText}>Take Photo</Text>
+                                </View>
+                            </Pressable>
+                            <Pressable
+                                onPress={() => {
+                                    choosePhotoFromGalery()
+                                }}
+                            >
+                                <View style={stylesEditProfile.optionButton}>
+                                    <SimpleLineIcons name="picture" size={20} color={colorApp} />
+                                    <Text style={stylesEditProfile.optionButtonText}>Choose Photo</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    ) : <></>
+                }
             </View>
-            <View style={stylesEditProfile.body}>
-                <Text style={stylesEditProfile.textTittle}>
-                    Edit Your Profile
-                </Text>
-                <Input
-                    label={'Foto'}
-                    data={pic}
-                    setData={setPic}
-                    icon={
-                        <Icon   
-                            name={'image'} 
-                            color={colorText} 
-                            size={20} 
-                            onPress={getPermission}
+                {/* {isEditInterests ?     
+                    <View style={stylesEditProfile.body}>
+                        <TouchableHighlight onPress={() => handleInterests()}>
+                            <View style={stylesEditProfile.cancelInterests}>
+                                <Icon name={'times'} color={colorText} size={20}/>
+                            </View>
+                        </TouchableHighlight>
+                        <Preferences list={interestsList} setList={setInterestsList}/>
+                    </View> 
+                    : */}
+                    <View style={stylesEditProfile.body}>
+                        <Text style={stylesEditProfile.textTittle}>
+                            Edit Your Profile
+                        </Text>
+                        <Text style={stylesEditProfile.fieldText}>
+                            Alias
+                        </Text>
+                        <Input
+                            label={'Alias'}
+                            textColor={colorWhite}
+                            data={alias}
+                            setData={setAlias}
+                            icon={
+                                <Icon   
+                                    name={'id-card'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            }
+                            error={aliasError}
                         />
-                    }
-                />
-                <Input
-                    label={'Alias'}
-                    data={alias}
-                    setData={setAlias}
-                    icon={
-                        <Icon   
-                            name={'id-card'} 
-                            color={colorText} 
-                            size={20} 
-                            onPress={getPermission}
+                        <Text style={stylesEditProfile.fieldText}>
+                            Nick
+                        </Text>
+                        <Input
+                            label={'Nick'}
+                            data={nick}
+                            setData={setNick}
+                            icon={
+                                <Icon   
+                                    name={'tag'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            }
+                            error={nickError}          
                         />
-                    }          
-                />
-                <Input
-                    label={'Nick'}
-                    data={nick}
-                    setData={setNick}
-                    icon={
-                        <Icon   
-                            name={'tag'} 
-                            color={colorText} 
-                            size={20} 
-                            onPress={getPermission}
+                        <Text style={stylesEditProfile.fieldText}>
+                            Country
+                        </Text>
+                        <Input
+                            label={'Country'}
+                            data={countryLocate}
+                            setData={setCountryLocate}
+                            icon={
+                                <Icon   
+                                name={'flag'} 
+                                color={colorText} 
+                                size={20} 
+                                onPress={() => setLocation()}
+                                />
+                            }
                         />
-                    }          
-                />
-                <Input
-                    label={'Country'}
-                    data={country}
-                    setData={setCountry}
-                    icon={
-                        <Icon   
-                        name={'flag'} 
-                        color={colorText} 
-                        size={20} 
-                        onPress={getPermission}
+                        <Text style={stylesEditProfile.fieldText}>
+                            Locality
+                        </Text>
+                        <Input
+                            label={'Locality'}
+                            data={locality}
+                            setData={setLocality}
+                            icon={<Icon   
+                                name={'map-marker'} 
+                                color={colorText} 
+                                size={20} 
+                                onPress={() => setLocation()}
+                            />}             
                         />
-                    }
-                />
-                <Input
-                    label={'Locality'}
-                    data={locality}
-                    setData={setLocality}
-                    icon={<Icon   
-                        name={'map-marker'} 
-                        color={colorText} 
-                        size={20} 
-                        onPress={setLocation}
-                    />}             
-                />
-                <Input
-                    label={'Interests'}
-                    data={interestsList}
-                    setData={setInterestsList}
-                    icon={<Icon   
-                        name={'map-marker'} 
-                        color={colorText} 
-                        size={20} 
-                    />}
-                />
-            </View>
+                        <Text style={stylesEditProfile.fieldText}>
+                            Interests
+                        </Text>
+                        <TouchableHighlight onPress={() => handleInterests()}>
+                            <View style={stylesEditProfile.interestsButton}>
+                                <Text style={stylesEditProfile.text}>
+                                    Edit interests
+                                </Text>
+                                <Icon
+                                    name={'eyedropper'} 
+                                    color={colorText} 
+                                    size={20} 
+                                />
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                {/* } */}
             <View style={stylesEditProfile.footer}>
                 <CancelButton navigation={navigation}/>
                 <AcceptButton accept={handleEdit} text={'Accept'}/>
             </View>
-        </View>   
+            <Modal
+                transparent={true}
+                animationType="slide"
+                visible={isEditInterests}
+                onReqestClose={() => setIsEditInterests(false)}
+            >
+                <TouchableWithoutFeedback onPress={() => setIsEditInterests(false)}>
+                    <View style={stylesEditProfile.preferencesContainer}>
+                        <Preferences list={interestsList} setList={setInterestsList}/>
+                        <View style={stylesEditProfile.footer}>
+                            <AcceptButton onPress={() => setIsEditInterests(false)} text={'Accept'}/>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+        </ScrollView>   
     );
 }
+
 export default EditProfile

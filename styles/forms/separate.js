@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const colorBackground = 'black'
-const colorGray = '#535353'
+import { colorText } from "../appColors/appColors";
 
 const stylesSeparate = StyleSheet.create({
     lineContainer: {
@@ -13,13 +11,13 @@ const stylesSeparate = StyleSheet.create({
     dash: {
         flex: 1,
         height: 1,
-        backgroundColor: colorGray,
+        backgroundColor: colorText,
         marginHorizontal: 1,
     },
     text: {
         fontSize: 16,
         marginHorizontal: 10,
-        color: colorGray,
+        color: colorText,
     },
 })
 

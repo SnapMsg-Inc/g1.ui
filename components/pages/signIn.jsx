@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableHighlight, Button, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableHighlight, ActivityIndicator } from 'react-native';
 import AcceptButton from '../buttons/buttonAcept';
 import CancelButton from '../buttons/buttonCancel';
 import ButtonFederate from '../buttons/buttonFederate';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Separate from '../forms/separate';
 import Input from '../forms/input';
-import Logo from '../logo';
-import stylesForms, { colorText } from '../../styles/SignForms';
-import { LoginAccount, SignFederate } from '../connectivity/authorization';
+import Logo from '../common/logo';
+import stylesForms from '../../styles/SignForms';
 import { ValidationsLogin } from '../forms/validations';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
+import { colorApp, colorText } from '../../styles/appColors/appColors';
 
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
@@ -69,11 +69,13 @@ function SignIn({ navigation }) {
                     error={passwordError} 
                 />
                 <View style={stylesForms.containerTextSugestion}>
-                    <Text style={stylesForms.textSugestion}>Forgot password?</Text>
+                    <TouchableHighlight onPress={() => {navigation.navigate('Forgot')}}>
+                        <Text style={stylesForms.textSugestion}>Forgot password?</Text>
+                    </TouchableHighlight>
                 </View>
                 {isLoading ? 
                         <View style={stylesForms.bodyButtonsLoading}>
-                            <ActivityIndicator size={'large'} color={'#1ed760'}/> 
+                            <ActivityIndicator size={'large'} color={colorApp}/> 
                         </View>
                     :
                         <View style={stylesForms.bodyButtons}>

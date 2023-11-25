@@ -4,6 +4,7 @@ import stylesFollow from '../../styles/buttons/buttonFollow';
 import { deleteUserFollowByUid } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
+import styles from '../../styles/profile/followsCard';
 
 const MAX_INTEREST_LENGTH = 40;
 
@@ -61,41 +62,5 @@ const FollowsCard = ({ uid, alias, nick, interests, pic }) => {
 		</TouchableOpacity>
 	);
 };
-
-const colorBackground = '#000'
-const colorApp = '#1ed760'
-export const colorText = '#535353'
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: '#ccc',
-	},
-	profileImage: {
-		width: 60,
-		height: 60,
-		borderRadius: 40,
-		marginRight: 10,
-	},
-	infoContainer: {
-		flex: 1,
-	},
-	name: {
-		fontSize: 16,
-		fontWeight: 'bold',
-		color: 'white',
-	},
-	interests: {
-		fontSize: 14,
-		color: 'white',
-	},
-	nick: {
-		color: colorText,
-		fontSize: 15,
-	}
-});
 
 export default FollowsCard;

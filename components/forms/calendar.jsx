@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, TouchableHighlight, Text } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import stylesCalendar, { colorText } from '../../styles/forms/calendar';
+import stylesCalendar from '../../styles/forms/calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { colorText } from '../../styles/appColors/appColors';
 
 export default function Calendar({ data, setData, error, setError }) {
     const [mode, setMode] = useState('date');

@@ -1,12 +1,10 @@
 import { StyleSheet } from "react-native";
-import { colorText } from "./input";
-
-const colorApp = '#1ed760'
+import { colorText, colorApp, colorBackground } from "../appColors/appColors";
 
 const stylesSetup = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: colorBackground,
     },
     header: {
         paddingBottom: 10,

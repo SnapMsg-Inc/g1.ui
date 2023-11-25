@@ -1,9 +1,6 @@
 import React from 'react';
-import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { CommonActions } from '@react-navigation/native';
 
 import Profile from "../pages/profile";
 import Feed from "../pages/feed";
@@ -15,8 +12,11 @@ import FollowingAndFollowersScreen from '../profileComponents/profileNavigation/
 import OtherProfile from '../pages/otherProfile';
 import EditProfile from '../profileComponents/profileNavigation/editProfile';
 import SearchScreen from '../discoverComponents/searchScreen';
-import CreatePostScreen from '../feedComponents/createPost';
+import CreatePostScreen from '../common/createPost';
 import EditPost from '../profileComponents/profileNavigation/editPost';
+import { DiscoverButton, FeedButton, MessagesButton, NotificationsButton, ProfileButton } from './drawerNavigationDispatcher';
+import ChatScreen from '../messagesComponents/chatScreen';
+import SearchUserScreen from '../messagesComponents/searchUser';
 
 const FeedStack = createStackNavigator();
 
@@ -74,10 +74,10 @@ function ProfileStackScreen() {
 				}}
 			/>
 
-            <ProfileStack.Screen name="EditPost"
-                component={EditPost}
-                options={{
-                    headerShown: false,
+			<ProfileStack.Screen name="EditPost"
+				component={EditPost}
+				options={{
+					headerShown: false,
 				}}
 			/>
 		</ProfileStack.Navigator>
@@ -106,73 +106,104 @@ function DiscoverStackScreen() {
 	);
 }
 
+const MessagesStack = createStackNavigator();
+
+function MessagesStackScreen() {
+	return (
+		<MessagesStack.Navigator initialRouteName="MessagesScreen">
+			<MessagesStack.Screen name="MessagesScreen"
+				component={Messages}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			<MessagesStack.Screen name="ChatScreen"
+				component={ChatScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+
+			<MessagesStack.Screen name="SearchUserScreen"
+				component={SearchUserScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+		</MessagesStack.Navigator>
+	);
+}
+
+
 const Drawer = createDrawerNavigator();
-const iconColor = '#1ED760';
 
 export default function Home() {
-    return (
-        <Drawer.Navigator
-            initialRouteName='Feed'
-            drawerContent={props => <CustomDrawer {...props} />}
-            screenOptions={{
-            drawerActiveTintColor: '#ffffff',
-            drawerInactiveTintColor: '#ffffff',
-            drawerLabelStyle: {
-                marginLeft: -25,
-                fontSize: 15,
-            },
-            swipeEdgeWidth: 150,            
-            }}
-            >
-            <Drawer.Screen
-            name="Profile"
-            component={ProfileStackScreen}
-            options={{              
-                drawerIcon: ({size}) => (
-                <FontAwesome5 name="user" color={iconColor} size={size} />
-                ),
-                headerShown:false,							
-                swipeEdgeWidth: 0,
-            }}
-            />
-            <Drawer.Screen
-            name="Feed"
-            component={FeedStackScreen}
-            options={{
-                drawerIcon: ({size}) => (
-                    <Octicons name="home" size={size} color={iconColor} />
-                ),
-                headerShown:false,
-            }}
-            />
-            <Drawer.Screen
-            name="Discover"
-            component={DiscoverStackScreen}
-            options={{
-                drawerIcon: ({size}) => (
-                    <Octicons name="search" size={size} color={iconColor} />
-                ),
-                headerShown:false,
-            }}
-            />
-            <Drawer.Screen
-            name="Notifications"
-            component={Notifications}
-            options={{
-                drawerIcon: ({size }) => (
-                <Octicons name="bell" color={iconColor} size={size} />
-                ),
-            }}
-            />
-            <Drawer.Screen
-            name="Messages"
-            component={Messages}
-            options={{
-                drawerIcon: ({size }) => (
-                <FontAwesome5 name="envelope" color={iconColor} size={size} />
-                ),
-            }}
-            />
-        </Drawer.Navigator>
-    )
+	return (
+		<Drawer.Navigator
+			initialRouteName='Feed'
+			drawerContent={props => <CustomDrawer {...props} />}
+			screenOptions={{
+			drawerActiveTintColor: '#ffffff',
+			drawerInactiveTintColor: '#ffffff',
+			drawerLabelStyle: {
+				marginLeft: -25,
+				fontSize: 15,
+			},
+			swipeEdgeWidth: 150,            
+			}}
+			>
+			<Drawer.Screen
+				name="Profile"
+				component={ProfileStackScreen}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<ProfileButton navigation={navigation} />
+					),
+				})}
+			/>
+			<Drawer.Screen
+				name="Feed"
+				component={FeedStackScreen}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<FeedButton navigation={navigation} />
+					),
+				})}
+			/>
+			<Drawer.Screen
+				name="Discover"
+				component={DiscoverStackScreen}
+				initialParams={{data:"your props"}}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<DiscoverButton navigation={navigation} />
+					),
+				})}
+			/>
+			<Drawer.Screen
+				name="Notifications"
+				component={Notifications}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<NotificationsButton navigation={navigation} />
+					),
+				})}
+			/>
+			<Drawer.Screen
+				name="Messages"
+				component={MessagesStackScreen}
+				options={({ navigation }) => ({
+					headerShown: false,
+					drawerLabel: () => (
+					<MessagesButton navigation={navigation} />
+					),
+				})}
+			/>
+		</Drawer.Navigator>
+	)
 }

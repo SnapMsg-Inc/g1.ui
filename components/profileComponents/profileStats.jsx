@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
+import { colorText, colorWhite } from '../../styles/appColors/appColors';
 
 const ProfileStats = ({ navigation, data }) => {
 	return (
@@ -19,7 +20,7 @@ const ProfileStats = ({ navigation, data }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                         style={{
-                            color: 'white',
+                            color: colorWhite,
                             fontWeight: 'bold',
                             marginRight: 5,
                         }}
@@ -28,7 +29,7 @@ const ProfileStats = ({ navigation, data }) => {
                     </Text>
                     <Text
                         style={{
-                            color: '#535353',
+                            color: colorText,
                             fontWeight: 'normal',
                         }}
                     >
@@ -45,7 +46,7 @@ const ProfileStats = ({ navigation, data }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                     style={{
-                        color: 'white',
+                        color: colorWhite,
                         fontWeight: 'bold',
                         marginRight: 5,
                     }}
@@ -55,7 +56,7 @@ const ProfileStats = ({ navigation, data }) => {
 
                     <Text
                         style={{
-                            color: '#535353',
+                            color: colorText,
                             fontWeight: 'normal',
                         }}
                     >

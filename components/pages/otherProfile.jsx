@@ -7,20 +7,21 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GetUserByUid, checkIfUserFollows } from '../connectivity/servicesUser';
 import ProfileHeader from '../profileComponents/profileHeader';
 import PostScreen from '../profileComponents/profileNavigation/postsScreen'
-import LikesScreen from '../profileComponents/profileNavigation/likesScreen'
-import RepliesScreen from '../profileComponents/profileNavigation/repliesScreen'
 import ButtonFollow from '../buttons/buttonFollow';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import styles from '../../styles/profile/otherProfile';
+import { colorApp, colorBackground, colorText } from '../../styles/appColors/appColors';
+import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
 const tabBar = props => (
 	<MaterialTabBar
 		{...props}
-		indicatorStyle={{ backgroundColor: '#1ed760', height: 3, }}
+		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
 		style={styles.tabBar}
-		activeColor='#1ed760'
-		inactiveColor='#535353' 
+		activeColor={colorApp}
+		inactiveColor={colorText} 
 		labelStyle={styles.label}
 	/>
 );
@@ -64,13 +65,12 @@ const OtherProfile = ({ navigation }) => {
 	const scrollY = useRef(new Animated.Value(0)).current;
 
 	const getUrl = () => {
-		//TODO: PAGINACION!!
-		return `${URL_POST}?nick=${data.nick}&limit=${100}&page=${0}`;
+		return `${URL_POST}?nick=${data.nick}`;
 	}
 
 	return (
 		<View style={styles.container}>
-			{ isLoading ? <ActivityIndicator size={'large'} color={'#1ed760'}/> : (
+			{ isLoading ? <ActivityIndicator size={'large'} color={colorApp}/> : (
 				<Tabs.Container
 					tabContainerStyle={styles.tabContainer}
 					renderHeader={() => (
@@ -83,15 +83,21 @@ const OtherProfile = ({ navigation }) => {
 					renderTabBar={tabBar}
 					>
 					<Tabs.Tab name="Posts" label="Posts">
-						<PostScreen url={getUrl()}/>
+						{	
+							// To ensure that data is already loaded
+							data.nick.length > 0 ? (
+								<PostScreen url={getUrl()}/>
+							) : <></>
+						}
 					</Tabs.Tab>
 
-					<Tabs.Tab name="Replies" label="Replies">
-						<RepliesScreen />
-					</Tabs.Tab>
-
-					<Tabs.Tab name="Likes" label="Likes">
-						<LikesScreen />
+					<Tabs.Tab name="Media" label="Media">
+						{	
+							// To ensure that data is already loaded
+							data.nick.length > 0 ? (
+								<MediaScreen url={getUrl()}/>
+							) : <></>
+						}
 					</Tabs.Tab>
 				</Tabs.Container>
 		)}
@@ -99,20 +105,5 @@ const OtherProfile = ({ navigation }) => {
 		</View> 
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-        flex:1,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-    },
-	tabBar: {
-		backgroundColor: 'black',
-	},
-	label: {
-		fontSize: 16,
-		textTransform: 'none',
-	},
-});
 
 export default OtherProfile;
