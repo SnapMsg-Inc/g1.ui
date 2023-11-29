@@ -22,7 +22,7 @@ import {
     query,
     onSnapshot
   } from 'firebase/firestore';
-import { getFirestore } from "firebase/firestore";
+import { database } from '../connectivity/firebase';
 
 const generateChatRoomUid = (uid1, uid2) => {
     // Ordena los IDs de usuario para garantizar consistencia.
@@ -44,27 +44,26 @@ export default function ChatScreen({ navigation }) {
     const defaultImage = require('../../assets/default_user_pic.png')
 
     const [messages, setMessages] = useState([]);
-    const database = getFirestore();
 
     useEffect(() => {
         const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
         const collectionRef = collection(database, `chatrooms/${chatRoomUid}/messages`);
         const q = query(collectionRef, orderBy('createdAt', 'desc'));
-      
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          setMessages(
-            querySnapshot.docs.map((doc) => ({
-              _id: doc.data()._id,
-              createdAt: doc.data().createdAt.toDate(),
-              text: doc.data().text,
-              user: doc.data().user,
-            }))
-          );
-        });
-      
-        return unsubscribe;
-      }, [database, generateChatRoomUid, userData.uid, data.uid]);
     
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setMessages(
+            querySnapshot.docs.map((doc) => ({
+            _id: doc.data()._id,
+            createdAt: doc.data().createdAt.toDate(),
+            text: doc.data().text,
+            user: doc.data().user,
+            }))
+        );
+        });
+        
+        return unsubscribe;
+    }, [database, generateChatRoomUid, userData.uid, data.uid]);
+
     const onSend = useCallback((messages = []) => {
         const { createdAt, text, user } = messages[0];
         // el mensaje necesita un id unico para ser guardado en la base de datos

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     StyleSheet,
     View,
@@ -23,6 +23,16 @@ import { FontAwesome5 } from 'react-native-vector-icons';
 import NewMessageButton from '../buttons/buttonNewMessage';
 import styles from '../../styles/messages/messages';
 import MessageCard from '../messagesComponents/messageCard';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    orderBy,
+    onSnapshot} from 'firebase/firestore';
+import { getFirestore } from "firebase/firestore";
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import { database } from '../connectivity/firebase';
 
 const MOCK_MESSAGES = [
     {
@@ -70,65 +80,12 @@ const MOCK_MESSAGES = [
         messageText:
             'Hey there, this is my test for a post of my social app in React Native.',
     },
-    {
-        uid: '6',
-        alias: 'Gaston',
-        nick: 'pela',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-          'Hey there, this is my test for a post of my social app in React Native.',
-      },
-      {
-        uid: '2',
-        alias: 'John Doe',
-        nick: 'lil jhon',
-        pic: '',
-        messageTime: '2 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '3',
-        alias: 'Ken William',
-        nick: 'ken',
-        pic: '',
-        messageTime: '1 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '4',
-        alias: 'Selina Paul',
-        nick: 'seli',
-        pic: '',
-        messageTime: '1 day ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '5',
-        alias: 'Christy Alex',
-        nick: 'chris',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '6',
-        alias: 'Gaston',
-        nick: 'pela',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-          'Hey there, this is my test for a post of my social app in React Native.',
-      },
   ];
 
 export default function Messages({ navigation }) {
-    const [searchUser,  setSearchUser] = useState(false);
-
+    const { userData } = useContext(LoggedUserContext)
+    const [chatRooms, setChatRooms] = useState([]);
+    
     return (
         <View style={styles.container}>
             {/* Header */}
