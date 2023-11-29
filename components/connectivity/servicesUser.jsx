@@ -8,9 +8,7 @@ const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 export async function GetUsers(setState, query) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
-    
-    // console.log("Bearer ", token);
-    
+
     await axios({
         method: 'get',
         url: `${URL}${query}`,
@@ -29,7 +27,7 @@ export async function GetUsers(setState, query) {
 export async function GetUserData(state) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
-    console.log(token)
+
     await axios({
         method: 'get',
         url: `${URL}/me`, 
@@ -82,7 +80,6 @@ export async function GetUserByUid(setState, uid) {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-        // console.log(response.data)
       setState({
         "uid": response.data[0].uid,
         "alias": response.data[0].alias,
@@ -98,26 +95,34 @@ export async function GetUserByUid(setState, uid) {
     });
 }
 
-// export async function GetUserFollowersByUid(setState, uid) {
-//     const auth = getAuth();
-//     const token = await getIdToken(auth.currentUser, false);
+export async function GetUserDataByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, false);
   
-// 	const urlWithQueryParams = `${URL}/${uid}/followers`
+    const queryParams = {
+      uid: uid,
+      maxResults: 1,
+      pages: 1,
+    };
 
-//     await axios({
-//       method: 'get',
-//       url: urlWithQueryParams,
-//       headers: {
-//         'Authorization': `Bearer ${token}`,
-//         'Content-Type': 'application/json'
-//       }
-//     }).then((response) => {
-//       setState(response.data);
-//     })
-//     . catch((error) => {
-//         console.log(JSON.stringify(error.response, null, 2))
-//     });
-// }
+    const queryString = new URLSearchParams(queryParams).toString();
+  
+    const urlWithQueryParams = `${URL}?${queryString}`;
+  
+    try {
+        const response = await axios({
+            method: 'get',
+            url: urlWithQueryParams,
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+            }
+        });
+        return response.data[0];
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
+}
 
 export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
     const auth = getAuth();
@@ -134,7 +139,7 @@ export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
         'Content-Type': 'application/json'
         }
     });
-    console.log(response.data)
+
     return response.data;
     } catch (error) {
         console.log(JSON.stringify(error.response, null, 2));
@@ -383,7 +388,7 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
     
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
-     console.log(token)
+
     try {
     const response = await axios({
         method: 'get',
@@ -461,7 +466,6 @@ export async function deletePost(pid) {
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/${pid}`;
-    console.log("eliminando post con pid: ", pid )
     try {
         await axios.delete(urlWithQueryParams, {
             headers: {

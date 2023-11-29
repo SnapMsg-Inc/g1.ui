@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     StyleSheet,
     View,
@@ -8,126 +8,109 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     RefreshControl,
-    TouchableWithoutFeedback,
     FlatList } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Octicons } from '@expo/vector-icons';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import { GetUserDataByUid } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
-import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/appColors/appColors';
 import SnapMsg from '../common/SnapMsg';
 import { FontAwesome5 } from 'react-native-vector-icons';
 import NewMessageButton from '../buttons/buttonNewMessage';
 import styles from '../../styles/messages/messages';
 import MessageCard from '../messagesComponents/messageCard';
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    getDoc,
+    doc,
+    orderBy,
+    onSnapshot} from 'firebase/firestore';
+import { getFirestore } from "firebase/firestore";
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import { database } from '../connectivity/firebase';
 
-const MOCK_MESSAGES = [
-    {
-        uid: '1',
-        alias: 'Jenny Doe',
-        nick: 'la jenny',
-        pic: '',
-        messageTime: '4 mins ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '2',
-        alias: 'John Doe',
-        nick: 'lil jhon',
-        pic: '',
-        messageTime: '2 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '3',
-        alias: 'Ken William',
-        nick: 'ken',
-        pic: '',
-        messageTime: '1 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '4',
-        alias: 'Selina Paul',
-        nick: 'seli',
-        pic: '',
-        messageTime: '1 day ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '5',
-        alias: 'Christy Alex',
-        nick: 'chris',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '6',
-        alias: 'Gaston',
-        nick: 'pela',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-          'Hey there, this is my test for a post of my social app in React Native.',
-      },
-      {
-        uid: '2',
-        alias: 'John Doe',
-        nick: 'lil jhon',
-        pic: '',
-        messageTime: '2 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '3',
-        alias: 'Ken William',
-        nick: 'ken',
-        pic: '',
-        messageTime: '1 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '4',
-        alias: 'Selina Paul',
-        nick: 'seli',
-        pic: '',
-        messageTime: '1 day ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '5',
-        alias: 'Christy Alex',
-        nick: 'chris',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '6',
-        alias: 'Gaston',
-        nick: 'pela',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-          'Hey there, this is my test for a post of my social app in React Native.',
-      },
-  ];
+const calculateTime = (time) => {
+    const currentTime = new Date().getTime();
+    const elapsedTime = (currentTime / 1000) - (time.seconds)
+    const seconds = Math.floor(elapsedTime);        
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) {
+        return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+    } else if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    } else if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    } else if (days > 0){
+        return `${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+}
 
 export default function Messages({ navigation }) {
-    const [searchUser,  setSearchUser] = useState(false);
+    const { userData } = useContext(LoggedUserContext)
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [chatRooms, setChatRooms] = useState([]);
+
+    const obtenerChatRooms = async () => {
+        setIsLoading(true);
+        const chatroomsRef = collection(database, 'chatrooms');
+        const querySnapshot = await getDocs(chatroomsRef);
+    
+        const chatRoomArray = querySnapshot.docs.map((doc) => ({
+          chatRoomUid: doc.id,
+          lastMessage: doc.data().lastMessage,
+          lastMessageCreatedAt: doc.data().lastMessageCreatedAt,
+        }));
+
+        // Me quedo solo con mis chatRooms
+        const chatRoomFiltrados = chatRoomArray.filter(
+            ({ chatRoomUid }) => chatRoomUid.includes(userData.uid));
+        
+        // Obtengo los uids de los usuarios con los que tengo chatRooms
+        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage, lastMessageCreatedAt }) => {
+            const otrosUid = chatRoomUid.split('_').filter(uid => uid !== userData.uid);
+            return {"uid": otrosUid[0],
+                    "lastMessage": lastMessage,
+                    "lastMessageCreatedAt": lastMessageCreatedAt
+                };
+        });
+
+        // Obtengo los datos de los usuarios con los que tengo chatRooms
+        const otherUsersData = await Promise.all(
+            otherUidArray.map(async ({ uid, lastMessage, lastMessageCreatedAt }) => {
+                const user = await GetUserDataByUid(uid);
+                return {
+                    uid: user.uid,
+                    alias: user.alias,
+                    nick: user.nick,
+                    pic: user.pic,
+                    messageTime: calculateTime(lastMessageCreatedAt),
+                    messageText: lastMessage,
+                };
+            })
+        );
+
+        setChatRooms(otherUsersData);
+        setIsLoading(false);
+    };
+
+    handleRefresh = async () => {
+        setIsRefreshing(true);
+        await obtenerChatRooms();
+        setIsRefreshing(false);
+    };
+
+    useEffect(() => {
+        obtenerChatRooms();
+    }, [database]);;
 
     return (
         <View style={styles.container}>
@@ -148,28 +131,35 @@ export default function Messages({ navigation }) {
                     <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
-            {/* Messages */}
-            <View style={stylesMessages.container}>
-                <FlatList
-                    data={MOCK_MESSAGES}
-                    renderItem={({ item }) =>
-                        <MessageCard data={item}/>
-                    }
-                    // onEndReached={fetchDataFromApi}
-                    // onEndReachedThreshold={0.10}
-                    // ListFooterComponent={renderLoader}
-                    // refreshControl={
-                        //     <RefreshControl
-                    //         refreshing={isRefreshing}
-                    //         onRefresh={handleRefresh}
-                    //         progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
-                    //         colors={[colorApp]}
-                    //         tintColor={colorApp}
-                    //         size={"large"}
-                    //     />
-                    // }
-                />
-            </View>
+            {/* ChatRooms */}
+            {
+                chatRooms?.length > 0 ? (
+                    <View style={stylesMessages.container}>
+                        <FlatList
+                            data={chatRooms}
+                            renderItem={({ item }) =>
+                                <MessageCard data={item}/>
+                            }
+                            refreshControl={
+                                    <RefreshControl
+                                    refreshing={isRefreshing}
+                                    onRefresh={handleRefresh}
+                                    progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                                    colors={[colorApp]}
+                                    tintColor={colorApp}
+                                    size={"large"}
+                                />
+                            }
+                        />
+                    </View>
+                ) : (
+                    <View style={{padding: 10}}>
+                        <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
+                        <Text style={{color: colorText, fontSize: 16}}>
+                            Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
+                        </Text>
+                    </View>)
+            }
             <NewMessageButton onPress={() => navigation.navigate('SearchUserScreen')}/>
         </View>
     )
