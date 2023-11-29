@@ -47,21 +47,27 @@ export default function Messages({ navigation }) {
     
         const chatRoomArray = querySnapshot.docs.map((doc) => ({
           chatRoomUid: doc.id,
+          lastMessage: doc.data().lastMessage,
         }));
 
+        console.log("CHATROOM: ", chatRoomArray);
         // Me quedo solo con mis chatRooms
         const chatRoomFiltrados = chatRoomArray.filter(
             ({ chatRoomUid }) => chatRoomUid.includes(userData.uid));
         
+        console.log("CHATROOM FILTRADO: ", chatRoomFiltrados);
         // Obtengo los uids de los usuarios con los que tengo chatRooms
-        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid }) => {
+        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage }) => {
             const otrosUid = chatRoomUid.split('_').filter(uid => uid !== userData.uid);
-            return {"uid": otrosUid[0]};
+            return {"uid": otrosUid[0],
+                    "lastMessage": lastMessage
+                };
         });
         
+        console.log("uids:  ", otherUidArray);
         // Obtengo los datos de los usuarios con los que tengo chatRooms
         const otherUsersData = await Promise.all(
-            otherUidArray.map(async ({ uid }) => {
+            otherUidArray.map(async ({ uid, lastMessage }) => {
                 const user = await GetUserDataByUid(uid);
                 return {
                     uid: user.uid,
@@ -69,8 +75,7 @@ export default function Messages({ navigation }) {
                     nick: user.nick,
                     pic: user.pic,
                     messageTime: '2 days ago',
-                    messageText:
-                        'testing...',
+                    messageText: lastMessage,
                 };
             })
         );

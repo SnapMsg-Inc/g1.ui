@@ -23,7 +23,8 @@ import {
     onSnapshot,
     getDoc,
     setDoc,
-    doc
+    doc,
+    updateDoc,
   } from 'firebase/firestore';
 import { database } from '../connectivity/firebase';
 
@@ -93,7 +94,12 @@ export default function ChatScreen({ navigation }) {
             text,
             user
         });
-    
+        
+        // Actualizar el campo lastMessage del chatRoom
+        updateDoc(doc(database, `chatrooms/${chatRoomUid}`), {
+            lastMessage: text,
+        });
+
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
     }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
