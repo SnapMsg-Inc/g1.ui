@@ -5,6 +5,7 @@ import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
+import SnapShare from '../../common/snapShare';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
@@ -22,8 +23,9 @@ const PostsScreen = ({url}) => {
         setFullPosts([]);
         try {
             const newPosts = await GetPosts(url, 10, 0)
-			setFullPosts(newPosts);
-            if (newPosts.length > 0) {
+
+            if (newPosts !== undefined && newPosts.length > 0) {
+                setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
                 setAllDataLoaded(true);
@@ -42,7 +44,7 @@ const PostsScreen = ({url}) => {
 
         try {
             const newPosts = await GetPosts(url, 10, currentPage)
-            if (newPosts.length > 0) {
+            if (newPosts !== undefined && newPosts.length > 0) {
                 setFullPosts([...fullPosts, ...newPosts]);
                 setCurrentPage(currentPage + 1);
             } else {
@@ -81,16 +83,26 @@ const PostsScreen = ({url}) => {
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                    <SnapMsg
-                        key={item.pid}
-                        uid={item.uid}
-                        pid={item.pid}
-                        username={item.nick}
-                        content={item.text}
-                        date={item.timestamp}
-                        likes={item.likes}
-                        picUri={item.media_uri}
-                    />
+                    "post" in item ? (
+                        <SnapShare 
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            post={item.post}
+                            date={item.timestamp}
+                        />
+                    ) : (
+                        <SnapMsg
+                            key={item.pid}
+                            uid={item.uid}
+                            pid={item.pid}
+                            username={item.nick}
+                            content={item.text}
+                            date={item.timestamp}
+                            likes={item.likes}
+                            picUri={item.media_uri}
+                        />
+                    )
                 }
                 onEndReached={fetchMorePostsFromApi}
                 onEndReachedThreshold={0.10}

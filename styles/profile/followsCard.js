@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		padding: 10,
 		borderBottomWidth: 1,
-		borderBottomColor: '#ccc',
+		borderBottomColor: colorText,
 	},
 	profileImage: {
 		width: 60,

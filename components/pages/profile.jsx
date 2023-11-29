@@ -14,6 +14,7 @@ import FavsScreen from '../profileComponents/profileNavigation/favsScreen';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from '../connectivity/location/permissionLocation';
 import * as Location from 'expo-location'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import SnapShareScreen from '../profileComponents/profileNavigation/snapShareScreen';
 
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
@@ -110,6 +111,10 @@ const Profile = ({ navigation }) => {
 
 						<Tabs.Tab name="Media" label="Media">
 							<MediaScreen url={getUrl()}/>
+						</Tabs.Tab>
+
+						<Tabs.Tab name="SnapShare" label="Reposts">
+							<SnapShareScreen/>
 						</Tabs.Tab>
 
 						<Tabs.Tab name="Favs" label="Favs">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext }from 'react';
-import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { colorBackground, colorText, colorWhite, colorApp } from '../../../styles/appColors/appColors';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from '../../connectivity/location/permissionLocation';
 import * as Location from 'expo-location'
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import { GetTrendings } from '../../connectivity/servicesUser';
 
 const MOCK_TRENDIG = [ "#boca", "messi", "roman", "argentina", "#politica"]
 
@@ -53,52 +54,53 @@ const TrendingScreen = () => {
 	const [isLoadingMoreTrendings, setIsLoadingMoreTrendings] = useState(false);
 
 	const fetchInitialTrendingsFromApi = async () => {
-        // setIsLoading(true);
-		// setCurrentPage(0);
-        // setAllDataLoaded(false)
-        // setFullTrendings([]);
-        // try {
-        //     const newTrendings = await GetTrendings(url, 10, 0)
-		// 	setFullTrendings(newTrendings);
-        //     if (newTrendings.length > 0) {
-        //         setCurrentPage(1);
-        //     } else {
-        //         setAllDataLoaded(true);
-        //     }
-        //     setIsLoading(false);
-        // } catch (error) {
-        //     console.error('Error fetching initial posts:', error);
-        // }
+        setIsLoading(true);
+		setCurrentPage(0);
+        setAllDataLoaded(false)
+        setFullTrendings([]);
+        try {
+            const newTrendings = await GetTrendings(10, 0)
+
+            if (newTrendings && newTrendings.length > 0) {
+                setFullTrendings(newTrendings);
+                setCurrentPage(1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching initial posts:', error);
+        }
     }
 
     const fetchMoreTrendingsFromApi = async () => {
-        // if (allDataLoaded || isLoading || isRefreshing) {
-        //     return;
-        // }
-        // setIsLoadingMoreTrendings(true);
+        if (allDataLoaded || isLoading || isRefreshing) {
+            return;
+        }
+        setIsLoadingMoreTrendings(true);
 
-        // try {
-        //     const newTrendings = await GetTrendings(url, 10, currentPage)
-        //     if (newTrendings.length > 0) {
-        //         setFullTrendings([...fullTrendings, ...newTrendings]);
-        //         setCurrentPage(currentPage + 1);
-        //     } else {
-        //         setAllDataLoaded(true);
-        //     }
-        //     setIsLoadingMoreTrendings(false);
-        // } catch (error) {
-        //     console.error('Error fetching more trending:', error);
-        // }
+        try {
+            const newTrendings = await GetTrendings(10, currentPage)
+            if (newTrendings && newTrendings.length > 0) {
+                setFullTrendings([...fullTrendings, ...newTrendings]);
+                setCurrentPage(currentPage + 1);
+            } else {
+                setAllDataLoaded(true);
+            }
+            setIsLoadingMoreTrendings(false);
+        } catch (error) {
+            console.error('Error fetching more trending:', error);
+        }
     }
 
     const handleRefresh = async () => {
-        // if (isRefreshing) {
-        //     return;
-        // }
-        // setIsRefreshing(true);
-        // await fetchInitialTrendingsFromApi(null);
+        if (isRefreshing) {
+            return;
+        }
+        setIsRefreshing(true);
+        await fetchInitialTrendingsFromApi(null);
 
-        // setIsRefreshing(false);
+        setIsRefreshing(false);
     }
 
     const renderLoader = () => {
@@ -107,11 +109,11 @@ const TrendingScreen = () => {
         );
     }
 
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         fetchInitialTrendingsFromApi();
-    //     }, [])
-    // );
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchInitialTrendingsFromApi();
+        }, [])
+    );
 
 	const handleItemPress = (searchQuery) => {
 		navigation.dispatch(
@@ -130,22 +132,24 @@ const TrendingScreen = () => {
 	return (
 		<View style={styles.container}>
 			<Tabs.FlatList
-                data={MOCK_TRENDIG}
+                data={fullTrendings}
 				ListHeaderComponent={
-					<View style={{flexDirection: 'row', paddingVertical: 10}}>
-						<Text style={{color: colorWhite, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
-							{`${countryLocate} trends`}
-						</Text>
-					</View>	
+                    isLoading ? <></> : (
+                        <View style={{flexDirection: 'row', paddingVertical: 10}}>
+                            <Text style={{color: colorWhite, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
+                                {`${countryLocate} trends`}
+                            </Text>
+                        </View>	
+                        )
 				}
                 renderItem={({ item, index }) => (
-					<TouchableOpacity onPress={() => handleItemPress(item)}>
+					<TouchableOpacity onPress={() => handleItemPress(item.topic)}>
 						<View style={{ marginLeft: 10, padding: 5 }}>
 							<Text style={{ color: colorWhite, fontSize: 16 }}>
 								{index + 1} - Trending
 							</Text>
 							<Text style={{ color: colorApp, fontSize: 18 }}>
-								{item}
+								{item.topic}
 							</Text>
 						</View>
 					</TouchableOpacity>
