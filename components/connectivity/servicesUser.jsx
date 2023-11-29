@@ -586,6 +586,7 @@ export const SendNotificationFollow = (uid) => {
         method: 'post',
         url: `${URL}/notify-follow/${'New%Follow'}/${uid}/`,
     })
+}
 
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
