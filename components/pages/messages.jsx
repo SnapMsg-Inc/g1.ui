@@ -33,6 +33,25 @@ import { getFirestore } from "firebase/firestore";
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { database } from '../connectivity/firebase';
 
+const calculateTime = (time) => {
+    const currentTime = new Date().getTime();
+    const elapsedTime = (currentTime / 1000) - (time.seconds)
+    const seconds = Math.floor(elapsedTime);        
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) {
+        return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+    } else if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    } else if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    } else if (days > 0){
+        return `${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+}
+
 export default function Messages({ navigation }) {
     const { userData } = useContext(LoggedUserContext)
     const [isLoading, setIsLoading] = useState(false);
@@ -48,33 +67,32 @@ export default function Messages({ navigation }) {
         const chatRoomArray = querySnapshot.docs.map((doc) => ({
           chatRoomUid: doc.id,
           lastMessage: doc.data().lastMessage,
+          lastMessageCreatedAt: doc.data().lastMessageCreatedAt,
         }));
 
-        console.log("CHATROOM: ", chatRoomArray);
         // Me quedo solo con mis chatRooms
         const chatRoomFiltrados = chatRoomArray.filter(
             ({ chatRoomUid }) => chatRoomUid.includes(userData.uid));
         
-        console.log("CHATROOM FILTRADO: ", chatRoomFiltrados);
         // Obtengo los uids de los usuarios con los que tengo chatRooms
-        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage }) => {
+        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage, lastMessageCreatedAt }) => {
             const otrosUid = chatRoomUid.split('_').filter(uid => uid !== userData.uid);
             return {"uid": otrosUid[0],
-                    "lastMessage": lastMessage
+                    "lastMessage": lastMessage,
+                    "lastMessageCreatedAt": lastMessageCreatedAt
                 };
         });
-        
-        console.log("uids:  ", otherUidArray);
+
         // Obtengo los datos de los usuarios con los que tengo chatRooms
         const otherUsersData = await Promise.all(
-            otherUidArray.map(async ({ uid, lastMessage }) => {
+            otherUidArray.map(async ({ uid, lastMessage, lastMessageCreatedAt }) => {
                 const user = await GetUserDataByUid(uid);
                 return {
                     uid: user.uid,
                     alias: user.alias,
                     nick: user.nick,
                     pic: user.pic,
-                    messageTime: '2 days ago',
+                    messageTime: calculateTime(lastMessageCreatedAt),
                     messageText: lastMessage,
                 };
             })

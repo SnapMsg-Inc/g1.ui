@@ -98,6 +98,7 @@ export default function ChatScreen({ navigation }) {
         // Actualizar el campo lastMessage del chatRoom
         updateDoc(doc(database, `chatrooms/${chatRoomUid}`), {
             lastMessage: text,
+            lastMessageCreatedAt: createdAt,
         });
 
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
