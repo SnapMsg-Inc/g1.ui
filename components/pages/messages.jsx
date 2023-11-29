@@ -136,32 +136,34 @@ export default function Messages({ navigation }) {
             </View>
             {/* ChatRooms */}
             {
-                chatRooms?.length > 0 ? (
-                    <View style={stylesMessages.container}>
-                        <FlatList
-                            data={chatRooms}
-                            renderItem={({ item }) =>
-                                <MessageCard data={item}/>
-                            }
-                            refreshControl={
-                                    <RefreshControl
-                                    refreshing={isRefreshing}
-                                    onRefresh={handleRefresh}
-                                    progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
-                                    colors={[colorApp]}
-                                    tintColor={colorApp}
-                                    size={"large"}
-                                />
-                            }
-                        />
-                    </View>
-                ) : (
-                    <View style={{padding: 10}}>
-                        <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
-                        <Text style={{color: colorText, fontSize: 16}}>
-                            Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
-                        </Text>
-                    </View>)
+                isLoading ? (<ActivityIndicator size="large" color={colorApp} />) : (
+                    chatRooms?.length > 0 ? (
+                        <View style={stylesMessages.container}>
+                            <FlatList
+                                data={chatRooms}
+                                renderItem={({ item }) =>
+                                    <MessageCard data={item}/>
+                                }
+                                refreshControl={
+                                        <RefreshControl
+                                        refreshing={isRefreshing}
+                                        onRefresh={handleRefresh}
+                                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                                        colors={[colorApp]}
+                                        tintColor={colorApp}
+                                        size={"large"}
+                                    />
+                                }
+                            />
+                        </View>
+                    ) : (
+                        <View style={{padding: 10}}>
+                            <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
+                            <Text style={{color: colorText, fontSize: 16}}>
+                                Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
+                            </Text>
+                        </View>)
+                )
             }
             <NewMessageButton onPress={() => navigation.navigate('SearchUserScreen')}/>
         </View>
