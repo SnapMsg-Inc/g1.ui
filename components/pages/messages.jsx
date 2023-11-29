@@ -101,7 +101,7 @@ export default function Messages({ navigation }) {
             })
         );
 
-        otherUsersData ? setChatRooms(otherUsersData) : setChatRooms([]);
+        setChatRooms(otherUsersData)
         setIsLoading(false);
     };
 
@@ -137,10 +137,20 @@ export default function Messages({ navigation }) {
             {/* ChatRooms */}
             {
                 isLoading ? (<ActivityIndicator size="large" color={colorApp} />) : (
-                    chatRooms?.length > 0 ? (
+                    
                         <View style={stylesMessages.container}>
                             <FlatList
                                 data={chatRooms}
+                                ListHeaderComponent={
+                                    chatRooms?.length > 0 ? ( <></> ) : (
+                                        <View style={{padding: 10}}>
+                                            <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
+                                            <Text style={{color: colorText, fontSize: 16}}>
+                                                Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
+                                            </Text>
+                                        </View>
+                                    )
+                                }
                                 renderItem={({ item }) =>
                                     <MessageCard data={item}/>
                                 }
@@ -155,14 +165,7 @@ export default function Messages({ navigation }) {
                                     />
                                 }
                             />
-                        </View>
-                    ) : (
-                        <View style={{padding: 10}}>
-                            <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
-                            <Text style={{color: colorText, fontSize: 16}}>
-                                Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
-                            </Text>
-                        </View>)
+                        </View>     
                 )
             }
             <NewMessageButton onPress={() => navigation.navigate('SearchUserScreen')}/>
