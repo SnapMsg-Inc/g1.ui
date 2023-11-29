@@ -13,6 +13,16 @@ const truncateText = (text) => {
 	}
 };
 
+const MAX_ALIAS_LENGTH = 12;
+
+const truncateAlias = (alias) => {
+	if (alias.length <= MAX_ALIAS_LENGTH) {
+		return alias;
+	} else {
+		return alias.slice(0, MAX_ALIAS_LENGTH) + '...';
+	}
+};
+
 const MessageCard = ({ data }) => {
 	const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +46,7 @@ const MessageCard = ({ data }) => {
                                 </View>
                                 <View style={stylesMessages.textSection}>
                                     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                        <Text style={stylesMessages.alias}>{data.alias}</Text>
+                                        <Text style={stylesMessages.alias}>{truncateAlias(data.alias)}</Text>
                                         <Text style={stylesMessages.text}>{data.messageTime}</Text>
                                     </View>
                                     <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text>
