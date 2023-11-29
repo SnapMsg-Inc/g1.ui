@@ -24,7 +24,6 @@ export const getFcmToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
     console.log('fcmtoken ',fcmToken)
     if (!fcmToken) {
-        console.log('no hay token')
         try {
             const token = await messaging().getToken({vapidKey: Config.MESSAGING_API_KEY});
             

@@ -3,40 +3,56 @@ import {
     StyleSheet,
     View,
     Text,
-    FlatList } from 'react-native';
+    ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors'
 import NotificationCard from '../notificationCard';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { Tabs } from 'react-native-collapsible-tab-view';
 
 export default function AllNotificationScreen({ navigation }) {
     const [notifications, setNotifications] = useState([]);
-    useEffect(() => {
-        const getNotifications = async () => {
-            try {
-              // Obtén el array de notificaciones desde AsyncStorage
-              const notificationsArray = await AsyncStorage.getItem('notifications');
-      
-              // Si hay notificaciones, conviértelas de JSON a un objeto JavaScript
-              if (notificationsArray) {
+    const [isRefreshing, setIsRefreshing] = useState(false)
+
+    const getNotifications = async () => {
+        try {
+            const notificationsArray = await AsyncStorage.getItem('notifications');
+            if (notificationsArray) {
                 const parsedNotifications = JSON.parse(notificationsArray);
                 setNotifications(parsedNotifications);
-              }
-            } catch (error) {
-              console.error('Error al obtener las notificaciones:', error);
             }
-          };
-          
-            // Llama a la función para obtener las notificaciones cuando el componente se monta
+        } catch (error) {
+            console.error('Error with notifications in AsyncStorage:', error);
+        }
+    };
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        getNotifications();
+        setIsRefreshing(false);
+    }
+
+    useEffect(() => {
         getNotifications();
         console.log(notifications)
     }, [])
 
     return (
         <View style={stylesMessages.container}>
-            <FlatList
+            <Tabs.FlatList
                 data={notifications}
                 renderItem={({ item }) =>
                     <NotificationCard data={item}/>
+                }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={'rgba(0,0,0,0.2)'}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={'large'}
+                    />
                 }
             />
         </View>
@@ -45,7 +61,6 @@ export default function AllNotificationScreen({ navigation }) {
 
 const stylesMessages = StyleSheet.create({
     container: {
-        marginTop: 100,
         flex: 1,
         justifyContent: 'flex-start', 
         backgroundColor: colorBackground,

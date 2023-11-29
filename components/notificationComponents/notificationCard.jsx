@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
@@ -16,29 +16,28 @@ const truncateText = (text) => {
 const NotificationCard = ({ data }) => {
 	const navigation = useNavigation();
     const [messageDay, setMessageDay] = useState('')
-    const currentTime = new Date().getTime();
-    const elapsedTime = currentTime - data.key;
-  
-    // Convertimos el tiempo en milisegundos a un formato más legible
-    // const seconds = Math.floor(elapsedTime / 1000);
-    // const minutes = Math.floor(seconds / 60);
-    // const hours = Math.floor(minutes / 60);
-    // const days = Math.floor(hours / 24);
+    
+    useEffect (() => {
+        const currentTime = new Date().getTime();
+        const elapsedTime = currentTime - (data.key)
+        const seconds = Math.floor(elapsedTime / 1000);        
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
 
-    // if (days > 0) {
-    //     setMessageDay(`${days} día${days !== 1 ? 's' : ''} atrás`)
-    // } else if (hours > 0) {
-    //     setMessageDay(`${hours} hora${hours !== 1 ? 's' : ''} atrás`);
-    // } else if (minutes > 0) {
-    //     setMessageDay(`${minutes} minuto${minutes !== 1 ? 's' : ''} atrás`);
-    // } else {
-    //     setMessageDay(`${seconds} segundo${seconds !== 1 ? 's' : ''} atrás`);
-    // }
+        if (minutes < 60) {
+            setMessageDay(`${minutes} minute${minutes !== 1 ? 's' : ''} ago`);
+        } else if (hours < 24) {
+            setMessageDay(`${hours} hour${hours !== 1 ? 's' : ''} ago`);
+        } else if (days > 0){
+            setMessageDay(`${days} day${days !== 1 ? 's' : ''} ago`)
+        }
+    },[])
+
 
 	return (
 		<>
             <TouchableOpacity> 
-                {/* onPress={handleMessagePress}> */}
                 <View style={stylesMessages.card}>
                     <View style={stylesMessages.userInfo}>
                         <View style={stylesMessages.textSection}>
@@ -47,7 +46,7 @@ const NotificationCard = ({ data }) => {
                                 <Text style={stylesMessages.text}>{data.body}</Text>
                             </View>
                             <View>
-                                <Text style={stylesMessages.text}>{(elapsedTime)}</Text>
+                                <Text style={stylesMessages.text}>{(messageDay)}</Text>
                             </View>
                         </View>
                     </View>
