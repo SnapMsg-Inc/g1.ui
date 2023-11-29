@@ -7,11 +7,13 @@ import {    CreateAccount,
             SignInWithGoogle } from "../authorization";
 import { getAuth } from "firebase/auth";
 import firebaseApp from "../firebase";
-import { GetMe, GetToken, postsUser, postsUserFederate } from "../servicesUser";
+import { GetMe, GetToken, RegisterTokenDevice, postsUser, postsUserFederate } from "../servicesUser";
 import { SignInReducer } from "../reducer/authReducer";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as Location from 'expo-location'
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestUserPermission } from "../notifications";
 
 export const AuthenticationContext = createContext()
 
@@ -47,7 +49,12 @@ export const AuthenticationContextProvider = ({children}) => {
                     if (isRegister || loginFederate) {
                         dispatchSignedIn({type:"SIGN_OUT"})
                         return
-                    }
+                    } 
+                    AsyncStorage.getItem('fcmToken')
+                    .then(token => {
+                        console.log('token', token)
+                        RegisterTokenDevice(token)
+                    });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
                 } else {
                     dispatchSignedIn({type:"SIGN_OUT"})

@@ -1,11 +1,18 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { AuthenticationContextProvider } from './components/connectivity/auth/authenticationContext';
-import firebaseApp from './components/connectivity/firebase';
 import { Navigation } from './components/navigation/navigation';
 import { LoggedUserContextProvider } from './components/connectivity/auth/loggedUserContext';
 import { colorBackground } from './styles/appColors/appColors';
+import { requestUserPermission } from './components/connectivity/notifications';
+import { useEffect } from 'react';
+import { AppRegistry } from 'react-native';
+import { name as appName } from './app.json';
 
 export default function App() {
+    useEffect(() => {
+        requestUserPermission()
+    }, []);
+
     return (
         <AuthenticationContextProvider>
             <LoggedUserContextProvider>
@@ -16,6 +23,8 @@ export default function App() {
         </AuthenticationContextProvider>
     );
 }
+
+AppRegistry.registerComponent(appName, () => self);
 
 const styles = StyleSheet.create({
     container: {
