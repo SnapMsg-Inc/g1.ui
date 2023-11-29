@@ -15,6 +15,26 @@ import {Bubble, GiftedChat, Send, InputToolbar} from 'react-native-gifted-chat';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import {
+    collection,
+    addDoc,
+    orderBy,
+    query,
+    onSnapshot
+  } from 'firebase/firestore';
+import { getFirestore } from "firebase/firestore";
+
+const generateChatRoomUid = (uid1, uid2) => {
+    // Ordena los IDs de usuario para garantizar consistencia.
+    // Esto es necesario ya que el orden de los IDs de usuario  no
+    // debe afectar el chatRoomUid, que es igual para los dos users involucrados.
+    const sortedUserIds = [uid1, uid2].sort();
+
+    // Combina los IDs de usuario para formar el chatRoomUid.
+    const chatRoomUid = sortedUserIds.join('_');
+
+return chatRoomUid;
+};
 
 export default function ChatScreen({ navigation }) {
     const route = useRoute();
@@ -24,37 +44,44 @@ export default function ChatScreen({ navigation }) {
     const defaultImage = require('../../assets/default_user_pic.png')
 
     const [messages, setMessages] = useState([]);
+    const database = getFirestore();
 
     useEffect(() => {
-        setMessages([
-        {
-            _id: 1,
-            text: 'Hello developer',
-            createdAt: new Date(),
-            user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: data.pic,
-            },
-        },
-        {
-            _id: 2,
-            text: 'Hello world',
-            createdAt: new Date(),
-            user: {
-            _id: 1,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-            },
-        },
-        ]);
-    }, []);
-
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+        const collectionRef = collection(database, `chatrooms/${chatRoomUid}/messages`);
+        const q = query(collectionRef, orderBy('createdAt', 'desc'));
+      
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          setMessages(
+            querySnapshot.docs.map((doc) => ({
+              _id: doc.data()._id,
+              createdAt: doc.data().createdAt.toDate(),
+              text: doc.data().text,
+              user: doc.data().user,
+            }))
+          );
+        });
+      
+        return unsubscribe;
+      }, [database, generateChatRoomUid, userData.uid, data.uid]);
+    
     const onSend = useCallback((messages = []) => {
-        setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, messages),
-        );
-    }, []);
+        const { createdAt, text, user } = messages[0];
+        // el mensaje necesita un id unico para ser guardado en la base de datos
+        const _id = createdAt.getTime().toString();
+    
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+    
+        // Añadir mensaje a la colección del chatRoom específico
+        addDoc(collection(database, `chatrooms/${chatRoomUid}/messages`), {
+        _id,
+        createdAt,
+        text,
+        user
+        });
+    
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
+    }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
     const renderSend = (props) => {
         return (
@@ -161,7 +188,8 @@ export default function ChatScreen({ navigation }) {
                 showUserAvatar={false}
                 onSend={(messages) => onSend(messages)}
                 user={{
-                    _id: 1,
+                    _id: userData.uid,
+                    pic: userData.pic,
                 }}
                 renderBubble={renderBubble}
                 alwaysShowSend
