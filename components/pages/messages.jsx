@@ -28,6 +28,8 @@ import {
     query,
     where,
     getDocs,
+    getDoc,
+    doc,
     orderBy,
     onSnapshot} from 'firebase/firestore';
 import { getFirestore } from "firebase/firestore";
@@ -84,8 +86,22 @@ const MOCK_MESSAGES = [
 
 export default function Messages({ navigation }) {
     const { userData } = useContext(LoggedUserContext)
-    const [chatRooms, setChatRooms] = useState([]);
     
+    // // Agrega esta función al código de tu componente ChatScreen
+    // const obtenerChatRooms = async () => {
+    //     const chatroomsRef = collection(database, 'chatrooms');
+    //     const querySnapshot = await getDocs(chatroomsRef);
+    //     console.log('Total de chatrooms: ', querySnapshot.size)
+    //     querySnapshot.forEach((doc) => {
+    //     console.log(doc.id, ' => ', doc.data());
+    //     });
+    // };
+    
+    // // Llama a la función en useEffect para obtener los chatRooms al cargar el componente
+    // useEffect(() => {
+    //     obtenerChatRooms();
+    // }, [database]);;
+
     return (
         <View style={styles.container}>
             {/* Header */}

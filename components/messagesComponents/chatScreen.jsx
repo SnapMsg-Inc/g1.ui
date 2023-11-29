@@ -20,7 +20,10 @@ import {
     addDoc,
     orderBy,
     query,
-    onSnapshot
+    onSnapshot,
+    getDoc,
+    setDoc,
+    doc
   } from 'firebase/firestore';
 import { database } from '../connectivity/firebase';
 
@@ -47,18 +50,30 @@ export default function ChatScreen({ navigation }) {
 
     useEffect(() => {
         const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+        const chatRoomRef = doc(database, `chatrooms/${chatRoomUid}`);
+        
+        const checkAndCreateChatRoom = async () => {
+            const docSnap = await getDoc(chatRoomRef);
+            
+            if (!docSnap.exists()) {
+                await setDoc(chatRoomRef, { /* initial fields and values */ });
+            }
+        };
+        
+        checkAndCreateChatRoom();
+        
         const collectionRef = collection(database, `chatrooms/${chatRoomUid}/messages`);
         const q = query(collectionRef, orderBy('createdAt', 'desc'));
-    
+        
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        setMessages(
-            querySnapshot.docs.map((doc) => ({
-            _id: doc.data()._id,
-            createdAt: doc.data().createdAt.toDate(),
-            text: doc.data().text,
-            user: doc.data().user,
-            }))
-        );
+            setMessages(
+                querySnapshot.docs.map((doc) => ({
+                _id: doc.data()._id,
+                createdAt: doc.data().createdAt.toDate(),
+                text: doc.data().text,
+                user: doc.data().user,
+                }))
+            );
         });
         
         return unsubscribe;
@@ -73,10 +88,10 @@ export default function ChatScreen({ navigation }) {
     
         // Añadir mensaje a la colección del chatRoom específico
         addDoc(collection(database, `chatrooms/${chatRoomUid}/messages`), {
-        _id,
-        createdAt,
-        text,
-        user
+            _id,
+            createdAt,
+            text,
+            user
         });
     
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
