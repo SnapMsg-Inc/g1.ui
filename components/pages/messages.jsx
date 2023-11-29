@@ -34,6 +34,9 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { database } from '../connectivity/firebase';
 
 const calculateTime = (time) => {
+    if (!time) {
+        return '';
+    }
     const currentTime = new Date().getTime();
     const elapsedTime = (currentTime / 1000) - (time.seconds)
     const seconds = Math.floor(elapsedTime);        
@@ -93,12 +96,12 @@ export default function Messages({ navigation }) {
                     nick: user.nick,
                     pic: user.pic,
                     messageTime: calculateTime(lastMessageCreatedAt),
-                    messageText: lastMessage,
+                    messageText: lastMessage ? lastMessage : '',
                 };
             })
         );
 
-        setChatRooms(otherUsersData);
+        otherUsersData ? setChatRooms(otherUsersData) : setChatRooms([]);
         setIsLoading(false);
     };
 

@@ -49,18 +49,20 @@ export default function ChatScreen({ navigation }) {
 
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
+    const checkAndCreateChatRoom = async () => {
         const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
         const chatRoomRef = doc(database, `chatrooms/${chatRoomUid}`);
+        const docSnap = await getDoc(chatRoomRef);
         
-        const checkAndCreateChatRoom = async () => {
-            const docSnap = await getDoc(chatRoomRef);
-            
-            if (!docSnap.exists()) {
-                await setDoc(chatRoomRef, { /* initial fields and values */ });
-            }
-        };
-        
+        if (!docSnap.exists()) {
+            await setDoc(doc(database, "chatrooms", chatRoomUid), {
+                "chatRoomUid": chatRoomUid,
+            });
+        }
+    };
+
+    useEffect(() => {
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
         checkAndCreateChatRoom();
         
         const collectionRef = collection(database, `chatrooms/${chatRoomUid}/messages`);
@@ -80,13 +82,15 @@ export default function ChatScreen({ navigation }) {
         return unsubscribe;
     }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
-    const onSend = useCallback((messages = []) => {
+    const onSend = useCallback(async (messages = []) => {
         const { createdAt, text, user } = messages[0];
         // el mensaje necesita un id unico para ser guardado en la base de datos
         const _id = createdAt.getTime().toString();
     
         const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
-    
+        
+        // Wait for the chatroom to be created before updating it
+        await checkAndCreateChatRoom();
         // Añadir mensaje a la colección del chatRoom específico
         addDoc(collection(database, `chatrooms/${chatRoomUid}/messages`), {
             _id,
