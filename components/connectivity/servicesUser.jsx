@@ -586,6 +586,7 @@ export const SendNotificationFollow = (uid) => {
         method: 'post',
         url: `${URL}/notify-follow/${'New%Follow'}/${uid}/`,
     })
+}
 
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const auth = getAuth();
@@ -680,15 +681,15 @@ export async function GetTrendings(maxResults = 100, page = 0) {
     const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/trendings?limit=${maxResults}&page=${page}`;
 
     try {
-    const response = await axios({
-        method: 'get',
-        url: urlWithQueryParams,
-        headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-        }
-    });
-    return response.data;
+        const response = await axios({
+            method: 'get',
+            url: urlWithQueryParams,
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+            }
+        });
+        return response.data;
     } catch (error) {
         console.log(JSON.stringify(error.response, null, 2));
     }

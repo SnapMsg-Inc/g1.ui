@@ -2,8 +2,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import Config from 'react-native-config';
 import { Alert, PermissionsAndroid } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+
+PushNotification.createChannel({
+        channelId: 'fcm_fallback_notification_channel', // (required)
+        channelName: 'My channel', // (required)
+    },
+    created => console.log(`createChannel returned '${created}'`),
+);
 
 // request permission for notification message
 export const requestUserPermission = async () => {
@@ -39,15 +47,25 @@ export const getFcmToken = async () => {
 
 messaging().onMessage(async remoteMessage => {
     console.log(remoteMessage)
-    Alert.alert(`${remoteMessage.notification.title}`, 
-                JSON.stringify(remoteMessage.notification.body),
-                [{ text: 'OK' }],
-                { cancelable: false })
+    // Alert.alert(`${remoteMessage.notification.title}`, 
+    //             JSON.stringify(remoteMessage.notification.body),
+    //             [{ text: 'OK' }],
+    //             { cancelable: false })
     addedNotifications(remoteMessage)
+
+    PushNotification.localNotification({
+        channelId: 'fcm_fallback_notification_channel', // (required)
+        channelName: 'My channel',
+        message: remoteMessage.notification.body,
+        title: remoteMessage.notification.title,
+        bigPictureUrl: remoteMessage.notification.android.imageUrl,
+        smallIcon: remoteMessage.notification.android.imageUrl,
+    })
 });
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
+    console.log(remoteMessage.data)
     addedNotifications(remoteMessage)
 });
 
