@@ -95,6 +95,35 @@ export async function GetUserByUid(setState, uid) {
     });
 }
 
+export async function GetUserDataByUid(uid) {
+    const auth = getAuth();
+    const token = await getIdToken(auth.currentUser, false);
+  
+    const queryParams = {
+      uid: uid,
+      maxResults: 1,
+      pages: 1,
+    };
+
+    const queryString = new URLSearchParams(queryParams).toString();
+  
+    const urlWithQueryParams = `${URL}?${queryString}`;
+  
+    try {
+        const response = await axios({
+            method: 'get',
+            url: urlWithQueryParams,
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+            }
+        });
+        return response.data[0];
+    } catch (error) {
+        console.log(JSON.stringify(error.response, null, 2));
+    }
+}
+
 export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
     const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);

@@ -8,16 +8,13 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     RefreshControl,
-    TouchableWithoutFeedback,
     FlatList } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Octicons } from '@expo/vector-icons';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import { GetUserDataByUid } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
-import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
+import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/appColors/appColors';
 import SnapMsg from '../common/SnapMsg';
 import { FontAwesome5 } from 'react-native-vector-icons';
 import NewMessageButton from '../buttons/buttonNewMessage';
@@ -36,71 +33,61 @@ import { getFirestore } from "firebase/firestore";
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { database } from '../connectivity/firebase';
 
-const MOCK_MESSAGES = [
-    {
-        uid: '1',
-        alias: 'Jenny Doe',
-        nick: 'la jenny',
-        pic: '',
-        messageTime: '4 mins ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '2',
-        alias: 'John Doe',
-        nick: 'lil jhon',
-        pic: '',
-        messageTime: '2 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '3',
-        alias: 'Ken William',
-        nick: 'ken',
-        pic: '',
-        messageTime: '1 hours ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '4',
-        alias: 'Selina Paul',
-        nick: 'seli',
-        pic: '',
-        messageTime: '1 day ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-    {
-        uid: '5',
-        alias: 'Christy Alex',
-        nick: 'chris',
-        pic: '',
-        messageTime: '2 days ago',
-        messageText:
-            'Hey there, this is my test for a post of my social app in React Native.',
-    },
-  ];
-
 export default function Messages({ navigation }) {
     const { userData } = useContext(LoggedUserContext)
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [chatRooms, setChatRooms] = useState([]);
+
+    const obtenerChatRooms = async () => {
+        setIsLoading(true);
+        const chatroomsRef = collection(database, 'chatrooms');
+        const querySnapshot = await getDocs(chatroomsRef);
     
-    // // Agrega esta función al código de tu componente ChatScreen
-    // const obtenerChatRooms = async () => {
-    //     const chatroomsRef = collection(database, 'chatrooms');
-    //     const querySnapshot = await getDocs(chatroomsRef);
-    //     console.log('Total de chatrooms: ', querySnapshot.size)
-    //     querySnapshot.forEach((doc) => {
-    //     console.log(doc.id, ' => ', doc.data());
-    //     });
-    // };
-    
-    // // Llama a la función en useEffect para obtener los chatRooms al cargar el componente
-    // useEffect(() => {
-    //     obtenerChatRooms();
-    // }, [database]);;
+        const chatRoomArray = querySnapshot.docs.map((doc) => ({
+          chatRoomUid: doc.id,
+        }));
+
+        // Me quedo solo con mis chatRooms
+        const chatRoomFiltrados = chatRoomArray.filter(
+            ({ chatRoomUid }) => chatRoomUid.includes(userData.uid));
+        
+        // Obtengo los uids de los usuarios con los que tengo chatRooms
+        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid }) => {
+            const otrosUid = chatRoomUid.split('_').filter(uid => uid !== userData.uid);
+            return {"uid": otrosUid[0]};
+        });
+        
+        // Obtengo los datos de los usuarios con los que tengo chatRooms
+        const otherUsersData = await Promise.all(
+            otherUidArray.map(async ({ uid }) => {
+                const user = await GetUserDataByUid(uid);
+                return {
+                    uid: user.uid,
+                    alias: user.alias,
+                    nick: user.nick,
+                    pic: user.pic,
+                    messageTime: '2 days ago',
+                    messageText:
+                        'testing...',
+                };
+            })
+        );
+
+        setChatRooms(otherUsersData);
+        setIsLoading(false);
+    };
+
+    handleRefresh = async () => {
+        setIsRefreshing(true);
+        await obtenerChatRooms();
+        setIsRefreshing(false);
+    };
+
+    useEffect(() => {
+        obtenerChatRooms();
+    }, [database]);;
 
     return (
         <View style={styles.container}>
@@ -121,28 +108,35 @@ export default function Messages({ navigation }) {
                     <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
-            {/* Messages */}
-            <View style={stylesMessages.container}>
-                <FlatList
-                    data={MOCK_MESSAGES}
-                    renderItem={({ item }) =>
-                        <MessageCard data={item}/>
-                    }
-                    // onEndReached={fetchDataFromApi}
-                    // onEndReachedThreshold={0.10}
-                    // ListFooterComponent={renderLoader}
-                    // refreshControl={
-                        //     <RefreshControl
-                    //         refreshing={isRefreshing}
-                    //         onRefresh={handleRefresh}
-                    //         progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
-                    //         colors={[colorApp]}
-                    //         tintColor={colorApp}
-                    //         size={"large"}
-                    //     />
-                    // }
-                />
-            </View>
+            {/* ChatRooms */}
+            {
+                chatRooms?.length > 0 ? (
+                    <View style={stylesMessages.container}>
+                        <FlatList
+                            data={chatRooms}
+                            renderItem={({ item }) =>
+                                <MessageCard data={item}/>
+                            }
+                            refreshControl={
+                                    <RefreshControl
+                                    refreshing={isRefreshing}
+                                    onRefresh={handleRefresh}
+                                    progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                                    colors={[colorApp]}
+                                    tintColor={colorApp}
+                                    size={"large"}
+                                />
+                            }
+                        />
+                    </View>
+                ) : (
+                    <View style={{padding: 10}}>
+                        <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
+                        <Text style={{color: colorText, fontSize: 16}}>
+                            Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
+                        </Text>
+                    </View>)
+            }
             <NewMessageButton onPress={() => navigation.navigate('SearchUserScreen')}/>
         </View>
     )
