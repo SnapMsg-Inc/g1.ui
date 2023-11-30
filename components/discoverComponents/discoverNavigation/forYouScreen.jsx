@@ -58,7 +58,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
 			let urlWithQueryParams;
 			searchQuery !== null ? 
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?text=${searchQuery}` :
+				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?text=${encodeURIComponent(searchQuery)}` :
 				// TODO: si search query == null entonces tengo que usar el endp de recommended users
 				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
 
@@ -133,66 +133,63 @@ const ForYouScreen = ({searchQuery=null}) => {
 							data={fullPosts}
 							ListHeaderComponent={() => {
 								return (
-									<View>
-										{
-											searchQuery ? (
-												users && users.length > 0 ? (
-													<Text style={styles.text}>
-														People
-													</Text>
-												) : <></>
-											) : (
-												users && users.length > 0 ? (
-													<Text style={styles.text}>
-														Who to follow
-													</Text>
-												) : <></>
-											)
-										}
-										{
-											users && users.length === 0 ? (
-												fullPosts && fullPosts.length === 0 ? (
-													<View style={{marginVertical: 10}}>
-														<View>
-															<Text style={styles.text}>
-																No results for {searchQuery}
-															</Text>
-															<Text style={styles.textAlt}>
-																Try searching for something else!
-															</Text>
-														</View>	
+									<>
+										{(users.length > 0) ? (
+										<View style={{marginVertical: 10}}>
+											<Text style={styles.text}>
+												{searchQuery ? 'People' : 'Who to follow'}
+											</Text>
+											<Carousel
+												loop={false}
+												width={width}
+												data={users}
+												height={180}
+												sliderWidth={300}
+												itemWidth={300}
+												scrollAnimationDuration={1000}
+												renderItem={({ item }) => (
+													<View style={{
+														backgroundColor: colorBackground,
+														marginLeft: 5,
+														marginRight: 5, }}>
+														<RecommendedUserCard 
+															uid={item.uid}
+															alias={item.alias}
+															nick={item.nick}
+															interests={item.interests}
+															pic={item.pic}
+														/>
 													</View>
-												) : <></>
+												)}
+												/>
+										</View>
+										) : (
+											fullPosts.length > 0 ? (
+												<View style={{marginVertical: 10}}>
+													<Text style={styles.text}>
+														Not users found for {searchQuery}
+													</Text>
+													<Text style={styles.textAlt}>
+														Try searching for something else!
+													</Text>
+													<Text style={styles.textRelatedPosts}>
+														Related posts:
+													</Text>
+												</View>
 											) : (
 												<View style={{marginVertical: 10}}>
-													<Carousel
-														loop={false}
-														width={width}
-														data={users}
-														height={180}
-														sliderWidth={300}
-														itemWidth={300}
-														scrollAnimationDuration={1000}
-														renderItem={({ item }) => (
-															<View style={{
-																backgroundColor: colorBackground,
-																marginLeft: 5,
-																marginRight: 5, }}>
-																<RecommendedUserCard 
-																	uid={item.uid}
-																	alias={item.alias}
-																	nick={item.nick}
-																	interests={item.interests}
-																	pic={item.pic}
-																/>
-															</View>
-														)}
-													/>
+													<Text style={styles.text}>
+														No results for {searchQuery}
+													</Text>
+													<Text style={styles.textAlt}>
+														Try searching for something else!
+													</Text>
 												</View>
 											)
+										)
 										}
-									</View>
-								)
+									</>									
+									)
 							}}
 							renderItem={({ item }) =>
 								"post" in item ? (
