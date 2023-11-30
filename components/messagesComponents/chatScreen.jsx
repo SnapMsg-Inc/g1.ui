@@ -54,11 +54,19 @@ export default function ChatScreen({ navigation }) {
         const chatRoomRef = doc(database, `chatrooms/${chatRoomUid}`);
         const docSnap = await getDoc(chatRoomRef);
         
+        // If the chatroom doesn't exist, create it
         if (!docSnap.exists()) {
             await setDoc(doc(database, "chatrooms", chatRoomUid), {
                 "chatRoomUid": chatRoomUid,
+                ["readBy_" + userData.uid]: true,
+                ["readBy_" + data.uid]: false,
             });
         }
+
+        // Update the readBy field of the chatroom
+        await updateDoc(chatRoomRef, {
+            ["readBy_" + userData.uid]: true,
+          });
     };
 
     useEffect(() => {
@@ -84,14 +92,15 @@ export default function ChatScreen({ navigation }) {
 
     const onSend = useCallback(async (messages = []) => {
         const { createdAt, text, user } = messages[0];
-        // el mensaje necesita un id unico para ser guardado en la base de datos
+        // The message ID must be unique so we use a timestamp
         const _id = createdAt.getTime().toString();
     
         const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
         
         // Wait for the chatroom to be created before updating it
         await checkAndCreateChatRoom();
-        // Añadir mensaje a la colección del chatRoom específico
+
+        // Add the message to the chatroom messages collection
         addDoc(collection(database, `chatrooms/${chatRoomUid}/messages`), {
             _id,
             createdAt,
@@ -99,10 +108,11 @@ export default function ChatScreen({ navigation }) {
             user
         });
         
-        // Actualizar el campo lastMessage del chatRoom
+        // Update the chatroom fields
         updateDoc(doc(database, `chatrooms/${chatRoomUid}`), {
             lastMessage: text,
             lastMessageCreatedAt: createdAt,
+            ["readBy_" + data.uid]: false,
         });
 
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
