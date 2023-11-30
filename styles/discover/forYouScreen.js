@@ -21,7 +21,15 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: colorText,
 		marginHorizontal: 10,
+	},
+	textRelatedPosts: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: colorWhite,
+		marginHorizontal: 10,
+		paddingTop: 10
 	}
+	
 });
 
 export default styles;
