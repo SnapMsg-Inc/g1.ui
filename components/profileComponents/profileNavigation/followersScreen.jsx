@@ -33,13 +33,12 @@ const FollowersScreen = ({ navigation, uid }) => {
             if (newFollowers.length > 0) {
                 setCurrentPage(1);
             } else {
-                console.log("All data loaded")
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
         } catch (error) {
-            console.log(error.response.status)
-            // TODO: CATCHEAR ESTE ERROR (GATEWAY CAIDO) EN TODOS LADOS!!!!!!!
+            console.error(error.response.status)
+
             if (error.response.status === 502)
                 alert('Services not available.\nPlease retry again later')
 
@@ -83,9 +82,7 @@ const FollowersScreen = ({ navigation, uid }) => {
 
 	useFocusEffect(
         React.useCallback(() => {
-			console.log("entro")
 			if (followers.length) {
-				console.log("followers: ", followers.length)
 				setFollowers([])
 		 	}
           	fetchInitialFollowersFromApi()

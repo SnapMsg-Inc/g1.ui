@@ -35,7 +35,6 @@ export default function AllNotificationScreen({ navigation }) {
 
     useEffect(() => {
         getNotifications();
-        console.log(notifications)
     }, [])
 
     return (

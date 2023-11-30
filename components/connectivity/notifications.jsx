@@ -22,7 +22,6 @@ export const requestUserPermission = async () => {
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-        console.log('permission')
         getFcmToken();
     }
 };
@@ -30,27 +29,20 @@ export const requestUserPermission = async () => {
 // get fcmToken to send notification
 export const getFcmToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
-    console.log('fcmtoken ',fcmToken)
     if (!fcmToken) {
         try {
             const token = await messaging().getToken({vapidKey: Config.MESSAGING_API_KEY});
             
             if (token) {
-                console.log('messaging', token)
                 await AsyncStorage.setItem('fcmToken', token);
             }
         } catch (error) {
-            console.log(`Can not get fcm token ${error}`);
+            console.error(`Can not get fcm token ${error}`);
         }
     }
 }
 
 messaging().onMessage(async remoteMessage => {
-    console.log(remoteMessage)
-    // Alert.alert(`${remoteMessage.notification.title}`, 
-    //             JSON.stringify(remoteMessage.notification.body),
-    //             [{ text: 'OK' }],
-    //             { cancelable: false })
     addedNotifications(remoteMessage)
 
     PushNotification.localNotification({
@@ -64,8 +56,6 @@ messaging().onMessage(async remoteMessage => {
 });
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
-    console.log(remoteMessage.data)
     addedNotifications(remoteMessage)
 });
 
@@ -73,7 +63,6 @@ const addedNotifications = async (msg) => {
     let notificationsArray = await AsyncStorage.getItem('notifications');
     notificationsArray = notificationsArray ? JSON.parse(notificationsArray) : [];
 
-    console.log('antes ', JSON.stringify(notificationsArray))
     notificationsArray.unshift({
         'key': msg.sentTime,
         'title': msg.notification.title,
@@ -83,8 +72,7 @@ const addedNotifications = async (msg) => {
     if (notificationsArray.length > 10) {
         notificationsArray.pop();
     }
-      
-    console.log('despues ',JSON.stringify(notificationsArray))
+
     await AsyncStorage.setItem('notifications', JSON.stringify(notificationsArray));
 }
  

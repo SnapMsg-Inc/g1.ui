@@ -52,7 +52,6 @@ export const AuthenticationContextProvider = ({children}) => {
                     } 
                     AsyncStorage.getItem('fcmToken')
                     .then(token => {
-                        console.log('token', token)
                         RegisterTokenDevice(token)
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
@@ -100,7 +99,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
                     })
                     .catch((error) => {
-                        console.log(error.response.status)
+                        console.error(error.response.status)
                         if (error.response.status === 502)
                             alert('Services not available.\nPlease retry again later')
                         else if (error.response.status === 404){
@@ -133,7 +132,7 @@ export const AuthenticationContextProvider = ({children}) => {
             setIsLoading(false)
             navigateTo()
         }).catch((error) => {
-            console.log('register', error.code);
+            console.error('register', error.code);
             dispatchSignedIn({type: 'SIGN_OUT'})
             alert('Email already in use')
             setError(true)
@@ -161,7 +160,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         setIsLoading(false)
                     })
                     .catch((error) => {
-                        console.log(error.response.status)
+                        console.error(error.response.status)
                         if (error.response.status === 502){
                             alert('Services not available.\nPlease retry again later')
                             DeleteUserFirebase()
@@ -170,7 +169,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         } else {
                             const {user} = currentUser 
                             user.givenName = user.givenName.replace(/ /g, '_')
-                            console.log(JSON.stringify(user,null,2))
+
                             const today = new Date()
                             postsUserFederate({
                                 "fullname": user.name,

@@ -36,9 +36,6 @@ const SearchScreen = () => {
 
 	const handleSearch = (query) => {
 		const text = query.replace(/\s/g, '')
-		if (text == '') {
-			console.log("text sin espacio")
-		}
 
 		setSearchQuery(text);
 		setShowFlatList(text.length > 0)

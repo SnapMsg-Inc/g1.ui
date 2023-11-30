@@ -24,11 +24,10 @@ const TrendingScreen = () => {
             ReverseGeocode(coordinates)
             .then((address) => {
                 const { city, country } = address[0]
-                console.log(`city ${city} country ${country}`)
                 setLocality(city)
                 setCountryLocate(country)
             }).catch((error) => {
-                console.log(error)
+                console.error(error)
             })
         }
         GetPermission()

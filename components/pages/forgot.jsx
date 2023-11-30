@@ -16,7 +16,6 @@ export default function ForgotPassword({navigation}) {
 
     const handleForgot = () => {
         if (ValidateForgot(email, setEmailError)) {
-            console.log('email', email)
             ResetPassword(email)
             .then(() => {
                 Alert.alert(

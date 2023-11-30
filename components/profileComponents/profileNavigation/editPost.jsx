@@ -41,7 +41,6 @@ const EditPost = ({ navigation }) => {
         })
         .then((image) => {
             if (!image.cancelled) {
-                console.log(image);
                 const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
                 setImage(imageUri);
             }
@@ -148,15 +147,12 @@ const EditPost = ({ navigation }) => {
     
         setUploading(true);
         setTransferred(0);
-        console.log("file: ", filename)
+
         const storageRef = storage().ref(`photos/${filename}`);
         const task = storageRef.putFile(uploadUri);
     
         // Set transferred state
         task.on('state_changed', (taskSnapshot) => {
-        console.log(
-            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-        );
     
         setTransferred(
             Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
@@ -179,7 +175,7 @@ const EditPost = ({ navigation }) => {
         return url;
     
         } catch (e) {
-            console.log(e);
+            console.error(e);
         return null;
         }
     

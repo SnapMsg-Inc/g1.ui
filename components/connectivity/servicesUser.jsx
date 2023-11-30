@@ -20,7 +20,7 @@ export async function GetUsers(setState, query) {
         setState(response.data)
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -54,7 +54,7 @@ export async function GetUserData(state) {
         })
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -91,7 +91,7 @@ export async function GetUserByUid(setState, uid) {
       });
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -120,7 +120,7 @@ export async function GetUserDataByUid(uid) {
         });
         return response.data[0];
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -142,7 +142,7 @@ export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
 
     return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -163,7 +163,7 @@ export async function GetUserFollowsByUid(setState, uid) {
         setState(response.data);
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     });
 }
 
@@ -180,10 +180,10 @@ export const postsUser = async (data) => {
         } 
     })
     .then((response) => {
-        console.log('User create')
+        console.log("User created");
     })
     . catch((error) => {
-        console.log(error.response.status)
+        console.error(error.response.status)
         deleteUser(auth.currentUser)
     })
 }
@@ -224,7 +224,7 @@ export async function deleteUserFollowByUid(uid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -251,7 +251,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
         if (error.response.status === 404 && error.response.data.detail === 'follow does not exist') {
             setIsFollowing(false)
         } else {
-            console.log(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response, null, 2))
             setIsFollowing(false)
         }
     }
@@ -270,10 +270,8 @@ export async function followUserByUid(uid) {
                 'Content-Type': 'application/json'
             }
         });
-        SendNotificationFollow(uid)
-        .catch((error) => console.log(error.response))
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -302,7 +300,7 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
         console.log("Post created")
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -323,7 +321,7 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     });
     return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -343,7 +341,7 @@ export async function GetFavPosts(maxResults = 100, page = 0) {
     });
     return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -361,7 +359,7 @@ export async function addPostToFav(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -379,7 +377,7 @@ export async function deletePostFromFav(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -400,7 +398,7 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     });
     return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -418,7 +416,7 @@ export async function likePost(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -436,7 +434,7 @@ export async function unlikePost(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -457,7 +455,7 @@ export async function GetRecommendedPosts(setState, uid, maxResults, page) {
         setState(response.data)
     })
     . catch((error) => {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     })
 }
 
@@ -474,7 +472,7 @@ export async function deletePost(pid) {
             }
         });
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -496,7 +494,7 @@ export async function PatchPostData(data, pid) {
         })
         return true
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -536,7 +534,7 @@ export async function checkIfUserLiked(setIsLiked, pid) {
         if (error.response.status === 404) {
             setIsLiked(false)
         } else {
-            console.log(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response, null, 2))
             setIsLiked(false)
         }
     }
@@ -565,7 +563,7 @@ export async function checkIfUserFaved(setIsFaved, pid) {
         if (error.response.status === 404) {
             setIsFaved(false)
         } else {
-            console.log(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response, null, 2))
             setIsFaved(false)
         }
     }
@@ -609,7 +607,7 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     });
     return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }
 
@@ -627,7 +625,7 @@ export async function snapSharePost(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -645,7 +643,7 @@ export async function deletePostFromSnapshared(pid) {
             }
         });
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response, null, 2))
     }
 }
 
@@ -672,7 +670,7 @@ export async function checkIfUserSnapShared(setIsSnapshared, pid) {
         if (error.response.status === 404) {
             setIsSnapshared(false)
         } else {
-            console.log(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response, null, 2))
             setIsSnapshared(false)
         }
     }
@@ -695,6 +693,6 @@ export async function GetTrendings(maxResults = 100, page = 0) {
         });
         return response.data;
     } catch (error) {
-        console.log(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response, null, 2));
     }
 }

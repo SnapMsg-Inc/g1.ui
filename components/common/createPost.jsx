@@ -34,7 +34,6 @@ const CreatePostScreen = ({ navigation }) => {
         })
         .then((image) => {
             if (!image.cancelled) {
-                console.log(image);
                 const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
                 setImage(imageUri);
             }
@@ -55,7 +54,6 @@ const CreatePostScreen = ({ navigation }) => {
         })
         .then((image) => {
             if (!image.cancelled) {
-                console.log(image);
                 const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
                 setImage(imageUri);
             }
@@ -81,7 +79,6 @@ const CreatePostScreen = ({ navigation }) => {
 
     const submitPost = async () => {
         const imageUrl = await uploadImage();
-        console.log(imageUrl)
         const uri = imageUrl ? [imageUrl] : [];
         createPost(text, uri, !isPublic, hashtags)
         .then(() => {
@@ -101,7 +98,7 @@ const CreatePostScreen = ({ navigation }) => {
             setText(null);
         })
         .catch((error) => {
-            console.log(error)
+            console.error(error)
         })
     }
 
@@ -125,9 +122,6 @@ const CreatePostScreen = ({ navigation }) => {
     
         // Set transferred state
         task.on('state_changed', (taskSnapshot) => {
-        console.log(
-            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-        );
     
         setTransferred(
             Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
@@ -146,7 +140,7 @@ const CreatePostScreen = ({ navigation }) => {
         return url;
     
         } catch (e) {
-            console.log(e);
+            console.error(e);
         return null;
         }
     

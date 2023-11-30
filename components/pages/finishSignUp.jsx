@@ -30,7 +30,7 @@ function FinishSignUp({ navigation }) {
                 markRegisterComplete()
             })
             .catch((error) => {
-                console.log(error)
+                console.error(error)
             }) 
         })
     }
@@ -39,8 +39,6 @@ function FinishSignUp({ navigation }) {
         if (step === 1)
             GeocodeWithLocalityAndCountry(locality, countryLocate, setCoordinates)
             .then((geocodeLocation)=> {
-                console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-                console.log('lenght ', geocodeLocation.length)
                 if (geocodeLocation.length === 0)
                     setCoordinates({ 'latitude': 0, 'longitude': 0})
                 else {
@@ -49,7 +47,7 @@ function FinishSignUp({ navigation }) {
                 }
             })
             .catch((error) => {
-                console.log(error)
+                console.error(error)
             })
         setStep(step + 1)
     };
@@ -63,16 +61,14 @@ function FinishSignUp({ navigation }) {
         ReverseGeocode(coordinates)
         .then((address)=> {
             const { city, country } = address[0]
-            console.log(`city ${city} country ${country}`)
             setLocality(city)
             setCountryLocate(country)
         }).catch((error) => {
-            console.log(error)
+            console.error(error)
         })
     }
     
     useEffect(() => {
-        console.log('useEffect')
         const setLocation = () => {
             CurrentPosition({
                 accuracy: Location.Accuracy.High,
@@ -81,7 +77,6 @@ function FinishSignUp({ navigation }) {
                 const { coords } = location
                 const { latitude, longitude} = coords
                 setCoordinates({'latitude': latitude, 'longitude': longitude})
-                console.log(`longitude ${JSON.stringify(coordinates)} `)
             })  
         }
         GetPermission()
