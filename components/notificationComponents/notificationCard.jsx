@@ -25,7 +25,9 @@ const NotificationCard = ({ data }) => {
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
 
-        if (minutes < 60) {
+        if (seconds < 60) {
+            setMessageDay(`${seconds} second${seconds !== 1 ? 's' : ''} ago`);
+        } else if (minutes < 60) {
             setMessageDay(`${minutes} minute${minutes !== 1 ? 's' : ''} ago`);
         } else if (hours < 24) {
             setMessageDay(`${hours} hour${hours !== 1 ? 's' : ''} ago`);

@@ -112,8 +112,14 @@ export default function Messages({ navigation }) {
     };
 
     useEffect(() => {
-        obtenerChatRooms();
-    }, [database]);;
+        const chatRoomsRef = collection(database, 'chatrooms');
+
+        const unsubscribe = onSnapshot(chatRoomsRef, () => {
+            obtenerChatRooms();
+        });
+
+        return () => unsubscribe();
+    }, [database ]);
 
     return (
         <View style={styles.container}>
