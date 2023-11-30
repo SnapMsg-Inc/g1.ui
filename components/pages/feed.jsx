@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, View, Text, Pressable, TouchableOpacity, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,8 +10,10 @@ import PostButton from '../buttons/buttonPost';
 import styles from '../../styles/feed/feed';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import SnapMsg from '../common/SnapMsg';
+import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 
 export default function Feed({ navigation }) {
+    const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
     const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +74,7 @@ export default function Feed({ navigation }) {
     useFocusEffect(
         React.useCallback(() => {
             fetchInitialPostsFromApi();
+            fetchUserDataFromApi();
         }, [])
     );
 

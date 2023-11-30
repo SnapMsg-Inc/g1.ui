@@ -32,6 +32,7 @@ import {
 import { getFirestore } from "firebase/firestore";
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { database } from '../connectivity/firebase';
+import { useFocusEffect } from '@react-navigation/native';
 
 const calculateTime = (time) => {
     if (!time) {
@@ -56,8 +57,8 @@ const calculateTime = (time) => {
 }
 
 export default function Messages({ navigation }) {
-    const { userData } = useContext(LoggedUserContext)
-    const [isLoading, setIsLoading] = useState(false);
+    const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+    const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [chatRooms, setChatRooms] = useState([]);
@@ -111,6 +112,12 @@ export default function Messages({ navigation }) {
         setIsRefreshing(false);
     };
 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUserDataFromApi();
+        }, [])
+    );
+
     useEffect(() => {
         const chatRoomsRef = collection(database, 'chatrooms');
 
@@ -119,7 +126,7 @@ export default function Messages({ navigation }) {
         });
 
         return () => unsubscribe();
-    }, [database ]);
+    }, [database]);
 
     return (
         <View style={styles.container}>
@@ -143,7 +150,6 @@ export default function Messages({ navigation }) {
             {/* ChatRooms */}
             {
                 isLoading ? (<ActivityIndicator size="large" color={colorApp} />) : (
-                    
                         <View style={stylesMessages.container}>
                             <FlatList
                                 data={chatRooms}
