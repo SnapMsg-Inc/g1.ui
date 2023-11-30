@@ -16,6 +16,7 @@ export default function AllNotificationScreen({ navigation }) {
 
     const getNotifications = async () => {
         try {
+            notifications.length > 0 ? setNotifications([]) : null;
             const notificationsArray = await AsyncStorage.getItem('notifications');
             if (notificationsArray) {
                 const parsedNotifications = JSON.parse(notificationsArray);
