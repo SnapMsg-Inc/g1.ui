@@ -72,6 +72,7 @@ export default function Messages({ navigation }) {
           chatRoomUid: doc.id,
           lastMessage: doc.data().lastMessage,
           lastMessageCreatedAt: doc.data().lastMessageCreatedAt,
+          readByMe: doc.data()["readBy_" + userData.uid],
         }));
 
         // Me quedo solo con mis chatRooms
@@ -79,17 +80,18 @@ export default function Messages({ navigation }) {
             ({ chatRoomUid }) => chatRoomUid.includes(userData.uid));
         
         // Obtengo los uids de los usuarios con los que tengo chatRooms
-        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage, lastMessageCreatedAt }) => {
+        const otherUidArray = chatRoomFiltrados.map(({ chatRoomUid, lastMessage, lastMessageCreatedAt, readByMe }) => {
             const otrosUid = chatRoomUid.split('_').filter(uid => uid !== userData.uid);
             return {"uid": otrosUid[0],
                     "lastMessage": lastMessage,
-                    "lastMessageCreatedAt": lastMessageCreatedAt
+                    "lastMessageCreatedAt": lastMessageCreatedAt,
+                    "readByMe": readByMe,
                 };
         });
 
         // Obtengo los datos de los usuarios con los que tengo chatRooms
         const otherUsersData = await Promise.all(
-            otherUidArray.map(async ({ uid, lastMessage, lastMessageCreatedAt }) => {
+            otherUidArray.map(async ({ uid, lastMessage, lastMessageCreatedAt, readByMe }) => {
                 const user = await GetUserDataByUid(uid);
                 return {
                     uid: user.uid,
@@ -98,6 +100,7 @@ export default function Messages({ navigation }) {
                     pic: user.pic,
                     messageTime: calculateTime(lastMessageCreatedAt),
                     messageText: lastMessage ? lastMessage : '',
+                    readByMe: readByMe,
                 };
             })
         );

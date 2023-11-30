@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const MAX_TEXT_LENGTH = 30;
+const MAX_TEXT_LENGTH = 20;
 
 const truncateText = (text) => {
 	if (text.length <= MAX_TEXT_LENGTH) {
@@ -49,7 +50,11 @@ const MessageCard = ({ data }) => {
                                         <Text style={stylesMessages.alias}>{truncateAlias(data.alias)}</Text>
                                         <Text style={stylesMessages.text}>{data.messageTime}</Text>
                                     </View>
-                                    <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text>
+                                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text>
+                                        {!data.readByMe && <Icon name="circle" size={15} color={colorApp} />}
+                                    </View>
+                                    {/* <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text> */}
                                 </View>
                             </View>
                         </View>
