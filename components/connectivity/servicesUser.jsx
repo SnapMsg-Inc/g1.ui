@@ -1,12 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, getIdToken, deleteUser } from 'firebase/auth'
 import axios from 'axios';
+import { auth, firebaseApp } from './firebase';
 
 const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
 const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 
 export async function GetUsers(setState, query) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     await axios({
@@ -25,7 +25,6 @@ export async function GetUsers(setState, query) {
 }
 
 export async function GetUserData(state) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     await axios({
@@ -59,7 +58,6 @@ export async function GetUserData(state) {
 }
 
 export async function GetUserByUid(setState, uid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const queryParams = {
@@ -96,7 +94,6 @@ export async function GetUserByUid(setState, uid) {
 }
 
 export async function GetUserDataByUid(uid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const queryParams = {
@@ -125,7 +122,6 @@ export async function GetUserDataByUid(uid) {
 }
 
 export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL}/${uid}/followers?limit=${maxResults}&page=${page}`;
@@ -147,7 +143,6 @@ export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
 }
 
 export async function GetUserFollowsByUid(setState, uid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
 	const urlWithQueryParams = `${URL}/${uid}/follows`
@@ -168,7 +163,6 @@ export async function GetUserFollowsByUid(setState, uid) {
 }
 
 export const postsUser = async (data) => {
-    const auth = getAuth()
     const token = await getIdToken(auth.currentUser, false)
     await axios({
         method: 'post',
@@ -211,7 +205,6 @@ export const PatchUser = (data, token) =>
     })
 
 export async function deleteUserFollowByUid(uid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const urlWithQueryParams = `${URL}/me/follows/${uid}`;
@@ -229,7 +222,6 @@ export async function deleteUserFollowByUid(uid) {
 }
 
 export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL}/${uid}/follows/${otherUid}`;
@@ -258,7 +250,6 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
 }
 
 export async function followUserByUid(uid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL}/me/follows/${uid}`;
@@ -277,7 +268,6 @@ export async function followUserByUid(uid) {
 
 
 export const createPost = async (text, pic, isPrivate, hashtags) => {
-    const auth = getAuth()
     const token = await getIdToken(auth.currentUser, false)
 
     const data = {
@@ -305,7 +295,6 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
 }
 
 export async function GetPosts(url, maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
     
     const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
@@ -326,7 +315,6 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
 }
 
 export async function GetFavPosts(maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
     const urlWithQueryParams = `${URL_POST}/favs?limit=${maxResults}&page=${page}`;
 
@@ -346,7 +334,6 @@ export async function GetFavPosts(maxResults = 100, page = 0) {
 }
 
 export async function addPostToFav(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
@@ -364,7 +351,6 @@ export async function addPostToFav(pid) {
 }
 
 export async function deletePostFromFav(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
@@ -382,7 +368,6 @@ export async function deletePostFromFav(pid) {
 }
 
 export async function GetFeedPosts(maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
     
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
@@ -403,7 +388,6 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
 }
 
 export async function likePost(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
@@ -421,7 +405,6 @@ export async function likePost(pid) {
 }
 
 export async function unlikePost(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
@@ -439,7 +422,6 @@ export async function unlikePost(pid) {
 }
 
 export async function GetRecommendedPosts(setState, uid, maxResults, page) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     let url = `${URL_POST}/recommended?limit=${maxResults}&page=${page}`;
@@ -460,7 +442,6 @@ export async function GetRecommendedPosts(setState, uid, maxResults, page) {
 }
 
 export async function deletePost(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/${pid}`;
@@ -477,7 +458,6 @@ export async function deletePost(pid) {
 }
 
 export async function PatchPostData(data, pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const url = `${URL_POST}/${pid}`;
@@ -498,7 +478,7 @@ export async function PatchPostData(data, pid) {
     }
 }
 
-export const GetToken = () => getIdToken(getAuth().currentUser, false) 
+export const GetToken = () => getIdToken(auth.currentUser, false) 
 
 export const GetMe = (token) => 
     axios({
@@ -512,7 +492,6 @@ export const GetMe = (token) =>
 
 
 export async function checkIfUserLiked(setIsLiked, pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/likes/${pid}`;
@@ -541,7 +520,6 @@ export async function checkIfUserLiked(setIsLiked, pid) {
 }
 
 export async function checkIfUserFaved(setIsFaved, pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/favs/${pid}`;
@@ -572,7 +550,6 @@ export async function checkIfUserFaved(setIsFaved, pid) {
 const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net'
 
 export const RegisterTokenDevice = (token) => {
-    const auth = getAuth()
     axios({
         method: 'post',
         url: `${URL_NOT}/register-token`,
@@ -591,7 +568,6 @@ export const SendNotificationFollow = (uid) => {
 }
 
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
@@ -612,7 +588,6 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
 }
 
 export async function snapSharePost(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
@@ -630,7 +605,6 @@ export async function snapSharePost(pid) {
 }
 
 export async function deletePostFromSnapshared(pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
   
     const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
@@ -648,7 +622,6 @@ export async function deletePostFromSnapshared(pid) {
 }
 
 export async function checkIfUserSnapShared(setIsSnapshared, pid) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL_POST}/snapshares/${pid}`;
@@ -677,7 +650,6 @@ export async function checkIfUserSnapShared(setIsSnapshared, pid) {
 }
 
 export async function GetTrendings(maxResults = 100, page = 0) {
-    const auth = getAuth();
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/trendings?limit=${maxResults}&page=${page}`;
