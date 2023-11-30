@@ -173,13 +173,6 @@ export const postsUser = async (data) => {
             'Content-Type': 'application/json'
         } 
     })
-    .then((response) => {
-        console.log("User created");
-    })
-    . catch((error) => {
-        console.error(error.response.status)
-        deleteUser(auth.currentUser)
-    })
 }
 
 export const postsUserFederate = (data, token) =>
