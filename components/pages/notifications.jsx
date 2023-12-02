@@ -3,12 +3,10 @@ import { StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
-import { useRoute } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/discover/discover';
 import NotificationHeader from '../notificationComponents/notificationHeader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AllNotificationScreen from '../notificationComponents/notificationNavigation/allNotifications';
 
 const tabBar = props => (
@@ -23,13 +21,13 @@ const tabBar = props => (
 );
 
 export default function Discover({ navigation }) {
-	const { fetchUserDataFromApi } = useContext(LoggedUserContext)
+	// const { fetchUserDataFromApi } = useContext(LoggedUserContext)
 
-	useFocusEffect(
-        React.useCallback(() => {              
-          	fetchUserDataFromApi()
-        }, [])
-    );
+	// useFocusEffect(
+    //     React.useCallback(() => {              
+    //       	fetchUserDataFromApi()
+    //     }, [])
+    // );
 
 	return (
 		<View style={styles.container}>

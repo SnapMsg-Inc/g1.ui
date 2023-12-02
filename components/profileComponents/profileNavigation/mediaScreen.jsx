@@ -30,7 +30,7 @@ const MediaScreen = ({url}) => {
             }
             setIsLoading(false);
         } catch (error) {
-            console.error('Error fetching initial posts:', error);
+            console.error('Error fetching initial posts:', error.response.status);
         }
     }
 
@@ -50,7 +50,7 @@ const MediaScreen = ({url}) => {
             }
             setIsLoadingMorePosts(false);
         } catch (error) {
-            console.error('Error fetching more posts:', error);
+            console.error('Error fetching more posts:', error.response.status);
         }
     }
 

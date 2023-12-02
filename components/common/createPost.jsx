@@ -227,7 +227,9 @@ const CreatePostScreen = ({ navigation }) => {
                             placeholderTextColor={colorText}
                             autoFocus
                             textAlignVertical="top"
+                            maxLength={300}
                         />
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 <View style={styles.hashtagsContainer}>

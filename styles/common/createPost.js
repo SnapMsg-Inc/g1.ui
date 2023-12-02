@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         flex: 1,
         color: colorWhite,
         textAlignVertical: 'top',
+        paddingHorizontal: 10,
     },
 	cancelButton: {
 		position: 'absolute',
