@@ -128,9 +128,18 @@ export const AuthenticationContextProvider = ({children}) => {
         CreateAccount(data.email, password)
         .then((userCredential) => {
             postsUser(data, false)
-            dispatchSignedIn({type: 'SIGN_UP'})
+            .then((response) => {
+                console.log("User created");
+                dispatchSignedIn({type: 'SIGN_UP'})
+                navigateTo()
+            })
+            . catch((error) => {
+                console.error(error.response.status)
+                if (error.response.status === 502)
+                    alert('Services not available.\nPlease retry again later')
+                deleteUser(auth.currentUser)
+            })
             setIsLoading(false)
-            navigateTo()
         }).catch((error) => {
             console.error('register', error.code);
             dispatchSignedIn({type: 'SIGN_OUT'})
@@ -179,7 +188,7 @@ export const AuthenticationContextProvider = ({children}) => {
                                     "latitude": 0,
                                     "longitude": 0
                                 },
-                                "ocupation": '',
+                                "ocupation": 'Not Found',
                                 "pic": user.photo,
                                 "email": user.email,
                                 "nick": user.givenName,

@@ -49,11 +49,11 @@ function SignUp({navigation}) {
                 "interests": [],
                 "zone": {"latitude": 0,
                         "longitude": 0},
-                "pic": "",
+                "pic": "https://firebasestorage.googleapis.com/v0/b/snap-msg.appspot.com/o/photos%2Fdefault.png?alt=media&token=f67f74e2-e9b6-4879-8ae1-637226214052",
                 "email": email,
                 "nick": nick,
                 "birthdate": date.toISOString().substring(0,10),
-                "ocupation": ''
+                "ocupation": 'Not Found'
             }
             onRegister(data, password, () => navigation.navigate('Finish'))
         }
