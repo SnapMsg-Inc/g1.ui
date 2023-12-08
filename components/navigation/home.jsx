@@ -17,6 +17,9 @@ import EditPost from '../profileComponents/profileNavigation/editPost';
 import { DiscoverButton, FeedButton, MessagesButton, NotificationsButton, ProfileButton } from './drawerNavigationDispatcher';
 import ChatScreen from '../messagesComponents/chatScreen';
 import SearchUserScreen from '../messagesComponents/searchUser';
+import { StatusBar } from 'react-native';
+import { useTheme } from '../color/themeContext';
+import { colorApp, colorBackground, colorWhite } from '../../styles/appColors/appColors';
 
 const FeedStack = createStackNavigator();
 
@@ -139,71 +142,78 @@ function MessagesStackScreen() {
 const Drawer = createDrawerNavigator();
 
 export default function Home() {
+	const { theme } = useTheme()
 	return (
-		<Drawer.Navigator
-			initialRouteName='Feed'
-			drawerContent={props => <CustomDrawer {...props} />}
-			screenOptions={{
-			drawerActiveTintColor: '#ffffff',
-			drawerInactiveTintColor: '#ffffff',
-			drawerLabelStyle: {
-				marginLeft: -25,
-				fontSize: 15,
-			},
-			swipeEdgeWidth: 150,            
-			}}
-			>
-			<Drawer.Screen
-				name="Profile"
-				component={ProfileStackScreen}
-				options={({ navigation }) => ({
-					headerShown: false,
-					drawerLabel: () => (
-					<ProfileButton navigation={navigation} />
-					),
-				})}
-			/>
-			<Drawer.Screen
-				name="Feed"
-				component={FeedStackScreen}
-				options={({ navigation }) => ({
-					headerShown: false,
-					drawerLabel: () => (
-					<FeedButton navigation={navigation} />
-					),
-				})}
-			/>
-			<Drawer.Screen
-				name="Discover"
-				component={DiscoverStackScreen}
-				initialParams={{data:"your props"}}
-				options={({ navigation }) => ({
-					headerShown: false,
-					drawerLabel: () => (
-					<DiscoverButton navigation={navigation} />
-					),
-				})}
-			/>
-			<Drawer.Screen
-				name="Notifications"
-				component={Notifications}
-				options={({ navigation }) => ({
-					headerShown: false,
-					drawerLabel: () => (
-					<NotificationsButton navigation={navigation} />
-					),
-				})}
-			/>
-			<Drawer.Screen
-				name="Messages"
-				component={MessagesStackScreen}
-				options={({ navigation }) => ({
-					headerShown: false,
-					drawerLabel: () => (
-					<MessagesButton navigation={navigation} />
-					),
-				})}
-			/>
-		</Drawer.Navigator>
+		<>
+			<StatusBar
+                backgroundColor={theme.backgroundColor === colorBackground ? colorBackground : colorWhite }
+                barStyle={theme.backgroundColor === colorBackground ? 'light-content' : 'dark-content'}
+            />
+			<Drawer.Navigator
+				initialRouteName='Feed'
+				drawerContent={props => <CustomDrawer {...props} />}
+				screenOptions={{
+				drawerActiveTintColor: '#ffffff',
+				drawerInactiveTintColor: '#ffffff',
+				drawerLabelStyle: {
+					marginLeft: -25,
+					fontSize: 15,
+				},
+				swipeEdgeWidth: 150,            
+				}}
+				>
+				<Drawer.Screen
+					name="Profile"
+					component={ProfileStackScreen}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<ProfileButton navigation={navigation} />
+						),
+					})}
+				/>
+				<Drawer.Screen
+					name="Feed"
+					component={FeedStackScreen}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<FeedButton navigation={navigation} />
+						),
+					})}
+				/>
+				<Drawer.Screen
+					name="Discover"
+					component={DiscoverStackScreen}
+					initialParams={{data:"your props"}}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<DiscoverButton navigation={navigation} />
+						),
+					})}
+				/>
+				<Drawer.Screen
+					name="Notifications"
+					component={Notifications}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<NotificationsButton navigation={navigation} />
+						),
+					})}
+				/>
+				<Drawer.Screen
+					name="Messages"
+					component={MessagesStackScreen}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<MessagesButton navigation={navigation} />
+						),
+					})}
+				/>
+			</Drawer.Navigator>
+		</>
 	)
 }

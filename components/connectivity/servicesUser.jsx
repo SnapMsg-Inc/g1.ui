@@ -52,9 +52,9 @@ export async function GetUserData(state) {
             "follows": response.data.follows,
         })
     })
-    . catch((error) => {
-        console.error(JSON.stringify(error.response, null, 2))
-    })
+    // . catch((error) => {
+    //     console.error(JSON.stringify(error.response, null, 2))
+    // })
 }
 
 export async function GetUserByUid(setState, uid) {
@@ -365,7 +365,7 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     
     const url = `${URL_POST}/feed?limit=${maxResults}&page=${page}`;
 
-    try {
+    // try {
     const response = await axios({
         method: 'get',
         url: url,
@@ -375,9 +375,9 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2));
-    }
+    // } catch (error) {
+    //     console.error(JSON.stringify(error.response, null, 2));
+    // }
 }
 
 export async function likePost(pid) {
@@ -393,7 +393,7 @@ export async function likePost(pid) {
             }
         });
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     }
 }
 
@@ -410,7 +410,7 @@ export async function unlikePost(pid) {
             }
         });
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     }
 }
 
@@ -430,7 +430,7 @@ export async function GetRecommendedPosts(setState, uid, maxResults, page) {
         setState(response.data)
     })
     . catch((error) => {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     })
 }
 
@@ -446,7 +446,7 @@ export async function deletePost(pid) {
             }
         });
     } catch (error) {
-        console.error(error)
+        console.error(error.response.status)
     }
 }
 
@@ -467,7 +467,7 @@ export async function PatchPostData(data, pid) {
         })
         return true
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     }
 }
 
@@ -506,7 +506,7 @@ export async function checkIfUserLiked(setIsLiked, pid) {
         if (error.response.status === 404) {
             setIsLiked(false)
         } else {
-            console.error(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response.status, null, 2))
             setIsLiked(false)
         }
     }
@@ -534,7 +534,7 @@ export async function checkIfUserFaved(setIsFaved, pid) {
         if (error.response.status === 404) {
             setIsFaved(false)
         } else {
-            console.error(JSON.stringify(error.response, null, 2))
+            console.error(JSON.stringify(error.response.status, null, 2))
             setIsFaved(false)
         }
     }
@@ -576,7 +576,7 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     });
     return response.data;
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response.status, null, 2));
     }
 }
 
@@ -593,7 +593,7 @@ export async function snapSharePost(pid) {
             }
         });
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     }
 }
 
@@ -610,7 +610,7 @@ export async function deletePostFromSnapshared(pid) {
             }
         });
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2))
+        console.error(JSON.stringify(error.response.status, null, 2))
     }
 }
 
@@ -658,6 +658,6 @@ export async function GetTrendings(maxResults = 100, page = 0) {
         });
         return response.data;
     } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2));
+        console.error(JSON.stringify(error.response.status, null, 2));
     }
 }

@@ -7,6 +7,7 @@ import { requestUserPermission } from './components/connectivity/notifications';
 import { useEffect } from 'react';
 import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
+import { ThemeProvider } from './components/color/themeContext';
 
 export default function App() {
     useEffect(() => {
@@ -15,11 +16,13 @@ export default function App() {
 
     return (
         <AuthenticationContextProvider>
-            <LoggedUserContextProvider>
-                <SafeAreaView style={styles.container}>
-                    <Navigation/>
-                </SafeAreaView>
-            </LoggedUserContextProvider>
+            <ThemeProvider>
+                <LoggedUserContextProvider>
+                    <SafeAreaView style={styles.container}>
+                        <Navigation/>
+                    </SafeAreaView>
+                </LoggedUserContextProvider>
+            </ThemeProvider>
         </AuthenticationContextProvider>
     );
 }

@@ -1,11 +1,13 @@
 import React from 'react';
 import { Animated } from 'react-native';
 import { colorBackground } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 const HEADER_HEIGHT_EXPANDED = 75;
  
 const ProfileImage = ({ scrollY, uri}) => {
     const defaultImage = require('../../assets/default_user_pic.png')
+    const { theme } = useTheme()
 
 	return (
         <Animated.Image
@@ -17,7 +19,7 @@ const ProfileImage = ({ scrollY, uri}) => {
                 height: 75,
                 borderRadius: 40,
                 borderWidth: 4,
-                borderColor: colorBackground,
+                borderColor: theme.backgroundColor,
                 marginTop: -30,
                 transform: [
                 {

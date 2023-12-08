@@ -6,11 +6,12 @@ import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapShare from '../../common/snapShare';
+import { useTheme } from '../../color/themeContext';
 
 const PostsScreen = ({url}) => {
 	const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-
+    const { theme } = useTheme()
 	const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -79,7 +80,7 @@ const PostsScreen = ({url}) => {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>

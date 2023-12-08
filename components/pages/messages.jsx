@@ -91,7 +91,8 @@ export default function Messages({ navigation }) {
 
         // Obtengo los datos de los usuarios con los que tengo chatRooms
         const otherUsersData = await Promise.all(
-            otherUidArray.map(async ({ uid, lastMessage, lastMessageCreatedAt, readByMe }) => {
+            otherUidArray.sort((a, b) => { return a.lastMessageCreatedAt < b.lastMessageCreatedAt ? 1 : -1})
+            .map(async ({ uid, lastMessage, lastMessageCreatedAt, readByMe }) => {
                 const user = await GetUserDataByUid(uid);
                 return {
                     uid: user.uid,

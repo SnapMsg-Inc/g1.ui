@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { colorText, colorWhite } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 const ProfileStats = ({ navigation, data }) => {
+    const { theme } = useTheme()
 	return (
         <View
             style={{
@@ -20,7 +22,7 @@ const ProfileStats = ({ navigation, data }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                         style={{
-                            color: colorWhite,
+                            color: theme.whiteColor,
                             fontWeight: 'bold',
                             marginRight: 5,
                         }}
@@ -46,7 +48,7 @@ const ProfileStats = ({ navigation, data }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text
                     style={{
-                        color: colorWhite,
+                        color: theme.whiteColor,
                         fontWeight: 'bold',
                         marginRight: 5,
                     }}

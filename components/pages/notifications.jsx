@@ -8,21 +8,21 @@ import { colorApp, colorText, colorBackground } from '../../styles/appColors/app
 import styles from '../../styles/discover/discover';
 import NotificationHeader from '../notificationComponents/notificationHeader';
 import AllNotificationScreen from '../notificationComponents/notificationNavigation/allNotifications';
-
-const tabBar = props => (
-	<MaterialTabBar
-		{...props}
-		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
-		style={styles.tabBar}
-		activeColor={colorApp}
-		inactiveColor={colorText} 
-		labelStyle={styles.label}
-	/>
-);
+import { useTheme } from '../color/themeContext';
 
 export default function Discover({ navigation }) {
-	// const { fetchUserDataFromApi } = useContext(LoggedUserContext)
-
+    const { theme } = useTheme()
+    
+    const tabBar = props => (
+        <MaterialTabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
+            style={[styles.tabBar, {backgroundColor: theme.backgroundColor}]}
+            activeColor={colorApp}
+            inactiveColor={colorText} 
+            labelStyle={styles.label}
+        />
+    );
 	// useFocusEffect(
     //     React.useCallback(() => {              
     //       	fetchUserDataFromApi()
@@ -30,7 +30,7 @@ export default function Discover({ navigation }) {
     // );
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.Container
                 tabContainerStyle={styles.tabContainer}
                 renderHeader={() => (

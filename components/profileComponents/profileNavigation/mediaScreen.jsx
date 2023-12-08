@@ -5,11 +5,12 @@ import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '../../color/themeContext';
 
 const MediaScreen = ({url}) => {
   const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-
+    const { theme } = useTheme()
 	const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -77,7 +78,7 @@ const MediaScreen = ({url}) => {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
@@ -101,7 +102,7 @@ const MediaScreen = ({url}) => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={"large"}

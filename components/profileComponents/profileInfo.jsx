@@ -5,17 +5,19 @@ import ProfileStats from '../profileComponents/profileStats';
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import ProfileBanner from './profileBanner';
 import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
 
 const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
+    const { theme } = useTheme()
 	return (
         <View
             style={{
                 flex: 1,
                 paddingHorizontal: 20,
-                backgroundColor: colorBackground,
+                backgroundColor: theme.backgroundColor,
             }}
         >
             {/* Banner */}
@@ -30,7 +32,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
         
              <Text
             style={{
-                color: colorWhite,
+                color: theme.whiteColor,
                 fontSize: 24,
                 fontWeight: 'bold',
                 marginTop: 10,
@@ -62,7 +64,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
             
             <Text
                 style={{
-                    color: colorWhite,
+                    color: theme.whiteColor,
                     marginBottom: 15, fontSize: 15 
                 }}
             >

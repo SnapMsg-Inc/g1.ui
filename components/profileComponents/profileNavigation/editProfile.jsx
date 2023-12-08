@@ -27,11 +27,12 @@ import { ValidateEdit } from "../../forms/validations";
 import { colorApp, colorBackground, colorText, colorWhite } from "../../../styles/appColors/appColors";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Preferences from "../../pages/preferences";
+import { useTheme } from "../../color/themeContext";
 
 function EditProfile({navigation}) {
     const route = useRoute();
 	const { data } = route.params;
-
+    const { theme } = useTheme()
     const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
     const [aliasError, setAliasError] = useState(null)
@@ -210,7 +211,7 @@ function EditProfile({navigation}) {
     }, [GetPermission])
 
     return (
-        <ScrollView style={stylesEditProfile.container}>
+        <ScrollView style={[stylesEditProfile.container, { backgroundColor: theme.backgroundColor }]}>
             <View style={stylesEditProfile.header}>
                 <Image source={{ uri: image }} style={stylesEditProfile.image}/>
                 <Pressable
@@ -344,7 +345,7 @@ function EditProfile({navigation}) {
                 onReqestClose={() => setIsEditInterests(false)}
             >
                 <TouchableWithoutFeedback onPress={() => setIsEditInterests(false)}>
-                    <View style={stylesEditProfile.preferencesContainer}>
+                    <View style={[stylesEditProfile.preferencesContainer, { backgroundColor: theme.backgroundColor }]}>
                         <Preferences list={interestsList} setList={setInterestsList}/>
                         <View style={stylesEditProfile.footer}>
                             <AcceptButton onPress={() => setIsEditInterests(false)} text={'Accept'}/>
