@@ -40,14 +40,15 @@ const Profile = ({ navigation }) => {
 	
 	useEffect(()=>{
         const setData = () => {
-            ReverseGeocode(coordinates)
-            .then((address) => {
-                const { city, country } = address[0]
-                setLocality(city)
-                setCountryLocate(country)
-            }).catch((error) => {
-                console.error(error)
-            })
+			if (coordinates.latitude !== 0 && coordinates.longitude !== 0)
+				ReverseGeocode(coordinates)
+				.then((address) => {
+					const { city, country } = address[0]
+					setLocality(city)
+					setCountryLocate(country)
+				}).catch((error) => {
+					console.error(error)
+				})
         }
         GetPermission()
         .then((location) => {

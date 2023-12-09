@@ -4,7 +4,7 @@ import { colorBackground, colorApp, colorText, colorWhite } from '../../styles/a
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [darkMode, setDarkMode] = useState(false);
+    const [darkMode, setDarkMode] = useState(true);
 
     const theme = {
         backgroundColor: darkMode ? colorBackground : colorWhite,

@@ -33,8 +33,8 @@ export const LoggedUserContextProvider = ({children}) => {
         })
         .catch((error) => {
             console.error('Error fetching user data:', error.response.status);
-            if (error.response.status === 502)
-                alert('Services not available.\nPlease retry again later')
+            // if (error.response.status === 502)
+            //     alert('Services not available.\nPlease retry again later')
             setIsLoadingUserData(false)
         })
     }

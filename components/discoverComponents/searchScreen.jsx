@@ -35,12 +35,11 @@ const SearchScreen = () => {
     }
 
 	const handleSearch = (query) => {
-		const text = query.replace(/\s/g, '')
+		const text = query //.replace(/\s/g, '')
 
 		setSearchQuery(text);
 		setShowFlatList(text.length > 0)
 
-		
 		const formattedQuery = text.toLowerCase();
 		
 		if (formattedQuery.length == 1) {

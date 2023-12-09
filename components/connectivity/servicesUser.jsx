@@ -9,19 +9,20 @@ const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
 export async function GetUsers(setState, query) {
     const token = await getIdToken(auth.currentUser, false);
 
-    await axios({
+    const response = await axios({
         method: 'get',
         url: `${URL}${query}`,
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
-    }).then((response) => {
-        setState(response.data)
     })
-    . catch((error) => {
-        console.error(JSON.stringify(error.response, null, 2))
-    });
+    
+    if (response) 
+        setState(response.data)
+    // . catch((error) => {
+    //     console.error(JSON.stringify(error.response, null, 2))
+    // });
 }
 
 export async function GetUserData(state) {
@@ -295,7 +296,7 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     
     const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    try {
+    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -305,16 +306,16 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2));
-    }
+//     } catch (error) {
+//         console.error(JSON.stringify(error.response, null, 2));
+//     }
 }
 
 export async function GetFavPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
     const urlWithQueryParams = `${URL_POST}/favs?limit=${maxResults}&page=${page}`;
 
-    try {
+    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -324,9 +325,9 @@ export async function GetFavPosts(maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    } catch (error) {
-        console.error(JSON.stringify(error.response, null, 2));
-    }
+    // } catch (error) {
+    //     console.error(JSON.stringify(error.response, null, 2));
+    // }
 }
 
 export async function addPostToFav(pid) {
@@ -543,26 +544,45 @@ export async function checkIfUserFaved(setIsFaved, pid) {
     }
 }
 
-const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net'
+const URL_NOT = 'https://api-gateway-marioax.cloud.okteto.net'
 
-export const RegisterTokenDevice = (token) =>
-    axios.post(`${URL_NOT}/register-token`,
-        {
+export const RegisterTokenDevice = (token, deviceToken) =>
+    axios({
+        method: 'post',
+        url:`${URL_NOT}/messages/register-token`,
+        data: {
             "user_id": auth.currentUser.uid,
-            "token": token
+            "token": deviceToken
+        },
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
-    )
+    })
 
 export const SendNotificationFollow = (nick, uid) =>
     axios.post(`${URL_NOT}/notify-follow/${nick}/${uid}`,{})
 
+export const SendNotificationMessage = (token, uid, userUid, text) => 
+    axios({
+        method: 'post',
+        url: `${URL_NOT}/messages/notify-message`,
+        data: {
+            "message_content": text,
+            "receiver_id": uid,
+            "sender_alias": userUid,
+        },
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
 
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
-
     const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
 
-    try {
+    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -572,9 +592,9 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    } catch (error) {
-        console.error(JSON.stringify(error.response.status, null, 2));
-    }
+    // } catch (error) {
+    //     console.error(JSON.stringify(error.response.status, null, 2));
+    // }
 }
 
 export async function snapSharePost(pid) {
@@ -633,7 +653,7 @@ export async function checkIfUserSnapShared(setIsSnapshared, pid) {
         if (error.response.status === 404) {
             setIsSnapshared(false)
         } else {
-            console.error(JSON.stringify(error.response, null, 2))
+            console.error('Error in snapshare', JSON.stringify(error.response.status, null, 2))
             setIsSnapshared(false)
         }
     }

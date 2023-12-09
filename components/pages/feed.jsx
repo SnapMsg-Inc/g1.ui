@@ -14,6 +14,7 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useTheme } from '../color/themeContext';
 
 export default function Feed({ navigation }) {
+    const { handleUpdateData } = useContext(LoggedUserContext)
     const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -38,16 +39,15 @@ export default function Feed({ navigation }) {
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
-            // setIsLoadingError(true)
-            // setMessageError([{message: 'Services not available.\nPlease retry again later'}])
         } catch (error) {
             console.error('Error fetching initial posts in feed:', error.response.status);
-            if (error.response.status === 502)
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
                 setMessageError([{message: 'Services not available.\nPlease retry again later'}])
             setIsLoading(false);
             setIsLoadingError(true)
         }
-        
     }
 
     const fetchDataFromApi = async () => {
@@ -66,8 +66,12 @@ export default function Feed({ navigation }) {
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching data:', error.response.status);
-            if (error.response.status === 502)
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
                 setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -75,6 +79,8 @@ export default function Feed({ navigation }) {
         if (isRefreshing) {
             return;
         }
+        if (isLoadingError)
+            handleUpdateData()
         setIsRefreshing(true);
         await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
@@ -83,7 +89,6 @@ export default function Feed({ navigation }) {
     useFocusEffect(
         React.useCallback(() => {
             fetchInitialPostsFromApi();
-            // fetchUserDataFromApi();
         }, [])
     );
 
@@ -154,6 +159,7 @@ export default function Feed({ navigation }) {
                             username={item.nick}
                             content={item.text}
                             date={item.timestamp}
+                            reposts={item.snapshares}
                             likes={item.likes}
                             picUri={item.media_uri}
                         />

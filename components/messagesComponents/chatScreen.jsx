@@ -28,6 +28,7 @@ import {
   } from 'firebase/firestore';
 import { database } from '../connectivity/firebase';
 import { useTheme } from '../color/themeContext';
+import { GetToken, SendNotificationMessage } from '../connectivity/servicesUser';
 
 const generateChatRoomUid = (uid1, uid2) => {
     // Ordena los IDs de usuario para garantizar consistencia.
@@ -115,8 +116,15 @@ export default function ChatScreen({ navigation }) {
             lastMessageCreatedAt: createdAt,
             ["readBy_" + data.uid]: false,
         });
-
+        
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
+        GetToken()
+        .then(token => {
+            console.log(token)
+            SendNotificationMessage(token, data.uid, userData.alias, text)
+            .then(response => console.log('Send notification message ', response.status))
+            .catch(error => console.log('Error send notification message ', error.response))
+        })
     }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
     const renderSend = (props) => {
