@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { PermissionsAndroid, SafeAreaView, StyleSheet } from 'react-native';
 import { AuthenticationContextProvider } from './components/connectivity/auth/authenticationContext';
 import { Navigation } from './components/navigation/navigation';
 import { LoggedUserContextProvider } from './components/connectivity/auth/loggedUserContext';
@@ -11,6 +11,10 @@ import { ThemeProvider } from './components/color/themeContext';
 
 export default function App() {
     useEffect(() => {
+        PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        ]);
         requestUserPermission()
     }, []);
 

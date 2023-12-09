@@ -6,14 +6,17 @@ import { Octicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles/discover/discoverHeader';
 import { colorText, colorApp, colorBackground } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 export default function DiscoverHeader({ navigation }) {
+    const { theme } = useTheme()
+
     const handleSearchPress = () => {
         navigation.navigate('SearchScreen');
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <TouchableHighlight onPress={handleSearchPress}>
                 <View style={styles.header}>
                     <TouchableHighlight

@@ -50,10 +50,13 @@ export const AuthenticationContextProvider = ({children}) => {
                         return
                     } 
                     AsyncStorage.getItem('fcmToken')
-                    .then(token => {
-                        RegisterTokenDevice(token)
-                        .then(response => console.log('Token device updated ', response.status))
-                        .catch(error => console.log('Error token device ', error.response.status))
+                    .then(deviceToken => {
+                        GetToken()
+                        .then(token => {
+                            RegisterTokenDevice(token, deviceToken)
+                            .then(response => console.log('Token device updated ', response.status))
+                            .catch(error => console.log('Error token device ', error.response.status))
+                        })
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
                 } else {
