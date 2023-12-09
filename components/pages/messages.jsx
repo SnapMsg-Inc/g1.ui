@@ -33,6 +33,7 @@ import { getFirestore } from "firebase/firestore";
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { database } from '../connectivity/firebase';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '../color/themeContext';
 
 const calculateTime = (time) => {
     if (!time) {
@@ -57,7 +58,8 @@ const calculateTime = (time) => {
 }
 
 export default function Messages({ navigation }) {
-    const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+    const { userData } = useContext(LoggedUserContext)
+    const { theme } = useTheme()
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -116,12 +118,6 @@ export default function Messages({ navigation }) {
         setIsRefreshing(false);
     };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchUserDataFromApi();
-        }, [])
-    );
-
     useEffect(() => {
         const chatRoomsRef = collection(database, 'chatrooms');
 
@@ -133,7 +129,7 @@ export default function Messages({ navigation }) {
     }, [database]);
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableHighlight
@@ -154,13 +150,13 @@ export default function Messages({ navigation }) {
             {/* ChatRooms */}
             {
                 isLoading ? (<ActivityIndicator size="large" color={colorApp} />) : (
-                        <View style={stylesMessages.container}>
+                        <View style={[stylesMessages.container, {backgroundColor: theme.backgroundColor}]}>
                             <FlatList
                                 data={chatRooms}
                                 ListHeaderComponent={
                                     chatRooms?.length > 0 ? ( <></> ) : (
                                         <View style={{padding: 10}}>
-                                            <Text style={{color: colorWhite, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
+                                            <Text style={{color: theme.whiteColor, fontSize: 22, fontWeight:'bold'}}>Welcome to your inbox!</Text>
                                             <Text style={{color: colorText, fontSize: 16}}>
                                                 Looks like you don't have any messages yet! Try reaching out and connecting with others on private conversations on SnapMsg.
                                             </Text>

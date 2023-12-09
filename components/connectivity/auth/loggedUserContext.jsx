@@ -29,7 +29,6 @@ export const LoggedUserContextProvider = ({children}) => {
         setIsLoadingUserData(true)
         await GetUserData(setUserData)
         .then(() => {
-            console.log('loggedContext')
             setIsLoadingUserData(false)
         })
         .catch((error) => {
@@ -39,6 +38,9 @@ export const LoggedUserContextProvider = ({children}) => {
             setIsLoadingUserData(false)
         })
     }
+
+    const handleUpdateData = () => 
+        fetchUserDataFromApi()
 
     useEffect(() => {
         if (isAuthenticated)
@@ -52,6 +54,7 @@ export const LoggedUserContextProvider = ({children}) => {
                     userData,
                     isLoadingUserData,
                     fetchUserDataFromApi,
+                    handleUpdateData
                 }
             } 
         >

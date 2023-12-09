@@ -12,6 +12,7 @@ import Preferences from "./preferences";
 import { GetToken, PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
+import { useTheme } from "../color/themeContext";
 
 function FinishSignUp({ navigation }) {
     const [countryLocate, setCountryLocate] = useState('')
@@ -20,6 +21,7 @@ function FinishSignUp({ navigation }) {
     const [interestsList, setInterestsList] = useState([])
     const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
     const { markRegisterComplete } = useContext(AuthenticationContext)
+    const { theme } = useTheme()
 
     const handleAccept = async() => {
         GetToken()
@@ -94,7 +96,7 @@ function FinishSignUp({ navigation }) {
     },[GetPermission])
 
     return(
-        <View style={stylesSetup.container}>
+        <View style={[stylesSetup.container, {backgroundColor: theme.backgroundColor}]}>
             <View style={stylesSetup.header}>
                 <Logo/>
             </View>
@@ -108,7 +110,7 @@ function FinishSignUp({ navigation }) {
                 (<Preferences list={interestsList} setList={setInterestsList}/>) 
             }
             <View style={[stylesSetup.footer, step === 1 ? stylesSetup.footerFirst : null]}>
-                {step === 2 ? <TouchableHighlight onPress={handleBack}>
+                {step === 2 ? <TouchableHighlight onPress={handleBack} underlayColor={'transparent'}>
                     <View style={stylesSetup.buttonBack}>
                         <Icon name="chevron-left" color={colorText} size={20}/>
                         <Text style={stylesSetup.text}>Back</Text>

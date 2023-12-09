@@ -13,7 +13,6 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as Location from 'expo-location'
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestUserPermission } from "../notifications";
 
 export const AuthenticationContext = createContext()
 
@@ -53,6 +52,8 @@ export const AuthenticationContextProvider = ({children}) => {
                     AsyncStorage.getItem('fcmToken')
                     .then(token => {
                         RegisterTokenDevice(token)
+                        .then(response => console.log('Token device updated ', response.status))
+                        .catch(error => console.log('Error token device ', error.response.status))
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
                 } else {

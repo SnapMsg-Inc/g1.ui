@@ -63,11 +63,11 @@ const Profile = ({ navigation }) => {
         })
     }, [GetPermission])
 	
-	useFocusEffect(
-        React.useCallback(() => {
-          	fetchUserDataFromApi()
-        }, [])
-    );
+	// useFocusEffect(
+    //     React.useCallback(() => {
+    //       	fetchUserDataFromApi()
+    //     }, [])
+    // );
 	
 	const scrollY = useRef(new Animated.Value(0)).current;
 	

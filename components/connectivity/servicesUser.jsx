@@ -242,7 +242,7 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
     }
 }
 
-export async function followUserByUid(uid) {
+export async function followUserByUid(uid, nick) {
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL}/me/follows/${uid}`;
@@ -254,6 +254,9 @@ export async function followUserByUid(uid) {
                 'Content-Type': 'application/json'
             }
         });
+        SendNotificationFollow(nick, uid)
+        .then(response => console.log('Notify send ', response.status))
+        .catch(error => console.log('Failed send notification ', error.response.status))
     } catch (error) {
         console.error(JSON.stringify(error.response, null, 2))
     }
@@ -542,23 +545,17 @@ export async function checkIfUserFaved(setIsFaved, pid) {
 
 const URL_NOT = 'https://messages-ms-messages-ms-marioax.cloud.okteto.net'
 
-export const RegisterTokenDevice = (token) => {
-    axios({
-        method: 'post',
-        url: `${URL_NOT}/register-token`,
-        data:  {
+export const RegisterTokenDevice = (token) =>
+    axios.post(`${URL_NOT}/register-token`,
+        {
             "user_id": auth.currentUser.uid,
             "token": token
         }
-    })
-}
+    )
 
-export const SendNotificationFollow = (uid) => {
-    axios({
-        method: 'post',
-        url: `${URL}/notify-follow/${'New%Follow'}/${uid}/`,
-    })
-}
+export const SendNotificationFollow = (nick, uid) =>
+    axios.post(`${URL_NOT}/notify-follow/${nick}/${uid}`,{})
+
 
 export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
@@ -570,8 +567,8 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
         method: 'get',
         url: urlWithQueryParams,
         headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     });
     return response.data;

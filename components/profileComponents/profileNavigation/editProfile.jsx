@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     TouchableOpacity
   } from "react-native";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Input from "../../forms/input";
 import stylesEditProfile from "../../../styles/profile/setupProfile";
 import AcceptButton from "../../buttons/buttonAcept";
@@ -28,11 +28,13 @@ import { colorApp, colorBackground, colorText, colorWhite } from "../../../style
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Preferences from "../../pages/preferences";
 import { useTheme } from "../../color/themeContext";
+import { LoggedUserContext } from "../../connectivity/auth/loggedUserContext";
 
 function EditProfile({navigation}) {
     const route = useRoute();
 	const { data } = route.params;
     const { theme } = useTheme()
+    const { handleUpdateData } = useContext(LoggedUserContext)
     const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
     const [aliasError, setAliasError] = useState(null)
@@ -152,6 +154,7 @@ function EditProfile({navigation}) {
                     PatchUser(data, token)
                     .then((response) => {
                         setTimeout(() => navigation.goBack(), 500)
+                        handleUpdateData()
                     })
                     .catch(() => {
                         Alert('Error in edit profile')

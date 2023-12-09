@@ -27,18 +27,20 @@ function Inits({navigation}) {
                     {"the latest"}
                 </Text>
                 <TouchableHighlight style={stylesInits.touchable} 
-                                    onPress={onPressSignUp}>
+                                    onPress={onPressSignUp}
+                                    underlayColor={'transparent'}>
                     <View style={stylesInits.btnSignUp}>
                         <Text style={stylesInits.fontSignUp}>
                             Sign up
                         </Text>
                     </View>
                 </TouchableHighlight>
-                <Text style={stylesInits.fontSugestion}>
+                <Text style={[stylesInits.fontSugestion, {color: theme.whiteColor}]}>
                     Have an account already?
                 </Text>
                 <TouchableHighlight style={stylesInits.touchable}
-                                    onPress={onPressSignIn}>
+                                    onPress={onPressSignIn}
+                                    underlayColor={'transparent'}>
                     <View style={stylesInits.btnSignIn}>
                         <Text style={stylesInits.fontSignIn}>
                             Sign in

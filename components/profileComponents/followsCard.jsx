@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import stylesFollow from '../../styles/buttons/buttonFollow';
-import { deleteUserFollowByUid } from '../connectivity/servicesUser';
+import { deleteUserFollowByUid, followUserByUid } from '../connectivity/servicesUser';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/profile/followsCard';
@@ -32,7 +32,8 @@ const FollowsCard = ({ uid, alias, nick, interests, pic }) => {
 
     const handleToggleFollow = () => {
 		// Lógica para cambiar el estado de seguimiento (following o not following)
-		deleteUserFollowByUid(uid);
+		isFollowing ? deleteUserFollowByUid(uid) : followUserByUid(uid, userData.nick)
+		// deleteUserFollowByUid(uid);
 		setIsFollowing(!isFollowing);
 	};
 
