@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput,
-    TouchableHighlight, ScrollView, Alert, ActivityIndicator, } from 'react-native';
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, Pressable, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -15,6 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styles from '../../styles/common/createPost';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { MentionInput, Suggestion } from 'react-native-controlled-mentions';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
@@ -24,8 +25,9 @@ const CreatePostScreen = ({ navigation }) => {
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
     const [hashtags, setHashtags] = useState([]);
+    const [mentions, setMentions] = useState([]);
     const [isPublic, setIsPublic] = useState(true);
-
+   
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
             width: 1200,
@@ -66,15 +68,20 @@ const CreatePostScreen = ({ navigation }) => {
         });
     };
     
-    const extractHashtags = (inputText) => {
+    const extractMentionsAndHashtags = (inputText) => {
         const hashtagRegex = /#[^\s#]+/g;
-        const extractedHashtags = inputText.match(hashtagRegex);
-        setHashtags(extractedHashtags || []);
+        const mentionRegex = /@[^\s@]+/g;
+    
+        const extractedHashtags = inputText.match(hashtagRegex) || [];
+        const extractedMentions = inputText.match(mentionRegex) || [];
+    
+        setHashtags(extractedHashtags);
+        setMentions(extractedMentions);
     };
-
+    
     const handleTextChange = (content) => {
         setText(content);
-        extractHashtags(content);
+        extractMentionsAndHashtags(content);
     };
 
     const submitPost = async () => {
@@ -169,6 +176,47 @@ const CreatePostScreen = ({ navigation }) => {
         isPublic ? setIsPublic(false) : setIsPublic(true);
     }
 
+    
+    const users = [
+        { id: '1', name: 'David Tabaka' },
+        { id: '2', name: 'Mary' },
+        { id: '3', name: 'Tony' },
+        { id: '4', name: 'Mike' },
+        { id: '5', name: 'Grey' },
+    ];
+    
+    const hashtags2 = [
+        { id: 'todo', name: 'todo' },
+        { id: 'help', name: 'help' },
+        { id: 'loveyou', name: 'loveyou' },
+    ];
+    
+    const renderSuggestions = (suggestions) => ({ keyword, onSuggestionPress }) => {
+        if (keyword == null) {
+        return null;
+        }
+    
+        return (
+            <View>
+                {suggestions
+                .filter((one) =>
+                    one.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
+                )
+                .map((one) => (
+                    <Pressable
+                        key={one.id}
+                        onPress={() => onSuggestionPress(one)}
+                        style={{ padding: 5 }}>
+                        <Text style={{color: colorText}}>{one.name}</Text>
+                    </Pressable>
+                ))}
+            </View>
+        );
+    };
+    
+    const renderMentionSuggestions = renderSuggestions(users);
+    const renderHashtagSuggestions = renderSuggestions(hashtags2);
+      
 	return (
 		<View style={styles.container}>
             <View style={styles.header}>
@@ -217,18 +265,37 @@ const CreatePostScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             )
                         }
-                        <TextInput
+                        <MentionInput
+                            autoFocus
                             value={text}
-                            onChangeText={handleTextChange}
+                            onChange={handleTextChange}
+                            
+                            partTypes={[
+                                {
+                                trigger: '@',
+                                renderSuggestions: renderMentionSuggestions,
+                                textStyle: {color: colorApp},
+                                },
+                                {
+                                trigger: '#',
+                                allowedSpacesCount: 0,
+                                renderSuggestions: renderHashtagSuggestions,
+                                textStyle: {color: colorApp},
+                                },
+                                {
+                                pattern: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.(xn--)?[a-z0-9-]{2,20}\b([-a-zA-Z0-9@:%_\+\[\],.~#?&\/=]*[-a-zA-Z0-9@:%_\+\]~#?&\/=])*/gi,
+                                textStyle: {color: colorApp},
+                                },
+                            ]}
+                            
                             placeholder="What's happening?"
                             multiline
-                            numberOfLines={5}
+                            numberOfLines={10}
                             style={styles.textInput}
                             placeholderTextColor={colorText}
-                            autoFocus
                             textAlignVertical="top"
                             maxLength={300}
-                        />
+                            />
                         <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
                 </View>
