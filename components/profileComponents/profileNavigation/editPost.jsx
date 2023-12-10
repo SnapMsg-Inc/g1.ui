@@ -241,14 +241,14 @@ const EditPost = ({ navigation }) => {
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
-                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} />
+                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
-                                        <FontAwesome5 name="lock" color={'red'} size={16} />
+                                        <FontAwesome5 name="lock" color={'red'} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             )
@@ -265,7 +265,7 @@ const EditPost = ({ navigation }) => {
                             textAlignVertical="top"
                             maxLength={300}
                         />
-                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10, fontSize: 18}}>{text.length} / 300</Text>
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}

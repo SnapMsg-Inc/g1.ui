@@ -10,13 +10,20 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import BackButton from '../buttons/buttonBack';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
-import { createPost } from '../connectivity/servicesUser';
+import { useFocusEffect } from '@react-navigation/native';
+import { GetTrendings, GetUserFollowersByUid, createPost } from '../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styles from '../../styles/common/createPost';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
-import { MentionInput, Suggestion } from 'react-native-controlled-mentions';
+import {
+    MentionInput,
+    Suggestion,
+    replaceMentionValues,
+    parseValue,
+} from 'react-native-controlled-mentions';
 import { useTheme } from '../color/themeContext';
+import { set } from 'lodash';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
@@ -28,7 +35,9 @@ const CreatePostScreen = ({ navigation }) => {
     const [hashtags, setHashtags] = useState([]);
     const [mentions, setMentions] = useState([]);
     const [isPublic, setIsPublic] = useState(true);
-   
+    const [fullTrendings, setFullTrendings] = useState([]);
+    const [followers, setFollowers] = useState([])
+
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
             width: 1200,
@@ -73,22 +82,36 @@ const CreatePostScreen = ({ navigation }) => {
         const hashtagRegex = /#[^\s#]+/g;
         const mentionRegex = /@[^\s@]+/g;
     
-        const extractedHashtags = inputText.match(hashtagRegex) || [];
-        const extractedMentions = inputText.match(mentionRegex) || [];
-    
+        let extractedHashtags = inputText.match(hashtagRegex) || [];
+        extractedHashtags.map((item, index) => {
+            extractedHashtags[index] = replaceMentionValues(item, ({name}) => `#${name}`);
+        })
+
+        let extractedMentions = inputText.match(mentionRegex) || [];
+        extractedMentions.map((item, index) => {
+            extractedMentions[index] = replaceMentionValues(item, ({id}) => `${id}`);
+        })
+
+        console.log("HASHTAGS: ", extractedHashtags, "MENTIONS UID: ", extractedMentions)
         setHashtags(extractedHashtags);
         setMentions(extractedMentions);
     };
     
     const handleTextChange = (content) => {
-        setText(content);
         extractMentionsAndHashtags(content);
+        setText(content);
     };
 
     const submitPost = async () => {
         const imageUrl = await uploadImage();
         const uri = imageUrl ? [imageUrl] : [];
-        createPost(text, uri, !isPublic, hashtags)
+        console.log("CONTENT: ", text)
+        let value = replaceMentionValues(text, ({name, trigger}) => `${trigger}${name}`);
+        console.log("VALUE: ", value)
+        console.log("MENTIONS: ", mentions);
+        console.log("MENTIONS filter: ", mentions?.filter(item => !item.startsWith('@')));
+
+        createPost(value, uri, !isPublic, hashtags)
         .then(() => {
             Alert.alert(
                 'Post published!',
@@ -176,23 +199,8 @@ const CreatePostScreen = ({ navigation }) => {
     const handleToggleIsPublic = () => {
         isPublic ? setIsPublic(false) : setIsPublic(true);
     }
-
     
-    const users = [
-        { id: '1', name: 'David Tabaka' },
-        { id: '2', name: 'Mary' },
-        { id: '3', name: 'Tony' },
-        { id: '4', name: 'Mike' },
-        { id: '5', name: 'Grey' },
-    ];
-    
-    const hashtags2 = [
-        { id: 'todo', name: 'todo' },
-        { id: 'help', name: 'help' },
-        { id: 'loveyou', name: 'loveyou' },
-    ];
-    
-    const renderSuggestions = (suggestions) => ({ keyword, onSuggestionPress }) => {
+    const renderSuggestions = (suggestions, trigger) => ({ keyword, onSuggestionPress }) => {
         if (keyword == null) {
         return null;
         }
@@ -208,16 +216,57 @@ const CreatePostScreen = ({ navigation }) => {
                         key={one.id}
                         onPress={() => onSuggestionPress(one)}
                         style={{ padding: 5 }}>
-                        <Text style={{color: colorText}}>{one.name}</Text>
+                        <Text style={{color: colorText}}>{trigger}{one.name}</Text>
                     </Pressable>
                 ))}
             </View>
         );
     };
     
-    const renderMentionSuggestions = renderSuggestions(users);
-    const renderHashtagSuggestions = renderSuggestions(hashtags2);
-      
+    const renderMentionSuggestions = renderSuggestions(followers, '@');
+    const renderHashtagSuggestions = renderSuggestions(fullTrendings, '#');
+    
+    const fetchInitialTrendingsFromApi = async () => {
+        setFullTrendings([]);
+        try {
+            const newTrendings = await GetTrendings(100, 0)
+
+            if (newTrendings && newTrendings.length > 0) {
+                setFullTrendings(newTrendings.map((item) => ({id: item.topic.slice(1), name: item.topic.slice(1)})));
+            }
+        } catch (error) {
+            setFullTrendings([]);
+            console.error('Error fetching initial posts:', error);
+        }
+    }
+
+    const fetchInitialFollowersFromApi = async () => {
+        setFollowers([]);
+        try {
+            const newFollowers = await GetUserFollowersByUid(userData.uid, 100, 0)
+            if (newFollowers && newFollowers.length > 0) {
+                setFollowers(newFollowers.map((item) => ({id: item.uid, name: item.nick})));
+            }
+        } catch (error) {
+            setFollowers([]);
+            console.error('Error fetching initial posts:', error.response.status);
+            if (error.response.status === 502)
+                alert('Services not available.\nPlease retry again later')
+        }
+    }
+
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchInitialTrendingsFromApi();
+            if (followers.length) {
+				setFollowers([])
+		 	}
+          	fetchInitialFollowersFromApi()
+        }, [])
+    );
+
 	return (
 		<View style={[styles.container, { backgroundColor: theme.backgroundColor}]}>
             <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
@@ -254,14 +303,14 @@ const CreatePostScreen = ({ navigation }) => {
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
-                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} />
+                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
-                                        <FontAwesome5 name="lock" color={'red'} size={16} />
+                                        <FontAwesome5 name="lock" color={'red'} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             )
@@ -290,6 +339,8 @@ const CreatePostScreen = ({ navigation }) => {
                             ]}
                             
                             placeholder="What's happening?"
+                            isInsertSpaceAfterMention={false}
+                            isBottomMentionSuggestionsRender={false}
                             multiline
                             numberOfLines={10}
                             style={styles.textInput}
@@ -297,13 +348,8 @@ const CreatePostScreen = ({ navigation }) => {
                             textAlignVertical="top"
                             maxLength={300}
                         />
-                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10, fontSize: 18}}>{text.length} / 300</Text>
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
-                </View>
-                <View style={styles.hashtagsContainer}>
-                    {hashtags.map((hashtag, index) => (
-                        <Text key={index} style={styles.hashtagText}>{hashtag}</Text>
-                    ))}
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}
             </ScrollView>
