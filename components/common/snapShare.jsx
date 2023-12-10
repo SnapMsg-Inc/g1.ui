@@ -74,52 +74,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 		"follows": 0,
 	});
 
-	const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
-
-	// Agregar una referencia al botón de los tres puntos
-	const optionsButtonRef = useRef(null);
-	const [optionsPosition, setOptionsPosition] = useState({ x: 0, y: 0 });
-
-	const showOptionsMenu = () => {
-		// Obtener las coordenadas del botón de los tres puntos
-		optionsButtonRef.current.measure((fx, fy, width, height, px, py) => {
-			// Calcular la posición del menú de opciones
-			const menuX = px;
-			const menuY = py + height;
-			setOptionsPosition({ x: menuX, y: menuY });
-		});
-		setIsOptionsMenuVisible(true);
-	};
-
-	const hideOptionsMenu = () => {
-		setIsOptionsMenuVisible(false);
-	};
-
-	const editPost = () => {
-		// const postData = {
-		// 	pid: pid,
-		// 	content: content,
-		// 	picUri: picUri,
-		// }
-		// navigation.navigate('EditPost', {data:postData})
-		hideOptionsMenu();
-	};
-
-	const deleteSnap = () => {
-		// deletePost(pid)
-		// .then(() => {
-		// 	setIsLoading(false);
-		// 	hideOptionsMenu();
-		// })
-		// .catch((error) => {
-		// 	console.error('Error fetching other user data:', error);
-		// 	setIsLoading(false);
-		// });
-        hideOptionsMenu();
-	};
-
 	// Actions:
-
 	// FAV
 	const [isFav, setIsFav] = useState(false);
 	const favIcon = isFav ? (
@@ -161,6 +116,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 	);
 
 	const handleToggleSnapShare = () => {
+		console.log('entro', snapShareAmount)
 		isSnapShared ? deletePostFromSnapshared(post.pid) : snapSharePost(post.pid);
 		isSnapShared ? setSnapShareAmount(snapShareAmount - 1) : setSnapShareAmount(snapShareAmount + 1);
 		setIsSnapshared(!isSnapShared);
@@ -246,23 +202,9 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                         <Text style={styles.username}>
                                             @{truncateNick(data.nick)} · {formatDateToDDMMYYYY(date)}
                                         </Text>
-                                    </View>
-
-                                    {/* {
-                                        uid === userData.uid ? (
-                                            <TouchableOpacity
-                                                ref={optionsButtonRef}
-                                                onPress={showOptionsMenu}
-                                            >
-                                                <Feather name="more-horizontal" size={24} color={colorText} />
-                                            </TouchableOpacity>
-                                        ) : <></>
-                                    } */}
-                                    
+                                    </View>               
                                 </View>
 
-                                {/* <Text style={styles.text}>{content}</Text> */}
-                                {/* <SnapMsgText text={content}/> */}
                                 <TwitterTextView
                                     style={[styles.text, {color: theme.whiteColor}]}
                                     hashtagStyle={styles.hashtagStyle}
@@ -283,16 +225,11 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 
                                 {/* Botones de acción */}
                                 <View style={styles.actionButtons}>
-                                    {/* <TouchableOpacity style={styles.actionButton}>
-                                        <MaterialCommunityIcon name="star-off-outline" size={28} color={colorText} />
-                                    </TouchableOpacity>
-                                    <Text style={styles.stats}>{comments}</Text> */}
-
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity style={styles.actionButton} onPress={handleToggleSnapShare}>
                                             {snapShareIcon}
                                         </TouchableOpacity>
-                                        <Text style={styles.stats}>{post.snapshares}</Text>
+                                        <Text style={styles.stats}>{snapShareAmount}</Text>
                                     </View>
                                     
                                     <View style={{flexDirection: 'row'}}>
@@ -309,31 +246,6 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                             </View>
                         </View>
                     </View>
-
-					{/* Menú de opciones */}
-					<Modal
-						transparent={true}
-						visible={isOptionsMenuVisible}
-						onRequestClose={hideOptionsMenu}
-					>
-						<TouchableWithoutFeedback onPress={hideOptionsMenu}>
-							<View style={styles.optionsMenuContainer}>
-								<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175 }]}>
-									<TouchableOpacity style={styles.optionItem} onPress={deleteSnap}>
-										<Text style={[styles.optionText, {color: 'red'}]}>Delete Post</Text>
-										<Feather name="trash-2" size={20} color="red" />
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.optionItem} onPress={editPost}>
-										<Text style={styles.optionText}>Edit Post</Text>
-										<Feather name="edit" size={20} color={colorWhite} />
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
-										<Text style={styles.optionText}>Cancel</Text>
-									</TouchableOpacity>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
-					</Modal>
 					</>
 				)
 			}

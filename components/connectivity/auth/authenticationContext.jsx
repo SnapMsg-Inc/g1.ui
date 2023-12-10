@@ -105,7 +105,7 @@ export const AuthenticationContextProvider = ({children}) => {
                     .catch((error) => {
                         console.error(error.response.status)
                         if (error.response.status === 502)
-                            alert('Services not available.\nPlease retry again later')
+                            alert('Services not available.\nPlease try again later')
                         else if (error.response.status === 404){
                             alert('User not found.\nPlease create account.')
                             DeleteUserFirebase();
@@ -140,7 +140,7 @@ export const AuthenticationContextProvider = ({children}) => {
             . catch((error) => {
                 console.error(error.response.status)
                 if (error.response.status === 502)
-                    alert('Services not available.\nPlease retry again later')
+                    alert('Services not available.\nPlease try again later')
                 deleteUser(auth.currentUser)
             })
             setIsLoading(false)
@@ -175,7 +175,7 @@ export const AuthenticationContextProvider = ({children}) => {
                     .catch((error) => {
                         console.error(error.response.status)
                         if (error.response.status === 502){
-                            alert('Services not available.\nPlease retry again later')
+                            alert('Services not available.\nPlease try again later')
                             DeleteUserFirebase()
                             onLogout()
                             setIsLoading(false)

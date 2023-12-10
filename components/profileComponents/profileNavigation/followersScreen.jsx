@@ -39,7 +39,7 @@ const FollowersScreen = ({ navigation, uid }) => {
         } catch (error) {
             console.error('Error fetching initial posts:', error.response.status);
             if (error.response.status === 502)
-                alert('Services not available.\nPlease retry again later')
+                alert('Services not available.\nPlease try again later')
 
         }
     }

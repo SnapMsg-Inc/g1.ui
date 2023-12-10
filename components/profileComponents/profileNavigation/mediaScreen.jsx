@@ -40,7 +40,7 @@ const MediaScreen = ({url}) => {
             if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setIsLoading(false)
             setIsLoadingError(true)
         }
@@ -66,7 +66,7 @@ const MediaScreen = ({url}) => {
             if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setIsLoading(false)
             setIsLoadingError(true)
         }
