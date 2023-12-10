@@ -102,7 +102,7 @@ const CreatePostScreen = ({ navigation }) => {
                     },
                 ]
             );
-            setText(null);
+            setText('');
         })
         .catch((error) => {
             console.error(error)
