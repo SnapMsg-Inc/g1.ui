@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 const MAX_TEXT_LENGTH = 30;
 
@@ -16,6 +17,7 @@ const truncateText = (text) => {
 const NotificationCard = ({ data }) => {
 	const navigation = useNavigation();
     const [messageDay, setMessageDay] = useState('')
+    const { theme } = useTheme()
     
     useEffect (() => {
         const currentTime = new Date().getTime();
@@ -44,7 +46,7 @@ const NotificationCard = ({ data }) => {
                     <View style={stylesMessages.userInfo}>
                         <View style={stylesMessages.textSection}>
                             <View style={{flex: 1,flexDirection: 'column', justifyContent: 'space-between'}}>
-                                <Text style={stylesMessages.alias}>{data.title}</Text>
+                                <Text style={[stylesMessages.alias, { color: theme.whiteColor }]}>{data.title}</Text>
                                 <Text style={stylesMessages.text}>{data.body}</Text>
                             </View>
                             <View>

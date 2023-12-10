@@ -61,7 +61,7 @@ const FollowerCard = ({ uid, alias, nick, interests, pic }) => {
 
 	const handleToggleFollow = () => {
 		// Lógica para cambiar el estado de seguimiento (following o not following)
-		isFollowing ? deleteUserFollowByUid(uid) : followUserByUid(uid)
+		isFollowing ? deleteUserFollowByUid(uid) : followUserByUid(uid, userData.nick)
 		setIsFollowing(!isFollowing);
 	};
 

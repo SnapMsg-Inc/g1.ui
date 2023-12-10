@@ -14,7 +14,8 @@
       <data android:scheme="https"/>
     </intent>
   </queries>
-  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme">
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true">
+  <!-- android:theme="@style/AppTheme"> -->
     <meta-data  android:name="com.dieam.reactnativepushnotification.notification_foreground"
                 android:value="true"/>
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>

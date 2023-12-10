@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         backgroundColor: colorBackground,
         marginBottom: 10,
         borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+        borderBottomColor: colorText,
         height: 50,
     },
     text: {

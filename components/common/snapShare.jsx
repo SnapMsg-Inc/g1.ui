@@ -11,6 +11,7 @@ import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/a
 import styles from '../../styles/common/snapShare';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useTheme } from '../color/themeContext';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -47,7 +48,7 @@ function formatDateToDDMMYYYY(timestamp) {
 export default SnapShare = ({ uid, pid, date, post}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const navigation = useNavigation();
-
+	const { theme } = useTheme()
 	const defaultImage = require('../../assets/default_user_pic.png')
 
     // DATA OF AUTHOR OF SNAPSHARE
@@ -174,7 +175,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching other user data:', error);
+				console.error('Error fetching other user data:', error.response.status);
 				setIsLoading(false);
 			});
 
@@ -184,7 +185,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching other user data:', error);
+				console.error('Error fetching other user data:', error.response.status);
 				setIsLoading(false);
 			});
 		checkIfUserLiked(setIsLiked, post.pid)
@@ -192,7 +193,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user liked post:', error);
+			console.error('Error fetching data when checking if user liked post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserFaved(setIsFav, post.pid)
@@ -200,7 +201,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user faved post:', error);
+			console.error('Error fetching data when checking if user faved post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserSnapShared(setIsSnapshared, post.pid)
@@ -208,7 +209,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user snapshared post:', error);
+			console.error('Error fetching data when checking if user snapshared post:', error.response.status);
 			setIsLoading(false)
 		})
 	};
@@ -239,7 +240,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                             <View style={styles.container}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.nickname}>
+                                        <Text style={[styles.nickname, { color: theme.whiteColor}]}>
                                             {truncateAlias(data.alias)}{' '}
                                         </Text>
                                         <Text style={styles.username}>
@@ -247,7 +248,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                         </Text>
                                     </View>
 
-                                    {
+                                    {/* {
                                         uid === userData.uid ? (
                                             <TouchableOpacity
                                                 ref={optionsButtonRef}
@@ -256,14 +257,14 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                                 <Feather name="more-horizontal" size={24} color={colorText} />
                                             </TouchableOpacity>
                                         ) : <></>
-                                    }
+                                    } */}
                                     
                                 </View>
 
                                 {/* <Text style={styles.text}>{content}</Text> */}
                                 {/* <SnapMsgText text={content}/> */}
                                 <TwitterTextView
-                                    style={styles.text}
+                                    style={[styles.text, {color: theme.whiteColor}]}
                                     hashtagStyle={styles.hashtagStyle}
                                     mentionStyle={styles.mentionStyle}
                                     linkStyle={styles.linkStyle}

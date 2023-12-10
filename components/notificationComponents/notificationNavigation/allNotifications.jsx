@@ -9,8 +9,10 @@ import { colorApp, colorText, colorBackground } from '../../../styles/appColors/
 import NotificationCard from '../notificationCard';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { Tabs } from 'react-native-collapsible-tab-view';
+import { useTheme } from '../../color/themeContext';
 
 export default function AllNotificationScreen({ navigation }) {
+    const { theme } = useTheme()
     const [notifications, setNotifications] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -38,7 +40,7 @@ export default function AllNotificationScreen({ navigation }) {
     }, [])
 
     return (
-        <View style={stylesMessages.container}>
+        <View style={[stylesMessages.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.FlatList
                 data={notifications}
                 renderItem={({ item }) =>
@@ -48,7 +50,7 @@ export default function AllNotificationScreen({ navigation }) {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0,0,0,0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={'large'}

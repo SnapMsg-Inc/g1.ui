@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } fr
 import { useNavigation } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useTheme } from '../color/themeContext';
 
 const MAX_TEXT_LENGTH = 20;
 
@@ -26,6 +27,7 @@ const truncateAlias = (alias) => {
 
 const MessageCard = ({ data }) => {
 	const navigation = useNavigation();
+    const { theme } = useTheme()
     const [isLoading, setIsLoading] = useState(false)
 
 	const handleMessagePress = () => {
@@ -47,7 +49,7 @@ const MessageCard = ({ data }) => {
                                 </View>
                                 <View style={stylesMessages.textSection}>
                                     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                        <Text style={stylesMessages.alias}>{truncateAlias(data.alias)}</Text>
+                                        <Text style={[stylesMessages.alias, {color: theme.whiteColor}]}>{truncateAlias(data.alias)}</Text>
                                         <Text style={stylesMessages.text}>{data.messageTime}</Text>
                                     </View>
                                     <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
