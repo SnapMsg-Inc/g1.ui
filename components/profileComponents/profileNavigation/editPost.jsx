@@ -16,11 +16,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
 import styles from '../../../styles/profile/editPost';
+import { useTheme } from '../../color/themeContext';
 
 const EditPost = ({ navigation }) => {
     const route = useRoute();
 	const { data } = route.params;
-
+    const { theme } = useTheme()
     const { userData } = useContext(LoggedUserContext)
 
     const [originalText, setOriginalText] = useState(data.content);
@@ -205,8 +206,8 @@ const EditPost = ({ navigation }) => {
     }
 
 	return (
-		<View style={styles.container}>
-            <View style={styles.header}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+            <View style={[styles.header, { backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
                 <TouchableHighlight
@@ -215,7 +216,7 @@ const EditPost = ({ navigation }) => {
                             navigation.goBack()
                         }}
                     >
-                        <Text style={styles.cancelButtonLabel}>Cancel</Text>
+                        <Text style={[styles.cancelButtonLabel, { color: theme.whiteColor}]}>Cancel</Text>
                 </TouchableHighlight>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
@@ -239,14 +240,14 @@ const EditPost = ({ navigation }) => {
                             isPublic ? (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: colorApp, marginRight: 10}}>Public</Text>
+                                        <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
                                         <FontAwesome5 name="lock-open" color={colorApp} size={16} />
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: 'red', marginRight: 10}}>Private</Text>
+                                        <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
                                         <FontAwesome5 name="lock" color={'red'} size={16} />
                                     </View>
                                 </TouchableOpacity>
@@ -258,11 +259,13 @@ const EditPost = ({ navigation }) => {
                             placeholder="What's happening?"
                             multiline
                             numberOfLines={5}
-                            style={styles.textInput}
+                            style={[styles.textInput, { color: theme.whiteColor}]}
                             placeholderTextColor={colorText}
                             autoFocus
                             textAlignVertical="top"
+                            maxLength={300}
                         />
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10, fontSize: 18}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}

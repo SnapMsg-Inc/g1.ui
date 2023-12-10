@@ -248,7 +248,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                         </Text>
                                     </View>
 
-                                    {
+                                    {/* {
                                         uid === userData.uid ? (
                                             <TouchableOpacity
                                                 ref={optionsButtonRef}
@@ -257,7 +257,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                                                 <Feather name="more-horizontal" size={24} color={colorText} />
                                             </TouchableOpacity>
                                         ) : <></>
-                                    }
+                                    } */}
                                     
                                 </View>
 

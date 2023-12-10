@@ -3,10 +3,11 @@ import { TouchableHighlight } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colorWhite } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 function BackButton({ onPress }) {
   const insets = useSafeAreaInsets();
-
+  const { theme } = useTheme()
   return (
     <TouchableHighlight
       onPress={onPress}
@@ -15,7 +16,7 @@ function BackButton({ onPress }) {
         position: 'absolute',
         top: insets.top + 10,
         left: 20,
-        backgroundColor: '#00000099',
+        backgroundColor: theme.backgroundColor,
         height: 30,
         width: 30,
         borderRadius: 15,
@@ -23,7 +24,7 @@ function BackButton({ onPress }) {
         justifyContent: 'center',
       }}
     >
-      <Feather name="chevron-left" color={colorWhite} size={26} />
+      <Feather name="chevron-left" color={theme.whiteColor} size={26} />
     </TouchableHighlight>
   );
 }
