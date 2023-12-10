@@ -15,10 +15,11 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styles from '../../styles/common/createPost';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 const CreatePostScreen = ({ navigation }) => {
     const { userData } = useContext(LoggedUserContext)
-    
+    const { theme } = useTheme()
     const [text, setText] = useState('');
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -170,8 +171,8 @@ const CreatePostScreen = ({ navigation }) => {
     }
 
 	return (
-		<View style={styles.container}>
-            <View style={styles.header}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor}]}>
+            <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
                 <TouchableHighlight
@@ -180,7 +181,7 @@ const CreatePostScreen = ({ navigation }) => {
                             navigation.goBack()
                         }}
                     >
-                        <Text style={styles.cancelButtonLabel}>Cancel</Text>
+                        <Text style={[styles.cancelButtonLabel, {color: theme.whiteColor}]}>Cancel</Text>
                 </TouchableHighlight>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
@@ -204,14 +205,14 @@ const CreatePostScreen = ({ navigation }) => {
                             isPublic ? (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: colorApp, marginRight: 10}}>Public</Text>
+                                        <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
                                         <FontAwesome5 name="lock-open" color={colorApp} size={16} />
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: 'red', marginRight: 10}}>Private</Text>
+                                        <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
                                         <FontAwesome5 name="lock" color={'red'} size={16} />
                                     </View>
                                 </TouchableOpacity>
@@ -229,7 +230,7 @@ const CreatePostScreen = ({ navigation }) => {
                             textAlignVertical="top"
                             maxLength={300}
                         />
-                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10, fontSize: 18}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 <View style={styles.hashtagsContainer}>
