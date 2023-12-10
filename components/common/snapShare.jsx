@@ -116,7 +116,6 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 	);
 
 	const handleToggleSnapShare = () => {
-		console.log('entro', snapShareAmount)
 		isSnapShared ? deletePostFromSnapshared(post.pid) : snapSharePost(post.pid);
 		isSnapShared ? setSnapShareAmount(snapShareAmount - 1) : setSnapShareAmount(snapShareAmount + 1);
 		setIsSnapshared(!isSnapShared);

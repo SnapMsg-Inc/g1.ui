@@ -17,6 +17,8 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import styles from '../../styles/navigation/customDrawer';
 import { colorText, colorApp, colorBackground } from '../../styles/appColors/appColors';
 import { useTheme } from '../color/themeContext';
+import SwitchWithIcons from "react-native-switch-with-icons";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawer = props => {
     const { onLogout } = useContext(AuthenticationContext)
@@ -53,19 +55,20 @@ const CustomDrawer = props => {
 
 				<DrawerItemList {...props} />
 				
-				<View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
+				<View style={{ paddingHorizontal: 20, borderTopWidth: 1, borderTopColor: colorText }}>
 					<View style={styles.signOutButton}>
 						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 							<Switch value={theme.backgroundColor === colorBackground}
-										onValueChange={toggleTheme}/>
-							<Text
-								style={{
-									fontSize: 15,
-									marginLeft: 5,
-									color: theme.colorText,
-								}}>
-								Dark mode
-							</Text>
+									onValueChange={toggleTheme}
+									thumbColor={theme.backgroundColor === colorBackground ? colorApp : colorApp}
+									style={{marginLeft: -5}}
+							/>
+							<Ionicons
+								name={theme.backgroundColor === colorBackground ? 'moon-outline' : 'sunny-outline'}
+								size={24}
+								color={colorApp}
+								style={{ marginLeft: 10 }}
+							/>
 						</View>
 						<TouchableOpacity onPress={onLogout}>
 							<View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -74,6 +77,7 @@ const CustomDrawer = props => {
 									style={{
 										fontSize: 15,
 										marginLeft: 5,
+										paddingVertical: 10,
 										color: colorText,
 									}}>
 									Sign Out
