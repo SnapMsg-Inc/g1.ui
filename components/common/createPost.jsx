@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput,
-    TouchableHighlight, ScrollView, Alert, ActivityIndicator, Pressable, } from 'react-native';
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, Pressable, TouchableOpacity, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -13,7 +13,6 @@ import storage from '@react-native-firebase/storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { GetTrendings, GetUserFollowersByUid, createPost } from '../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import styles from '../../styles/common/createPost';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
 import {
@@ -272,25 +271,25 @@ const CreatePostScreen = ({ navigation }) => {
             <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
-                <TouchableHighlight
+                <TouchableOpacity
                         style={styles.cancelButton}
                         onPress={() => { 
                             navigation.goBack()
                         }}
                     >
                         <Text style={[styles.cancelButtonLabel, {color: theme.whiteColor}]}>Cancel</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
                         <Text>{transferred} % Completed!</Text>
                         <ActivityIndicator size="large" color={colorApp} />
                     </View>
                     ) : (
-                    <TouchableHighlight
+                    <TouchableOpacity
                         style={styles.postButton}
                         onPress={submitPost}>
                         <Text style={styles.postButtonLabel}>Post</Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 )}
             </View>
 
@@ -343,7 +342,7 @@ const CreatePostScreen = ({ navigation }) => {
                             isBottomMentionSuggestionsRender={false}
                             multiline
                             numberOfLines={10}
-                            style={styles.textInput}
+                            style={[styles.textInput, {color: theme.whiteColor}]}
                             placeholderTextColor={colorText}
                             textAlignVertical="top"
                             maxLength={300}

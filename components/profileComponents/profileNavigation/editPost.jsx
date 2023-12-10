@@ -210,25 +210,25 @@ const EditPost = ({ navigation }) => {
             <View style={[styles.header, { backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
-                <TouchableHighlight
+                <TouchableOpacity
                         style={styles.cancelButton}
                         onPress={() => { 
                             navigation.goBack()
                         }}
                     >
                         <Text style={[styles.cancelButtonLabel, { color: theme.whiteColor}]}>Cancel</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
                         <Text>{transferred} % Completed!</Text>
                         <ActivityIndicator size="large" color={colorApp} />
                     </View>
                     ) : (
-                    <TouchableHighlight
+                    <TouchableOpacity
                         style={styles.postButton}
                         onPress={submitPost}>
                         <Text style={styles.postButtonLabel}>Confirm edition</Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 )}
             </View>
 

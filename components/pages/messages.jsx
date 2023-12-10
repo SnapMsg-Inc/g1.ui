@@ -10,7 +10,6 @@ import {
     RefreshControl,
     FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import { GetUserDataByUid } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
@@ -132,7 +131,7 @@ export default function Messages({ navigation }) {
         <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         navigation.dispatch(DrawerActions.openDrawer());
                     }}
@@ -141,7 +140,7 @@ export default function Messages({ navigation }) {
                         <FontAwesome5 name="envelope" color={colorApp} size={28} />
                         <Text style={styles.font}>Messages</Text>
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 <View style={styles.containerLogo}>
                     <Icon name="snapchat-ghost" color={colorApp} size={30} />
                     <Icon name="envelope" color={colorApp} size={10} />

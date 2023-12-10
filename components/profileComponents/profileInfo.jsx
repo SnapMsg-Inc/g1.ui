@@ -29,18 +29,19 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
                 {/* For self profile */}
                 {headerButton}
             </View>
-        
-             <Text
-            style={{
-                color: theme.whiteColor,
-                fontSize: 24,
-                fontWeight: 'bold',
-                marginTop: 10,
-                }}
-            >
-                {data.alias}
-            </Text>
-
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
+                <Text
+                    style={{
+                        color: theme.whiteColor,
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                        marginTop: 10,
+                        }}
+                >
+                    {data.alias}
+                </Text>
+                {console.log(data)}
+            </View>
             <Text
                 style={{
                     color: colorWhite,

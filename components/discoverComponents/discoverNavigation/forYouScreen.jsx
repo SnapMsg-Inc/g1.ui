@@ -241,7 +241,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 												/>
 											{fullPosts.length === 0 && 
 												<View style={{marginVertical: 10}}>
-													<Text style={styles.text}>
+													<Text style={[styles.text, {color: theme.whiteColor}]}>
 														No posts found for {searchQuery}
 													</Text>
 													<Text style={styles.textAlt}>
@@ -252,7 +252,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 										</View>
 										) : (fullPosts.length > 0 ? (
 												<View style={{marginVertical: 10}}>
-													<Text style={styles.text}>
+													<Text style={[styles.text, {color: theme.whiteColor}]}>
 														Not users found for {searchQuery}
 													</Text>
 													<Text style={styles.textAlt}>

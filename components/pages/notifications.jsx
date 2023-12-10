@@ -9,6 +9,7 @@ import styles from '../../styles/discover/discover';
 import NotificationHeader from '../notificationComponents/notificationHeader';
 import AllNotificationScreen from '../notificationComponents/notificationNavigation/allNotifications';
 import { useTheme } from '../color/themeContext';
+import MentionsScreen from '../notificationComponents/notificationNavigation/mentions';
 
 export default function Discover({ navigation }) {
     const { theme } = useTheme()
@@ -46,7 +47,7 @@ export default function Discover({ navigation }) {
                 </Tabs.Tab>
 
                 <Tabs.Tab name="Mentions" label="Mentions">
-                    {/* <ForYouScreen searchQuery={searchQuery}/> */}
+                    <MentionsScreen/>
                 </Tabs.Tab>
             </Tabs.Container>
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />

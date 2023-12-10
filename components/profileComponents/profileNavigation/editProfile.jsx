@@ -323,7 +323,7 @@ function EditProfile({navigation}) {
                 <Text style={stylesEditProfile.fieldText}>
                     Interests
                 </Text>
-                <TouchableHighlight onPress={() => handleInterests()}>
+                <TouchableOpacity onPress={() => handleInterests()}>
                     <View style={stylesEditProfile.interestsButton}>
                         <Text style={stylesEditProfile.text}>
                             Edit interests
@@ -334,7 +334,7 @@ function EditProfile({navigation}) {
                             size={20} 
                         />
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
 
             <View style={stylesEditProfile.footer}>

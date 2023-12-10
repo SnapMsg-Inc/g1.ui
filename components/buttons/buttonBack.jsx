@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight } from 'react-native';
+import { TouchableHighlight, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colorWhite } from '../../styles/appColors/appColors';
@@ -9,7 +9,7 @@ function BackButton({ onPress }) {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme()
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       onPress={onPress}
       style={{
         zIndex: 20,
@@ -25,7 +25,7 @@ function BackButton({ onPress }) {
       }}
     >
       <Feather name="chevron-left" color={theme.whiteColor} size={26} />
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 

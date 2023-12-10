@@ -29,6 +29,7 @@ import {
 import { database } from '../connectivity/firebase';
 import { useTheme } from '../color/themeContext';
 import { GetToken, SendNotificationMessage } from '../connectivity/servicesUser';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const generateChatRoomUid = (uid1, uid2) => {
     // Ordena los IDs de usuario para garantizar consistencia.
@@ -199,7 +200,7 @@ export default function ChatScreen({ navigation }) {
             <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 {/* <BackButton onPress={() => {navigation.goBack()}}/> */}
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {navigation.goBack()}}
                     style={{
                         position: 'absolute',
@@ -214,8 +215,8 @@ export default function ChatScreen({ navigation }) {
                     }}
                     >
                     <Feather name="chevron-left" color={theme.whiteColor} size={36} />
-                </TouchableHighlight>
-                <TouchableHighlight onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
                     <View  style={styles.userInfo}>
                         <Image source={(data.pic == 'none') || (data.pic === '') ? defaultImage : { uri: data.pic }} style={styles.image} />
                         <View>
@@ -223,7 +224,7 @@ export default function ChatScreen({ navigation }) {
                             <Text style={styles.nick}>{`@${data.nick}`}</Text>
                         </View>
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
             {/* MESSAGES */}
             <GiftedChat
