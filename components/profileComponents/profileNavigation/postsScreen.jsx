@@ -79,9 +79,10 @@ const PostsScreen = ({url}) => {
         if (isRefreshing) {
             return;
         }
-        if (isLoadingError) 
-            handleUpdateData()
         setIsRefreshing(true);
+        if (isLoadingError) {
+            handleUpdateData()
+        }
         await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
     }
@@ -153,7 +154,7 @@ const PostsScreen = ({url}) => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={"large"}

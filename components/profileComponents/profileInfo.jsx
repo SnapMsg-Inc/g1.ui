@@ -4,8 +4,9 @@ import ProfileImage from '../profileComponents/profileImage';
 import ProfileStats from '../profileComponents/profileStats';
 import SetUpProfileButton from '../buttons/buttonSetUpProfile';
 import ProfileBanner from './profileBanner';
-import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
 import { useTheme } from '../color/themeContext';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const HEADER_HEIGHT_NARROWED = 50;
 const HEADER_HEIGHT_EXPANDED = 75;
@@ -29,7 +30,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
                 {/* For self profile */}
                 {headerButton}
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Text
                     style={{
                         color: theme.whiteColor,
@@ -40,6 +41,7 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
                 >
                     {data.alias}
                 </Text>
+                {data.is_admin ? <MaterialIcons name="admin-panel-settings" size={25} color={theme.whiteColor} style={{marginTop: 10, color: colorApp, paddingVertical: 8, paddingHorizontal: 10}}/> : null}
                 {console.log(data)}
             </View>
             <Text

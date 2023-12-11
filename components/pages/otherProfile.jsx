@@ -41,6 +41,7 @@ const OtherProfile = ({ navigation }) => {
         "nick": "",
         "followers": 0,
         "follows": 0,
+		is_admin: false,
     })
 
 	const fetchDataFromApi = async () => {

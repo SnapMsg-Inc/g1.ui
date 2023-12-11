@@ -87,6 +87,7 @@ export async function GetUserByUid(setState, uid) {
         "follows": response.data[0].follows,
         "interests": response.data[0].interests,
         "pic": response.data[0].pic,
+        "is_admin": response.data[0].is_admin,
       });
     })
     . catch((error) => {

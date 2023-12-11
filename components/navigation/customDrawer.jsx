@@ -19,6 +19,7 @@ import { colorText, colorApp, colorBackground } from '../../styles/appColors/app
 import { useTheme } from '../color/themeContext';
 import SwitchWithIcons from "react-native-switch-with-icons";
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const CustomDrawer = props => {
     const { onLogout } = useContext(AuthenticationContext)
@@ -77,7 +78,7 @@ const CustomDrawer = props => {
 									style={{
 										fontSize: 15,
 										marginLeft: 5,
-										paddingVertical: 10,
+										paddingVertical: 50,
 										color: colorText,
 									}}>
 									Sign Out
