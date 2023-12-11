@@ -9,13 +9,14 @@ import FinishSignUp from '../pages/finishSignUp';
 import { colorApp, colorBackground, colorWhite } from '../../styles/appColors/appColors';
 import ForgotPassword from '../pages/forgot';
 import { useTheme } from '../color/themeContext';
+import RegisterPin from '../pages/registerPin';
 
 const Stack = createStackNavigator();
 
 export default function InitNavigation() {
     const { isLoadingApp } = useContext(AuthenticationContext)
     const { theme } = useTheme()
-    const [isDarkTheme, setIsDarkTheme] = useState(false)
+    
     return (
         <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <StatusBar
@@ -24,13 +25,14 @@ export default function InitNavigation() {
             />
             { isLoadingApp ? <ActivityIndicator size={'large'} color={colorApp}/> : (
                 <Stack.Navigator    
-                        initialRouteName='Inits' 
+                        initialRouteName='Register' 
                         screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="Inits" component={Inits}/>
                     <Stack.Screen name="SignIn" component={SignIn}/>
                     <Stack.Screen name="SignUp" component={SignUp}/>
                     <Stack.Screen name="Finish" component={FinishSignUp}/>
                     <Stack.Screen name="Forgot" component={ForgotPassword}/>
+                    <Stack.Screen name='Register' component={RegisterPin}/>
                 </Stack.Navigator>
             )}
         </View>
