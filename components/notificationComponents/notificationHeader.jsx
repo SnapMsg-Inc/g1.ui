@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { Octicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles/notifications/notificationHeader';

@@ -17,21 +17,12 @@ import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import styles from '../../styles/navigation/customDrawer';
 import { colorText, colorApp, colorBackground } from '../../styles/appColors/appColors';
 import { useTheme } from '../color/themeContext';
-import SwitchWithIcons from "react-native-switch-with-icons";
-import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const CustomDrawer = props => {
     const { onLogout } = useContext(AuthenticationContext)
     const { theme, toggleTheme } = useTheme()
     const { userData, fetchUserDataFromApi } = useContext(LoggedUserContext)
     
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         fetchUserDataFromApi()
-    //     }, [])
-    // );
-
     const defaultImage = require('../../assets/default_user_pic.png')
 	
 	return (

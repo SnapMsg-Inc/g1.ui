@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput,
-    TouchableHighlight, ScrollView, Alert, ActivityIndicator, } from 'react-native';
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -12,7 +12,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
 import styles from '../../../styles/profile/editPost';

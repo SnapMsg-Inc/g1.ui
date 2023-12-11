@@ -6,7 +6,8 @@ import {
     Image,
     TouchableHighlight,
     Button, 
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
@@ -29,7 +30,6 @@ import {
 import { database } from '../connectivity/firebase';
 import { useTheme } from '../color/themeContext';
 import { GetToken, SendNotificationMessage } from '../connectivity/servicesUser';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const generateChatRoomUid = (uid1, uid2) => {
     // Ordena los IDs de usuario para garantizar consistencia.
