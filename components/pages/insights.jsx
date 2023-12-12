@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableHighlight, TouchableWithoutFeedback, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import styles from '../../styles/insights/insights';
@@ -7,6 +7,9 @@ import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/a
 import { useTheme } from '../color/themeContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-neat-date-picker'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesome5 } from '@expo/vector-icons';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default function Insights({ navigation }) {
     const { theme } = useTheme()
@@ -14,6 +17,41 @@ export default function Insights({ navigation }) {
 
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [presets, setPresets] = useState([])
+    const [selectedRange, setSelectedRange] = useState({});
+    const [showMenu, setShowMenu] = useState(false);
+
+    const [rangePublications, setRangePublications] = useState(0);
+    const [rangeLikes, setRangeLikes] = useState(0);
+    const [rangeShares, setRangeShares] = useState(0);
+    const [rangeInteractions, setRangeInteractions] = useState(0);
+
+    const toggleMenu = () => {
+        setShowMenu(!showMenu)
+    }
+
+    const menuOptions = [
+        { label: 'Last 7 Days', onPress: () => {
+                setSelectedRange(presets[0]) 
+                toggleMenu()   
+            }
+        },
+        { label: 'Last 30 Days', onPress: () => {
+                setSelectedRange(presets[1])
+                toggleMenu()   
+            }
+        },
+        { label: 'Last Year', onPress: () => {
+                setSelectedRange(presets[2])
+                toggleMenu()   
+            }
+        },
+        { label: 'Custom', onPress: () => {
+            openDatePickerRange()
+            toggleMenu()   
+            }
+        },
+    ];
 
     const openDatePickerRange = () => setShowDatePickerRange(true)
 
@@ -26,6 +64,7 @@ export default function Insights({ navigation }) {
         setShowDatePickerRange(false)
         setStartDate(output.startDateString)
         setEndDate(output.endDateString)
+        setSelectedRange({ label: 'Custom', start: output.startDateString, end: output.endDateString })
     }
 
     const onSelectPresetRange = (presetRange) => {
@@ -34,11 +73,11 @@ export default function Insights({ navigation }) {
         setShowDatePickerRange(false);
     };
 
-    const presets = [
-        { label: 'Last 7 Days', start: '2023-11-01', end: '2023-11-07' },
-        { label: 'Last 30 Days', start: '2023-10-01', end: '2023-10-31' },
-        { label: 'Last Year', start: '2022-11-01', end: '2023-11-01'}
-    ];
+    // const presets = [
+    //     { label: 'Last 7 Days', start: '2023-11-01', end: '2023-11-07' },
+    //     { label: 'Last 30 Days', start: '2023-10-01', end: '2023-10-31' },
+    //     { label: 'Last Year', start: '2022-11-01', end: '2023-11-01'}
+    // ];
      
     const datePickerOptions = {
         backgroundColor: '#ffffff',
@@ -52,6 +91,41 @@ export default function Insights({ navigation }) {
         confirmButtonColor: colorApp
     };
 
+    const formatRangeText = (start, end) => {
+        const startMonth = new Date(start).toLocaleString('default', { month: 'short' });
+        const endMonth = new Date(end).toLocaleString('default', { month: 'short' });
+    
+        const startDay = new Date(start).getDate();
+        const endDay = new Date(end).getDate();
+    
+        return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
+    };
+      
+    useEffect(() => {
+        // Calcular intervalos predefinidos dinámicamente
+        const today = new Date();
+        const last7DaysStart = new Date(today);
+        last7DaysStart.setDate(today.getDate() - 6);
+
+        const last30DaysStart = new Date(today);
+        last30DaysStart.setDate(today.getDate() - 29);
+    
+        const lastYearStart = new Date(today);
+        lastYearStart.setFullYear(today.getFullYear() - 1);
+    
+        const calculatedPresets = [
+          { label: 'Last 7 Days', start: last7DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+          { label: 'Last 30 Days', start: last30DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+          { label: 'Last Year', start: lastYearStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+        ];
+        console.log(calculatedPresets)
+        setPresets(calculatedPresets);
+        setSelectedRange(calculatedPresets[0]);
+        setStartDate(calculatedPresets[0].start);
+        setEndDate(calculatedPresets[0].end);
+      }, []);
+
+      
     return (
         <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             <View style={styles.header}>
@@ -72,32 +146,79 @@ export default function Insights({ navigation }) {
                 </View>
             </View>
 
-
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10}}>
-                <TouchableHighlight onPress={openDatePickerRange}>
-                    <View style={{backgroundColor: colorApp, borderRadius: 8}}>
-                        <Text style={{color: theme.whiteColor, paddingHorizontal: 10, paddingVertical: 3, fontSize: 16}}>Select Range</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', padding: 10 }}>    
+                <View>
+                <TouchableOpacity key={selectedRange.label} onPress={toggleMenu}>
+                        <View style={{width: 150, backgroundColor: colorApp, borderRadius: 8, marginVertical: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <Text style={{color: colorWhite, paddingHorizontal: 10, paddingVertical: 3, fontSize: 16}}>{selectedRange.label}</Text>
+                            <Ionicons name="chevron-down" color={colorWhite} size={22} style={{paddingRight: 8, paddingVertical: 3}} />
+                        </View>
+                    </TouchableOpacity>
+                    {showMenu && (
+                            <View style={{marginTop: 5 , backgroundColor: theme.colorBackground, width: 150, borderWidth: 1, borderRadius: 8, borderColor: colorApp }}>
+                                {menuOptions.map((option, index) => (
+                                    <TouchableOpacity key={index} onPress={option.onPress}>
+                                        <View style={{ padding: 10 }}>
+                                            <Text style={{color: theme.whiteColor}}>{option.label}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                    )}
+                </View>
+                <Text style={{color: theme.whiteColor, paddingHorizontal: 10, paddingVertical: 5, fontSize: 16, fontWeight: 'bold'}}>{formatRangeText(selectedRange.start, selectedRange.end)}</Text>
+            </View>
+            
+            <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', padding: 10 }}>
+                <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>Account insights</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
+                <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
+                        <MaterialCommunityIcon name="publish" size={27} color={colorApp} />
+                        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10}}>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>{rangePublications}</Text>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>Posts</Text>
+                        </View>
                     </View>
-                </TouchableHighlight>
-                {/* <Button title={'Select Range'} onPress={openDatePickerRange} /> */}
-                <DatePicker
-                    isVisible={showDatePickerRange}
-                    mode={'range'}
-                    onCancel={onCancelRange}
-                    onConfirm={onConfirmRange}
-                    presetButtons
-                    colorOptions={datePickerOptions}
-                />
-                <Text style={{color: theme.whiteColor}}>{startDate && `${startDate} ~ ${endDate}`}</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
+                        <MaterialCommunityIcon name="heart" size={27} color={colorApp} />
+                        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10}}>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>{rangeLikes}</Text>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>Likes</Text>
+                        </View>
+                    </View>
+                </View>
+                <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
+                        <FontAwesome5 name="retweet" size={24} color={colorApp} />
+                        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10}}>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>{rangeShares}</Text>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>SnapShares</Text>
+                        </View>
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
+                        <MaterialCommunityIcon name="transit-detour" size={27} color={colorApp} />
+                        <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 10}}>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>{rangeInteractions}</Text>
+                            <Text style={{color: theme.whiteColor, fontWeight: 'bold', fontSize: 18}}>Interactions</Text>
+                        </View>
+                    </View>
+                </View>
             </View>
+            
+                
+            <DatePicker
+                isVisible={showDatePickerRange}
+                mode={'range'}
+                onCancel={onCancelRange}
+                onConfirm={onConfirmRange}
+                presetButtons
+                colorOptions={datePickerOptions}
+            />
+            
+            
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                {presets.map((preset) => (
-                    <TouchableHighlight key={preset.label} onPress={() => onSelectPresetRange(preset)}>
-                        <Text style={{ color: theme.whiteColor }}>{preset.label}</Text>
-                    </TouchableHighlight>
-                ))}
-            </View>
         </View>
     )
 }
