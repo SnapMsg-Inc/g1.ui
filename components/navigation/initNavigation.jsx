@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar,ActivityIndicator } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, StatusBar,ActivityIndicator, AppState } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Inits from '../pages/inits';
 import SignIn from '../pages/signIn';
@@ -10,6 +10,7 @@ import { colorApp, colorBackground, colorWhite } from '../../styles/appColors/ap
 import ForgotPassword from '../pages/forgot';
 import { useTheme } from '../color/themeContext';
 import RegisterPin from '../pages/registerPin';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default function InitNavigation() {
             />
             { isLoadingApp ? <ActivityIndicator size={'large'} color={colorApp}/> : (
                 <Stack.Navigator    
-                        initialRouteName='Register' 
+                        initialRouteName='Inits' 
                         screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="Inits" component={Inits}/>
                     <Stack.Screen name="SignIn" component={SignIn}/>

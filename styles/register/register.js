@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colorApp, colorBackground, colorWhite } from "../appColors/appColors";
+import { colorApp, colorBackground, colorText, colorWhite } from "../appColors/appColors";
 
 export const styleRegister = StyleSheet.create({
     container: {
@@ -8,28 +8,76 @@ export const styleRegister = StyleSheet.create({
         backgroundColor: colorBackground,
     },
     header: {
-        padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center'
+        paddingBottom: 10,
+        flexDirection:'column',
+        paddingVertical:10,
+        paddingBottom: 20,
     },
     body: {
-        
+        paddingHorizontal: 10, 
     },
     title: {
         color: colorApp,
-        marginHorizontal: 30,
-        fontSize: 32,
-        marginTop: 15,
-        marginBottom: 15,
+        paddingHorizontal: 55,
+        fontSize: 34,
     },
-    captchaButton: {
-        color: colorWhite,
+    text: {
+        color: colorText,
+        paddingHorizontal: 30,
+        paddingVertical: 20,
     },
-    captcha: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignContent: 'center',
+    item: {
+        color: colorText,
+        paddingHorizontal: 10,
+        paddingVertical: 20,
+        alignContent:'center',
+        alignItems: 'center'
+    },
+    itemContainer: {
+        paddingHorizontal:30,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    phoneContainer: {
+        alignContent: 'center'
+    },
+    btnPhone: {
+        paddingHorizontal: 30,
+        alignItems: 'flex-end',
+        justifyContent: 'flex-end'
+    },
+    input: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: colorBackground,
+        backgroundColor: colorWhite,
+        width: 50,
+        height: 50,
+        textAlign: 'center',
+        marginRight: 10,
+        fontSize: 22,
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 20,
+        paddingVertical: 20,
+    },
+    codeContainer: {
+        flexDirection: 'column'
+    },
+    btnAccept: {
+        paddingHorizontal:30,
+        alignItems: 'center'
+    },
+    errorContainer:{
+        paddingHorizontal:30,
+        alignItems: 'center',
+        paddingBottom: 10,
+    },
+    textError: {
+        color: colorApp,
+        fontSize: 18,
+        fontWeight: 'bold'
     }
 })

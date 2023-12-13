@@ -16,8 +16,11 @@ import Calendar from "../forms/calendar";
 import CreateAccount, { SignFederate } from "../connectivity/authorization";
 import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
 import { ValidationsSignUp } from "../forms/validations";
+import { useTheme } from "../color/themeContext";
 
 function SignUp({navigation}) {
+    const { theme } = useTheme()
+    const timeInit = Date.now()
     const [fullName, setFullName] = useState('')
     const [alias, setAlias] = useState('')
     const [email, setEmail] = useState('')
@@ -55,16 +58,16 @@ function SignUp({navigation}) {
                 "birthdate": date.toISOString().substring(0,10),
                 "ocupation": 'Not Found'
             }
-            onRegister(data, password, () => navigation.navigate('Finish'))
+            onRegister(data, password, timeInit, () => navigation.navigate('Finish'))
         }
     }; 
 
     const signButtonFederate = () => {
-        onRegisterFederate(() => navigation.navigate('Finish'))
+        onRegisterFederate((dataFederate) => navigation.navigate('Finish'))
     }   
 
     return (
-        <View style={stylesForms.container}>
+        <View style={[stylesForms.container, { backgroundColor: theme.backgroundColor}]}>
             <View style={stylesForms.header}>
                 <Logo/>
             </View>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import * as Location from 'expo-location';
 import { TouchableHighlight } from "react-native";
@@ -11,7 +11,6 @@ import LocationSetup from "./location";
 import Preferences from "./preferences";
 import { GetToken, PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
-import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
 import { useTheme } from "../color/themeContext";
 
 function FinishSignUp({ navigation }) {
@@ -20,7 +19,6 @@ function FinishSignUp({ navigation }) {
     const [step, setStep] = useState(1); 
     const [interestsList, setInterestsList] = useState([])
     const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
-    const { markRegisterComplete } = useContext(AuthenticationContext)
     const { theme } = useTheme()
 
     const handleAccept = async() => {
@@ -29,7 +27,7 @@ function FinishSignUp({ navigation }) {
             PatchUser({"zone": coordinates,
                         "interests": interestsList}, token)
             .then((response) => {
-                markRegisterComplete()
+                navigation.navigate('Register')
             })
             .catch((error) => {
                 console.error(error)
