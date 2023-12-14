@@ -196,7 +196,6 @@ export const AuthenticationContextProvider = ({children}) => {
                         setIsLoading(false)
                     })
                     .catch((error) => {
-                        console.error('No users exists',error.response.status)
                         if (error.response.status >= 500){
                             alert('Services not available.\nPlease try again later')
                             DeleteUserFirebase()
@@ -235,6 +234,10 @@ export const AuthenticationContextProvider = ({children}) => {
                     })
                 })
             })
+        })
+        .catch(error => {
+            console.log('error', error)
+            setIsLoading(false)
         })
     }
 

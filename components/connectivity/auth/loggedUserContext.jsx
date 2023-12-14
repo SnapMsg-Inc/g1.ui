@@ -31,9 +31,9 @@ export const LoggedUserContextProvider = ({children}) => {
         "follows": 0,
     })
 
-    const fetchUserDataFromApi = async () => {
+    const fetchUserDataFromApi = () => {
         setIsLoadingUserData(true)
-        await GetUserData(setUserData)
+        GetUserData(setUserData)
         .then(() => {
             setIsLoadingUserData(false)
         })
