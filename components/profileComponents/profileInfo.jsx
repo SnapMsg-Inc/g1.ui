@@ -42,7 +42,6 @@ const ProfileInfo = ({scrollY, navigation, data, headerButton, location }) => {
                     {data.alias}
                 </Text>
                 {data.is_admin ? <MaterialIcons name="admin-panel-settings" size={25} color={theme.whiteColor} style={{marginTop: 10, color: colorApp, paddingVertical: 8, paddingHorizontal: 10}}/> : null}
-                {console.log(data)}
             </View>
             <Text
                 style={{

@@ -121,10 +121,8 @@ export default function ChatScreen({ navigation }) {
         setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
         GetToken()
         .then(token => {
-            console.log(token)
             SendNotificationMessage(token, data.uid, userData.alias, text)
-            .then(response => console.log('Send notification message ', response.status))
-            .catch(error => console.log('Error send notification message ', error?.response?.status))
+            .catch(error => console.error('Error send notification message ', error?.response?.status))
         })
     }, [database, generateChatRoomUid, userData.uid, data.uid]);
 

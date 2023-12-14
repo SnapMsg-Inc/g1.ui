@@ -9,8 +9,6 @@ function ButtonFollow ({ uid, following }) {
     const [isFollowing, setIsFollowing] = useState(following);
 
     const handleToggleFollow = () => {
-		// Lógica para cambiar el estado de seguimiento (following o not following)
-		console.log('nick', userData.nick)
         isFollowing ? deleteUserFollowByUid(uid) : followUserByUid(uid, userData.nick)
 		setIsFollowing(!isFollowing);
 	};

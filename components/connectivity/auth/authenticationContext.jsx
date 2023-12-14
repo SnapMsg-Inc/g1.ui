@@ -55,8 +55,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         GetToken()
                         .then(token => {
                             RegisterTokenDevice(token, deviceToken)
-                            .then(response => console.log('Token device updated ', response.status))
-                            .catch(error => console.log('Error token device ', error.response))
+                            .catch(error => console.error('Error token device ', error.response))
                         })
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
@@ -103,11 +102,18 @@ export const AuthenticationContextProvider = ({children}) => {
                 GetToken()
                 .then((token)=>{
                     GetMe(token)
-                    .then(()=>{
-                        sendMetricsDD('users.login_success_federate', 'incr', '1',[])
-                        setLoginFederate(false)
-                        setIsLoading(false)
-                        dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
+                    .then((response)=>{
+                        if (response.data.is_blocked) {
+                            onLogout();
+                            setIsLoading(false);
+                            setLoginFederate(false);
+                            sendMetricsDD('users.login_failure_federate', 'incr', '1',[])
+                        } else {
+                            sendMetricsDD('users.login_success_federate', 'incr', '1',[])
+                            setLoginFederate(false)
+                            setIsLoading(false)
+                            dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
+                        }
                     })
                     .catch((error) => {
                         sendMetricsDD('user.login_failure_federate', 'incr', '1',[])

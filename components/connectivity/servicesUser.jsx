@@ -25,9 +25,30 @@ export async function GetUsers(setState, query) {
     // });
 }
 
-export async function GetUserData(state) {
+export async function GetRecommendedUsers(setState) {
     const token = await getIdToken(auth.currentUser, false);
 
+    const urlWithQueryParams = `${URL}/me/recommended`;
+
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    
+    if (response) 
+        setState(response.data)
+    // . catch((error) => {
+    //     console.error(JSON.stringify(error.response, null, 2))
+    // });
+}
+
+export async function GetUserData(state) {
+    const token = await getIdToken(auth.currentUser, false);
+    console.log(token)
     await axios({
         method: 'get',
         url: `${URL}/me`, 
@@ -127,6 +148,27 @@ export async function GetUserFollowersByUid(uid, maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
 
     const urlWithQueryParams = `${URL}/${uid}/followers?limit=${maxResults}&page=${page}`;
+
+    try {
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }
+    });
+
+    return response.data;
+    } catch (error) {
+        console.error(JSON.stringify(error.response, null, 2));
+    }
+}
+
+export async function GetUsersMentions(maxResults = 100, page = 0) {
+    const token = await getIdToken(auth.currentUser, false);
+
+    const urlWithQueryParams = `${URL}?limit=${maxResults}&page=${page}`;
 
     try {
     const response = await axios({
@@ -244,6 +286,34 @@ export async function checkIfUserFollows(setIsFollowing, uid, otherUid) {
     }
 }
 
+export async function checkIfUserFollowsMentions(uid, otherUid) {
+    const token = await getIdToken(auth.currentUser, false);
+
+    const urlWithQueryParams = `${URL}/${uid}/follows/${otherUid}`;
+
+    try {
+        const response = await axios.get(urlWithQueryParams, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 200 && response.data.message === 'follow exists') {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        if (error.response.status === 404 && error.response.data.detail === 'follow does not exist') {
+            return false;
+        } else {
+            console.error(JSON.stringify(error.response, null, 2))
+            return false;
+        }
+    }
+}
+
 export async function followUserByUid(uid, nick) {
     const token = await getIdToken(auth.currentUser, false);
 
@@ -262,14 +332,15 @@ export async function followUserByUid(uid, nick) {
 }
 
 
-export const createPost = async (text, pic, isPrivate, hashtags) => {
+export const createPost = async (text, pic, isPrivate, hashtags, mentionsUid) => {
     const token = await getIdToken(auth.currentUser, false)
 
     const data = {
         "hashtags": hashtags,
         "is_private": isPrivate,
         "media_uri": pic,
-        "text": text
+        "text": text,
+        "mentioned_user_ids": mentionsUid
       }
 
     await axios({
@@ -280,9 +351,6 @@ export const createPost = async (text, pic, isPrivate, hashtags) => {
             'Authorization' : `Bearer ${token}`,
             'Content-Type': 'application/json'
         } 
-    })
-    .then((response) => {
-        console.log("Post created")
     })
     . catch((error) => {
         console.error(JSON.stringify(error.response, null, 2))
@@ -660,4 +728,23 @@ export async function GetTrendings(maxResults = 100, page = 0) {
     } catch (error) {
         console.error(JSON.stringify(error.response.status, null, 2));
     }
+}
+
+export async function GetUserMePostsStats(startDate, endDate) {
+    const token = await getIdToken(auth.currentUser, false);
+
+    console.log("START: " , startDate, "END: ", endDate)
+    const urlWithQueryParams = `${URL_POST}/stats/me?start=${startDate}&end=${endDate}`;
+
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    console.log(response.data)
+    return response.data;
 }

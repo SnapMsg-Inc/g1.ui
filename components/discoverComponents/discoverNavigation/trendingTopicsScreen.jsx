@@ -137,9 +137,23 @@ const TrendingScreen = () => {
 				ListHeaderComponent={
                     isLoading ? <></> : (
                         <View style={{flexDirection: 'row', paddingVertical: 10}}>
-                            <Text style={{color: theme.whiteColor, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
-                                {`${countryLocate} trends`}
-                            </Text>
+                            {fullTrendings?.length > 0 ? (
+                                    <Text style={{color: theme.whiteColor, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
+                                        {`${countryLocate} trends`}
+                                    </Text>
+                                ) : (
+                                    <View>
+                                        <Text style={{color: theme.whiteColor, fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+                                            {`Oops! It seem that there are no trending topics at ${countryLocate}.`}
+                                        </Text>
+                                        <Text style={{color: colorText, fontSize: 16, marginLeft: 10}}>
+                                            Post something to start a new trend!
+                                        </Text>
+                                    </View>
+                                )
+                            
+                            }
+                            
                         </View>	
                         )
 				}
