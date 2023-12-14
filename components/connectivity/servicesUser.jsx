@@ -3,8 +3,8 @@ import { getAuth, getIdToken, deleteUser } from 'firebase/auth'
 import axios from 'axios';
 import { auth, firebaseApp } from './firebase';
 
-const URL = 'https://api-gateway-marioax.cloud.okteto.net/users'
-const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+const URL = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/users'
+const URL_POST = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts'
 
 export async function GetUsers(setState, query) {
     const token = await getIdToken(auth.currentUser, false);
@@ -256,9 +256,6 @@ export async function followUserByUid(uid, nick) {
                 'Content-Type': 'application/json'
             }
         });
-        SendNotificationFollow(nick, uid)
-        .then(response => console.log('Notify send ', response.status))
-        .catch(error => console.log('Failed send notification ', error.response.status))
     } catch (error) {
         console.error(JSON.stringify(error.response, null, 2))
     }
@@ -297,7 +294,6 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
     
     const urlWithQueryParams = `${url}&limit=${maxResults}&page=${page}`;
 
-    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -307,16 +303,12 @@ export async function GetPosts(url, maxResults = 100, page = 0) {
         }
     });
     return response.data;
-//     } catch (error) {
-//         console.error(JSON.stringify(error.response, null, 2));
-//     }
 }
 
 export async function GetFavPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
     const urlWithQueryParams = `${URL_POST}/favs?limit=${maxResults}&page=${page}`;
 
-    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -326,9 +318,6 @@ export async function GetFavPosts(maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    // } catch (error) {
-    //     console.error(JSON.stringify(error.response, null, 2));
-    // }
 }
 
 export async function addPostToFav(pid) {
@@ -545,12 +534,12 @@ export async function checkIfUserFaved(setIsFaved, pid) {
     }
 }
 
-const URL_NOT = 'https://api-gateway-marioax.cloud.okteto.net'
+const URL_NOT = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net'
 
 export const RegisterTokenDevice = (token, deviceToken) =>
     axios({
         method: 'post',
-        url:`${URL_NOT}/messages/register-token`,
+        url:`${URL_NOT}/messages/token`,
         data: {
             "user_id": auth.currentUser.uid,
             "token": deviceToken
@@ -561,13 +550,10 @@ export const RegisterTokenDevice = (token, deviceToken) =>
         }
     })
 
-export const SendNotificationFollow = (nick, uid) =>
-    axios.post(`${URL_NOT}/notify-follow/${nick}/${uid}`,{})
-
 export const SendNotificationMessage = (token, uid, userUid, text) => 
     axios({
         method: 'post',
-        url: `${URL_NOT}/messages/notify-message`,
+        url: `${URL_NOT}/messages`,
         data: {
             "message_content": text,
             "receiver_id": uid,
@@ -583,7 +569,6 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
     const urlWithQueryParams = `${URL_POST}/me/snapshares?limit=${maxResults}&page=${page}`;
 
-    // try {
     const response = await axios({
         method: 'get',
         url: urlWithQueryParams,
@@ -593,9 +578,6 @@ export async function GetSnapSharedPosts(maxResults = 100, page = 0) {
         }
     });
     return response.data;
-    // } catch (error) {
-    //     console.error(JSON.stringify(error.response.status, null, 2));
-    // }
 }
 
 export async function snapSharePost(pid) {
@@ -663,7 +645,7 @@ export async function checkIfUserSnapShared(setIsSnapshared, pid) {
 export async function GetTrendings(maxResults = 100, page = 0) {
     const token = await getIdToken(auth.currentUser, false);
 
-    const urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/trendings?limit=${maxResults}&page=${page}`;
+    const urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/trendings?limit=${maxResults}&page=${page}`;
 
     try {
         const response = await axios({
