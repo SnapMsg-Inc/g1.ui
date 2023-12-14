@@ -28,7 +28,7 @@ function FinishSignUp({ navigation }) {
             PatchUser({"zone": coordinates,
                         "interests": interestsList}, token)
             .then((response) => {
-                sendMetricsDD('users.zone', 'incr', '1', [`zone:${locality}`])
+                sendMetricsDD('users.zone', 'incr', '1', [`location:${locality}`])
                 navigation.navigate('Register')
             })
             .catch((error) => {

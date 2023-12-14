@@ -21,13 +21,13 @@ export default function ForgotPassword({navigation}) {
         if (ValidateForgot(email, setEmailError)) {
             ResetPassword(email)
             .then(() => {
+                //sendMetricsDD('users.forgot','incr','1')
                 Alert.alert(
                     'Congratulations!',
                     'Password reset link sent! Check your email',
                     [{ text: 'OK', onPress: () => navigation.goBack() }],
                     { cancelable: false }
                 );
-                sendMetricsDD('user_forgot', 'forgot_user', 'forgot_password_user')
             })
             .catch((error) => {
                 Alert.alert(

@@ -163,7 +163,8 @@ export const AuthenticationContextProvider = ({children}) => {
                 console.error(error.response.status)
                 if (error.response.status === 502)
                     alert('Services not available.\nPlease try again later')
-                deleteUser(auth.currentUser)
+                DeleteUserFirebase()
+                setIsLoading(false)
             })
         }).catch((error) => {
             sendMetricsDD('users.register_failure', 'incr', '1',[])
