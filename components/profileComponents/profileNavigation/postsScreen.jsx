@@ -125,26 +125,28 @@ const PostsScreen = ({url}) => {
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
-                    "post" in item ? (
-                        <SnapShare 
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            post={item.post}
-                            date={item.timestamp}
-                        />
-                    ) : (
-                        <SnapMsg
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            username={item.nick}
-                            content={item.text}
-                            date={item.timestamp}
-                            reposts={item.snapshares}
-                            likes={item.likes}
-                            picUri={item.media_uri}
-                        />
+                    item.is_blocked? <></> : (
+                        "post" in item ? (
+                            <SnapShare 
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                post={item.post}
+                                date={item.timestamp}
+                            />
+                        ) : (
+                            <SnapMsg
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                username={item.nick}
+                                content={item.text}
+                                date={item.timestamp}
+                                reposts={item.snapshares}
+                                likes={item.likes}
+                                picUri={item.media_uri}
+                            />
+                        )
                     )
                 }
                 onEndReached={fetchMorePostsFromApi}
