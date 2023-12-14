@@ -127,13 +127,15 @@ const PostsScreen = ({url}) => {
                 renderItem={({ item }) =>
                     item.is_blocked? <></> : (
                         "post" in item ? (
-                            <SnapShare 
-                                key={item.pid}
-                                uid={item.uid}
-                                pid={item.pid}
-                                post={item.post}
-                                date={item.timestamp}
-                            />
+                            item.post.is_blocked ? <></> : (
+                                <SnapShare 
+                                    key={item.pid}
+                                    uid={item.uid}
+                                    pid={item.pid}
+                                    post={item.post}
+                                    date={item.timestamp}
+                                />
+                            )
                         ) : (
                             <SnapMsg
                                 key={item.pid}
