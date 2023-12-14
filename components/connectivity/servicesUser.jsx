@@ -48,7 +48,6 @@ export async function GetRecommendedUsers(setState) {
 
 export async function GetUserData(state) {
     const token = await getIdToken(auth.currentUser, false);
-    console.log(token)
     await axios({
         method: 'get',
         url: `${URL}/me`, 
