@@ -48,6 +48,7 @@ export async function GetRecommendedUsers(setState) {
 
 export async function GetUserData(state) {
     const token = await getIdToken(auth.currentUser, false);
+
     await axios({
         method: 'get',
         url: `${URL}/me`, 
@@ -752,7 +753,6 @@ export async function GetTrendings(maxResults = 100, page = 0) {
 export async function GetUserMePostsStats(startDate, endDate) {
     const token = await getIdToken(auth.currentUser, false);
 
-    console.log("START: " , startDate, "END: ", endDate)
     const urlWithQueryParams = `${URL_POST}/me/stats?start=${startDate}&end=${endDate}`;
 
     const response = await axios({
@@ -764,6 +764,5 @@ export async function GetUserMePostsStats(startDate, endDate) {
         }
     });
 
-    console.log(response.data)
     return response.data;
 }
