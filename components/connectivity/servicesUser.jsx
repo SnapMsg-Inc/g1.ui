@@ -441,6 +441,26 @@ export async function GetFeedPosts(maxResults = 100, page = 0) {
     // }
 }
 
+export async function GetFeedRecommendedPosts(maxResults = 100, page = 0) {
+    const token = await getIdToken(auth.currentUser, false);
+    
+    const url = `${URL_POST}/me/recommended?limit=${maxResults}&page=${page}`;
+
+    // try {
+    const response = await axios({
+        method: 'get',
+        url: url,
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }
+    });
+    return response.data;
+    // } catch (error) {
+    //     console.error(JSON.stringify(error.response, null, 2));
+    // }
+}
+
 export async function likePost(pid) {
     const token = await getIdToken(auth.currentUser, false);
 
@@ -733,7 +753,7 @@ export async function GetUserMePostsStats(startDate, endDate) {
     const token = await getIdToken(auth.currentUser, false);
 
     console.log("START: " , startDate, "END: ", endDate)
-    const urlWithQueryParams = `${URL_POST}/stats/me?start=${startDate}&end=${endDate}`;
+    const urlWithQueryParams = `${URL_POST}/me/stats?start=${startDate}&end=${endDate}`;
 
     const response = await axios({
         method: 'get',

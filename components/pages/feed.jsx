@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
+import { GetFeedPosts, GetFeedRecommendedPosts, GetPosts, GetRecommendedPosts, GetUserData } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import styles from '../../styles/feed/feed';
@@ -23,6 +23,7 @@ export default function Feed({ navigation }) {
     const [isLoadingError, setIsLoadingError] = useState(false)
     const [messageError, setMessageError] = useState([{message: ''}])
     const { theme } = useTheme()
+    const [noPosts, setNoPosts] = useState(false);
 
     const fetchInitialPostsFromApi = async () => {
         setIsLoading(true);
@@ -36,6 +37,13 @@ export default function Feed({ navigation }) {
                 setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
+                const recommendedPosts = await GetFeedRecommendedPosts(10, 0);
+                if (recommendedPosts && recommendedPosts.length > 0) {
+                    setFullPosts(recommendedPosts);
+                    setCurrentPage(1);
+                } else {
+                    setNoPosts(true);
+                }
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
@@ -139,46 +147,57 @@ export default function Feed({ navigation }) {
                     />
                 }
             /> 
-            : 
-            <FlatList
-                data={fullPosts}
-                renderItem={({ item }) =>
-                    "post" in item ? (
-                        <SnapShare 
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            post={item.post}
-                            date={item.timestamp}
+            :
+            noPosts ? (
+                <View>
+                    <Text style={{color: theme.whiteColor, fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+                        Oops! It seem that there are not posts to show.
+                    </Text>
+                    <Text style={{color: colorText, fontSize: 16, marginLeft: 10}}>
+                        Select some interests to see recommended posts, or follow some users to see their posts on your feed! 
+                    </Text>
+                </View>
+            ): (
+                <FlatList
+                    data={fullPosts}
+                    renderItem={({ item }) =>
+                        "post" in item ? (
+                            <SnapShare 
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                post={item.post}
+                                date={item.timestamp}
+                            />
+                        ) : (
+                            <SnapMsg
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                username={item.nick}
+                                content={item.text}
+                                date={item.timestamp}
+                                reposts={item.snapshares}
+                                likes={item.likes}
+                                picUri={item.media_uri}
+                            />
+                        )
+                    }
+                    onEndReached={fetchDataFromApi}
+                    onEndReachedThreshold={0.10}
+                    ListFooterComponent={renderLoader}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isRefreshing}
+                            onRefresh={handleRefresh}
+                            progressBackgroundColor={theme.progressColor}
+                            colors={[colorApp]}
+                            tintColor={colorApp}
+                            size={"large"}
                         />
-                    ) : (
-                        <SnapMsg
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            username={item.nick}
-                            content={item.text}
-                            date={item.timestamp}
-                            reposts={item.snapshares}
-                            likes={item.likes}
-                            picUri={item.media_uri}
-                        />
-                    )
-                }
-                onEndReached={fetchDataFromApi}
-                onEndReachedThreshold={0.10}
-                ListFooterComponent={renderLoader}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={isRefreshing}
-                        onRefresh={handleRefresh}
-                        progressBackgroundColor={theme.progressColor}
-                        colors={[colorApp]}
-                        tintColor={colorApp}
-                        size={"large"}
-                    />
-                }
-            />
+                    }
+                />
+            )
             }
 
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />

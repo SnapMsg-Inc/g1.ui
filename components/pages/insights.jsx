@@ -97,6 +97,7 @@ export default function Insights({ navigation }) {
       
     useEffect(() => {
         const today = new Date();
+        
         const last7DaysStart = new Date(today);
         last7DaysStart.setDate(today.getDate() - 6);
 
@@ -105,7 +106,8 @@ export default function Insights({ navigation }) {
     
         const lastYearStart = new Date(today);
         lastYearStart.setFullYear(today.getFullYear() - 1);
-    
+        
+        today.setDate(today.getDate() + 1);
         const calculatedPresets = [
         { label: 'Last 7 Days', start: last7DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
         { label: 'Last 30 Days', start: last30DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
