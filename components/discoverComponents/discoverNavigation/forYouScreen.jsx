@@ -42,7 +42,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 		// Utilizar setHashtags y setMentions según sea necesario
 		let hashtags = extractedHashtags.map(item => encodeURIComponent(item)).join('&hashtags=');
 		let words = remainingText.map(item => encodeURIComponent(item)).join(' ')
-		console.log(`Search:     hashtags=${hashtags}&text=${words}`)
+
 		let concat = hashtags.length > 0 ? `hashtags=${hashtags}&text=${words}` : `text=${words}`
 		return searchUser ? (remainingText.length === 0 ? '' : remainingText[0]) : concat
 	};
@@ -69,7 +69,6 @@ const ForYouScreen = ({searchQuery=null}) => {
             } else {
 				setAllDataLoaded(true);
             }
-			console.log('full post', fullPosts.length)
             setIsLoading(false);
         } catch (error) {
             console.error('Error fetching initial posts in ForYouScreen:', error.response.status);
@@ -94,7 +93,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
 			let urlWithQueryParams;
 			let search = extractHashtagsAndWords(searchQuery, false)
-			console.log('estoy buscando ', search)
+
 			searchQuery !== null ? 
 				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
 				// TODO: si search query == null entonces tengo que usar el endp de recommended users
@@ -146,7 +145,6 @@ const ForYouScreen = ({searchQuery=null}) => {
 		if (query !== null) {
 		  // Si searchQuery comienza con '#', quita el '#' y usa el resto como nick
 		  nick = extractHashtagsAndWords(searchQuery, true)
-		  console.log(nick)
 		//   const nick = searchQuery.startsWith('#') ? searchQuery.slice(1) : searchQuery;
 		  urlWithQueryParams = `?nick=${nick}&limit=10&page=0`;
 		} else {

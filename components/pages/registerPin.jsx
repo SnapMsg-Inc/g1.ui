@@ -90,13 +90,12 @@ export default function RegisterPin ({ navigation }) {
         const apiSecret = "bOeKUVpt7rL1nYeB"
         sendSMS(from, text,phoneNumber,apiKey,apiSecret)
         .then(response => { 
-            console.log('Message sent successfully: ', response.status); 
             setOpenSMS(!openSMS)
             setOpenInputCode(!openInputCode)
             setVerificationCode(codeSend)
         })
         .catch(error => { 
-            console.log('There was an error sending the messages. With error: ', error.response.status); 
+            console.error('There was an error sending the messages. With error: ', error.response.status); 
             Alert.alert('Error', 'Message delivery failed')
         });
     }
@@ -107,7 +106,6 @@ export default function RegisterPin ({ navigation }) {
         if (auth.currentUser.email === email) {
             sendEmail(email, smtpKey, codeSend)
             .then((response) => {
-                console.log('send mail ',response.status)
                 setOpenMail(!openMail)
                 setOpenInputCode(!openInputCode)
                 setVerificationCode(codeSend)

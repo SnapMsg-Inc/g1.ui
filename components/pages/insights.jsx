@@ -60,7 +60,6 @@ export default function Insights({ navigation }) {
     }
     
     const onConfirmRange = (output) => {
-        console.log(output)
         setShowDatePickerRange(false)
         setStartDate(output.startDateString)
         setEndDate(output.endDateString)
@@ -118,7 +117,6 @@ export default function Insights({ navigation }) {
           { label: 'Last 30 Days', start: last30DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
           { label: 'Last Year', start: lastYearStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
         ];
-        console.log(calculatedPresets)
         setPresets(calculatedPresets);
         setSelectedRange(calculatedPresets[0]);
         setStartDate(calculatedPresets[0].start);

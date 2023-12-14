@@ -11,7 +11,7 @@ import BackButton from '../buttons/buttonBack';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import { useFocusEffect } from '@react-navigation/native';
-import { GetTrendings, GetUserFollowersByUid, createPost } from '../connectivity/servicesUser';
+import { GetTrendings, GetUserFollowersByUid, GetUsers, GetUsersMentions, checkIfUserFollowsMentions, createPost } from '../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import styles from '../../styles/common/createPost';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
@@ -91,7 +91,6 @@ const CreatePostScreen = ({ navigation }) => {
             extractedMentions[index] = replaceMentionValues(item, ({id}) => `${id}`);
         })
 
-        console.log("HASHTAGS: ", extractedHashtags, "MENTIONS UID: ", extractedMentions)
         setHashtags(extractedHashtags);
         setMentions(extractedMentions);
     };
@@ -104,13 +103,18 @@ const CreatePostScreen = ({ navigation }) => {
     const submitPost = async () => {
         const imageUrl = await uploadImage();
         const uri = imageUrl ? [imageUrl] : [];
-        console.log("CONTENT: ", text)
-        let value = replaceMentionValues(text, ({name, trigger}) => `${trigger}${name}`);
-        console.log("VALUE: ", value)
-        console.log("MENTIONS: ", mentions);
-        console.log("MENTIONS filter: ", mentions?.filter(item => !item.startsWith('@')));
 
-        createPost(value, uri, !isPublic, hashtags)
+        let value = replaceMentionValues(text, ({name, trigger}) => `${trigger}${name}`);
+        let uids = mentions?.filter(item => !item.startsWith('@'));
+
+        let mentionsUid = await Promise.all(uids?.map(async (item) => {
+            const follows = await checkIfUserFollowsMentions(userData.uid, item);
+            return follows ? item : null;
+        }));
+
+        mentionsUid = mentionsUid.filter(Boolean);
+
+        createPost(value, uri, !isPublic, hashtags, mentionsUid)
         .then(() => {
             Alert.alert(
                 'Post published!',
@@ -210,6 +214,7 @@ const CreatePostScreen = ({ navigation }) => {
                 .filter((one) =>
                     one.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
                 )
+                .slice(0, 5)
                 .map((one) => (
                     <Pressable
                         key={one.id}
@@ -229,7 +234,6 @@ const CreatePostScreen = ({ navigation }) => {
         setFullTrendings([]);
         try {
             const newTrendings = await GetTrendings(100, 0)
-
             if (newTrendings && newTrendings.length > 0) {
                 setFullTrendings(newTrendings.map((item) => ({id: item.topic.slice(1), name: item.topic.slice(1)})));
             }
@@ -242,9 +246,13 @@ const CreatePostScreen = ({ navigation }) => {
     const fetchInitialFollowersFromApi = async () => {
         setFollowers([]);
         try {
-            const newFollowers = await GetUserFollowersByUid(userData.uid, 100, 0)
-            if (newFollowers && newFollowers.length > 0) {
-                setFollowers(newFollowers.map((item) => ({id: item.uid, name: item.nick})));
+            // const newFollowers = await GetUserFollowersByUid(userData.uid, 100, 0)
+            // if (newFollowers && newFollowers.length > 0) {
+            //     setFollowers(newFollowers.map((item) => ({id: item.uid, name: item.nick})));
+            // }
+            const users = await GetUsersMentions(100, 0);
+            if (users && users.length > 0) {
+                setFollowers(users.map((item) => ({id: item.uid, name: item.nick})));
             }
         } catch (error) {
             setFollowers([]);

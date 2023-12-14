@@ -55,8 +55,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         GetToken()
                         .then(token => {
                             RegisterTokenDevice(token, deviceToken)
-                            .then(response => console.log('Token device updated ', response.status))
-                            .catch(error => console.log('Error token device ', error.response))
+                            .catch(error => console.error('Error token device ', error.response))
                         })
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})

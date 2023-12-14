@@ -22,8 +22,6 @@ export const sendMetricsDD = async (metric, type, value, tags=[]) => {
                 'Authorization': `Bearer ${token}`,
             },
         });
-        if (response)
-            console.log('send metrics ', response.status)
     } catch (error) {
         console.error('Error submitting event to Datadog:', error?.response?.status);
     }

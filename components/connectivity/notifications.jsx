@@ -10,7 +10,6 @@ PushNotification.createChannel({
         channelId: 'fcm_fallback_notification_channel', // (required)
         channelName: 'My channel', // (required)
     },
-    created => console.log(`createChannel returned '${created}'`),
 );
 
 // request permission for notification message
@@ -29,11 +28,11 @@ export const requestUserPermission = async () => {
 // get fcmToken to send notification
 export const getFcmToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
-    console.log('fcm token', fcmToken)
+
     if (!fcmToken) {
         try {
             const token = await messaging().getToken({vapidKey: Config.MESSAGING_API_KEY});
-            console.log('fcm', token)
+
             if (token) {
                 await AsyncStorage.setItem('fcmToken', token);
             }
