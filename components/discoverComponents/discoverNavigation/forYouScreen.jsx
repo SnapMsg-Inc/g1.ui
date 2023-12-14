@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, ActivityIndicator, RefreshControl }
 import RecommendedUserCard from '../../common/recommendedUser';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import Carousel from 'react-native-reanimated-carousel';
-import { GetPosts, GetRecommendedPosts, GetUsers } from '../../connectivity/servicesUser';
+import { GetPosts, GetRecommendedPosts, GetRecommendedUsers, GetUsers } from '../../connectivity/servicesUser';
 import SnapMsg from '../../common/SnapMsg';
 import styles from '../../../styles/discover/forYouScreen';
 import { colorApp, colorBackground } from '../../../styles/appColors/appColors';
@@ -32,14 +32,12 @@ const ForYouScreen = ({searchQuery=null}) => {
 			return ''
 		const hashtagRegex = /#[^\s#]+/g;	
 		const extractedHashtags = inputText.match(hashtagRegex) || [];
-	
-		// Eliminar menciones y hashtags del texto original
+
 		const remainingText = inputText
 			.replace(hashtagRegex, '')
 			.trim()
-			.split(/\s+/); // Dividir el texto restante en un array de palabras
-	
-		// Utilizar setHashtags y setMentions según sea necesario
+			.split(/\s+/);
+
 		let hashtags = extractedHashtags.map(item => encodeURIComponent(item)).join('&hashtags=');
 		let words = remainingText.map(item => encodeURIComponent(item)).join(' ')
 
@@ -54,13 +52,11 @@ const ForYouScreen = ({searchQuery=null}) => {
         setFullPosts([]);
 		setIsLoadingError(false)
         try {
-			// TODO: USAR end-point adecuado
-			//await GetRecommendedPosts...
 			let search = extractHashtagsAndWords(query, false)
 			let urlWithQueryParams;
 			query !== null ? 
 				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
-				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts/me/recommended?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
             if (newPosts && newPosts.length > 0) {
@@ -89,15 +85,12 @@ const ForYouScreen = ({searchQuery=null}) => {
         setIsLoadingMorePosts(true);
 
         try {
-			// TODO: USAR end-point adecuado
-			//await GetRecommendedPosts(setPosts, userData.uid, 100, 0)
 			let urlWithQueryParams;
 			let search = extractHashtagsAndWords(searchQuery, false)
 
 			searchQuery !== null ? 
 				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
-				// TODO: si search query == null entonces tengo que usar el endp de recommended users
-				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts/me/recommended?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
             if (newPosts && newPosts.length > 0) {
@@ -143,30 +136,38 @@ const ForYouScreen = ({searchQuery=null}) => {
 		let nick
 		let urlWithQueryParams;
 		if (query !== null) {
-		  // Si searchQuery comienza con '#', quita el '#' y usa el resto como nick
-		  nick = extractHashtagsAndWords(searchQuery, true)
-		//   const nick = searchQuery.startsWith('#') ? searchQuery.slice(1) : searchQuery;
-		  urlWithQueryParams = `?nick=${nick}&limit=10&page=0`;
-		} else {
-		  // TODO: si searchQuery == null entonces tengo que usar el endpoint de recommended users
-		  urlWithQueryParams = `?limit=10&page=0`;
-		}
-		if (nick !== '') {
-			GetUsers(setUsers, urlWithQueryParams)
-			.then(() => setIsLoading(false)) 
-			.catch((error) => {
-				console.error('Error fetching followers data in for you Screen:', error.response.status);
-				if (error.response.status >= 400 && error.response.status < 500)
-					setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
-				if (error.response.status >= 500)
-					setMessageError([{message: 'Services not available.\nPlease try again later'}])
+			nick = extractHashtagsAndWords(searchQuery, true)
+			if (nick !== '') {
+				urlWithQueryParams = `?nick=${nick}&limit=10&page=0`;
+				GetUsers(setUsers, urlWithQueryParams)
+					.then(() => setIsLoading(false)) 
+					.catch((error) => {
+						console.error('Error fetching followers data in for you Screen:', error.response.status);
+						if (error.response.status >= 400 && error.response.status < 500)
+							setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+						if (error.response.status >= 500)
+							setMessageError([{message: 'Services not available.\nPlease try again later'}])
+						setUsers([])
+						setIsLoading(false)
+						setIsLoadingError(true)
+					});
+			} else {
 				setUsers([])
-				setIsLoading(false)
-				setIsLoadingError(true)
-			});
+			}
 		} else {
-			setUsers([])
-		} 
+			GetRecommendedUsers(setUsers)
+				.then(() => setIsLoading(false)) 
+				.catch((error) => {
+					console.error('Error fetching followers data in for you Screen:', error.response.status);
+					if (error.response.status >= 400 && error.response.status < 500)
+						setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+					if (error.response.status >= 500)
+						setMessageError([{message: 'Services not available.\nPlease try again later'}])
+					setUsers([])
+					setIsLoading(false)
+					setIsLoadingError(true)
+				});
+		}
 	};
 	  
 	useEffect(() => {

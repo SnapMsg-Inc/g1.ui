@@ -25,6 +25,27 @@ export async function GetUsers(setState, query) {
     // });
 }
 
+export async function GetRecommendedUsers(setState) {
+    const token = await getIdToken(auth.currentUser, false);
+
+    const urlWithQueryParams = `${URL}/me/recommended`;
+
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    
+    if (response) 
+        setState(response.data)
+    // . catch((error) => {
+    //     console.error(JSON.stringify(error.response, null, 2))
+    // });
+}
+
 export async function GetUserData(state) {
     const token = await getIdToken(auth.currentUser, false);
     console.log(token)
