@@ -10,6 +10,7 @@ import DatePicker from 'react-native-neat-date-picker'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesome5 } from '@expo/vector-icons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { GetUserMePostsStats } from '../connectivity/servicesUser';
 
 export default function Insights({ navigation }) {
     const { theme } = useTheme()
@@ -71,12 +72,6 @@ export default function Insights({ navigation }) {
         setEndDate(presetRange.end);
         setShowDatePickerRange(false);
     };
-
-    // const presets = [
-    //     { label: 'Last 7 Days', start: '2023-11-01', end: '2023-11-07' },
-    //     { label: 'Last 30 Days', start: '2023-10-01', end: '2023-10-31' },
-    //     { label: 'Last Year', start: '2022-11-01', end: '2023-11-01'}
-    // ];
      
     const datePickerOptions = {
         backgroundColor: '#ffffff',
@@ -101,7 +96,6 @@ export default function Insights({ navigation }) {
     };
       
     useEffect(() => {
-        // Calcular intervalos predefinidos dinámicamente
         const today = new Date();
         const last7DaysStart = new Date(today);
         last7DaysStart.setDate(today.getDate() - 6);
@@ -113,16 +107,28 @@ export default function Insights({ navigation }) {
         lastYearStart.setFullYear(today.getFullYear() - 1);
     
         const calculatedPresets = [
-          { label: 'Last 7 Days', start: last7DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
-          { label: 'Last 30 Days', start: last30DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
-          { label: 'Last Year', start: lastYearStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+        { label: 'Last 7 Days', start: last7DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+        { label: 'Last 30 Days', start: last30DaysStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
+        { label: 'Last Year', start: lastYearStart.toISOString().split('T')[0], end: today.toISOString().split('T')[0] },
         ];
         setPresets(calculatedPresets);
         setSelectedRange(calculatedPresets[0]);
-        setStartDate(calculatedPresets[0].start);
-        setEndDate(calculatedPresets[0].end);
-      }, []);
+    }, []);
 
+    useEffect(() => {
+        if (selectedRange) {
+            GetUserMePostsStats(selectedRange.start, selectedRange.end)
+                .then((response) => {
+                    setRangePublications(response.total_posts);
+                    setRangeLikes(response.total_likes);
+                    setRangeShares(response.total_snapshares);
+                    setRangeInteractions(response.total_snapshares + response.total_likes);
+                })
+                .catch((error) => {
+                    console.error(error.response.data);
+                });
+        }
+    }, [selectedRange]);
       
     return (
         <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>

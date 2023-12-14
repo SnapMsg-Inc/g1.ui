@@ -729,3 +729,22 @@ export async function GetTrendings(maxResults = 100, page = 0) {
         console.error(JSON.stringify(error.response.status, null, 2));
     }
 }
+
+export async function GetUserMePostsStats(startDate, endDate) {
+    const token = await getIdToken(auth.currentUser, false);
+
+    console.log("START: " , startDate, "END: ", endDate)
+    const urlWithQueryParams = `${URL_POST}/stats/me?start=${startDate}&end=${endDate}`;
+
+    const response = await axios({
+        method: 'get',
+        url: urlWithQueryParams,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    console.log(response.data)
+    return response.data;
+}
