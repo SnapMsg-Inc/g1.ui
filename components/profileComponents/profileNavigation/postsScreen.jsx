@@ -43,7 +43,7 @@ const PostsScreen = ({url}) => {
             if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setIsLoading(false)
             setIsLoadingError(true)
         }
@@ -69,7 +69,7 @@ const PostsScreen = ({url}) => {
             if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setIsLoading(false)
             setIsLoadingError(true)
         }
@@ -79,9 +79,10 @@ const PostsScreen = ({url}) => {
         if (isRefreshing) {
             return;
         }
-        if (isLoadingError) 
-            handleUpdateData()
         setIsRefreshing(true);
+        if (isLoadingError) {
+            handleUpdateData()
+        }
         await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
     }
@@ -153,7 +154,7 @@ const PostsScreen = ({url}) => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={"large"}

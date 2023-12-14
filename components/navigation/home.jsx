@@ -14,12 +14,13 @@ import EditProfile from '../profileComponents/profileNavigation/editProfile';
 import SearchScreen from '../discoverComponents/searchScreen';
 import CreatePostScreen from '../common/createPost';
 import EditPost from '../profileComponents/profileNavigation/editPost';
-import { DiscoverButton, FeedButton, MessagesButton, NotificationsButton, ProfileButton } from './drawerNavigationDispatcher';
+import { DiscoverButton, FeedButton, InsightsButton, MessagesButton, NotificationsButton, ProfileButton } from './drawerNavigationDispatcher';
 import ChatScreen from '../messagesComponents/chatScreen';
 import SearchUserScreen from '../messagesComponents/searchUser';
 import { StatusBar } from 'react-native';
 import { useTheme } from '../color/themeContext';
 import { colorApp, colorBackground, colorWhite } from '../../styles/appColors/appColors';
+import Insights from '../pages/insights';
 
 const FeedStack = createStackNavigator();
 
@@ -210,6 +211,16 @@ export default function Home() {
 						headerShown: false,
 						drawerLabel: () => (
 						<MessagesButton navigation={navigation} />
+						),
+					})}
+				/>
+				<Drawer.Screen
+					name="Insights"
+					component={Insights}
+					options={({ navigation }) => ({
+						headerShown: false,
+						drawerLabel: () => (
+						<InsightsButton navigation={navigation} />
 						),
 					})}
 				/>

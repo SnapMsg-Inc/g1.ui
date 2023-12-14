@@ -59,8 +59,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 			let search = extractHashtagsAndWords(query, false)
 			let urlWithQueryParams;
 			query !== null ? 
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?${search}` :
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
             if (newPosts && newPosts.length > 0) {
@@ -76,7 +76,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 			if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setFullPosts([])
 			setIsLoading(false)
             setIsLoadingError(true)
@@ -96,9 +96,9 @@ const ForYouScreen = ({searchQuery=null}) => {
 			let search = extractHashtagsAndWords(searchQuery, false)
 			console.log('estoy buscando ', search)
 			searchQuery !== null ? 
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?${search}` :
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
 				// TODO: si search query == null entonces tengo que usar el endp de recommended users
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
             if (newPosts && newPosts.length > 0) {
@@ -113,7 +113,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 			if (error.response.status >= 400 && error.response.status < 500)
                 setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
             if (error.response.status >= 500)
-                setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
             setFullPosts([])
 			setIsLoading(false)
             setIsLoadingError(true)
@@ -161,7 +161,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 				if (error.response.status >= 400 && error.response.status < 500)
 					setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
 				if (error.response.status >= 500)
-					setMessageError([{message: 'Services not available.\nPlease retry again later'}])
+					setMessageError([{message: 'Services not available.\nPlease try again later'}])
 				setUsers([])
 				setIsLoading(false)
 				setIsLoadingError(true)
@@ -241,7 +241,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 												/>
 											{fullPosts.length === 0 && 
 												<View style={{marginVertical: 10}}>
-													<Text style={styles.text}>
+													<Text style={[styles.text, {color: theme.whiteColor}]}>
 														No posts found for {searchQuery}
 													</Text>
 													<Text style={styles.textAlt}>
@@ -252,7 +252,7 @@ const ForYouScreen = ({searchQuery=null}) => {
 										</View>
 										) : (fullPosts.length > 0 ? (
 												<View style={{marginVertical: 10}}>
-													<Text style={styles.text}>
+													<Text style={[styles.text, {color: theme.whiteColor}]}>
 														Not users found for {searchQuery}
 													</Text>
 													<Text style={styles.textAlt}>

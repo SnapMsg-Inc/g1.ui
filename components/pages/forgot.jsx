@@ -10,6 +10,7 @@ import AcceptButton from "../buttons/buttonAcept"
 import { ValidateForgot } from "../forms/validations";
 import { ResetPassword } from "../connectivity/authorization";
 import { useTheme } from "../color/themeContext";
+import { sendMetricsDD } from "../connectivity/ddMetrics";
 
 export default function ForgotPassword({navigation}) {
     const [email, setEmail] = useState('')
@@ -26,6 +27,7 @@ export default function ForgotPassword({navigation}) {
                     [{ text: 'OK', onPress: () => navigation.goBack() }],
                     { cancelable: false }
                 );
+                sendMetricsDD('user_forgot', 'forgot_user', 'forgot_password_user')
             })
             .catch((error) => {
                 Alert.alert(

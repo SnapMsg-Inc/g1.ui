@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { Octicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles/notifications/notificationHeader';
@@ -13,7 +12,7 @@ export default function NotificationHeader({ navigation }) {
     return (
         <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <View style={styles.header}>
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {
                         navigation.dispatch(DrawerActions.openDrawer());
                     }}
@@ -22,7 +21,7 @@ export default function NotificationHeader({ navigation }) {
                         <Octicons name="bell" color={colorApp} size={24} />
                         <Text style={styles.font}>Notifications</Text>
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 <View style={styles.containerLogo}>
                     <Icon name="snapchat-ghost" color={colorApp} size={30}/>
                     <Icon name="envelope" color={colorApp} size={10}/>

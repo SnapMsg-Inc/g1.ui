@@ -70,8 +70,24 @@ const addedNotifications = async (msg) => {
         'body': msg.notification.body,
     });
     
+    let mentionsArray = await AsyncStorage.getItem('mentions');
+    mentionsArray = mentionsArray ? JSON.parse(mentionsArray) : [];
+
+    if (msg.notification.title === 'New Mention') {
+        mentionsArray.unshift({
+            'key': msg.sentTime,
+            'title': msg.notification.title,
+            'body': msg.notification.body,
+        });
+        await AsyncStorage.setItem('mentions', JSON.stringify(mentionsArray));
+    }
+
     if (notificationsArray.length > 10) {
         notificationsArray.pop();
+    }
+
+    if (mentionsArray.length > 10) {
+        mentionsArray.pop();
     }
 
     await AsyncStorage.setItem('notifications', JSON.stringify(notificationsArray));

@@ -25,7 +25,6 @@ import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
 import { colorApp, colorBackground, colorText, colorWhite } from "../../../styles/appColors/appColors";
-import { TouchableHighlight } from "react-native-gesture-handler";
 import Preferences from "../../pages/preferences";
 import { useTheme } from "../../color/themeContext";
 import { LoggedUserContext } from "../../connectivity/auth/loggedUserContext";
@@ -323,7 +322,7 @@ function EditProfile({navigation}) {
                 <Text style={stylesEditProfile.fieldText}>
                     Interests
                 </Text>
-                <TouchableHighlight onPress={() => handleInterests()}>
+                <TouchableOpacity onPress={() => handleInterests()}>
                     <View style={stylesEditProfile.interestsButton}>
                         <Text style={stylesEditProfile.text}>
                             Edit interests
@@ -334,7 +333,7 @@ function EditProfile({navigation}) {
                             size={20} 
                         />
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
 
             <View style={stylesEditProfile.footer}>

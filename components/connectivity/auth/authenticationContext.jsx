@@ -6,13 +6,14 @@ import {    CreateAccount,
             SignFederate,
             SignInWithGoogle } from "../authorization";
 import { getAuth } from "firebase/auth";
-import firebaseApp from "../firebase";
+import firebaseApp, { auth } from "../firebase";
 import { GetMe, GetToken, RegisterTokenDevice, postsUser, postsUserFederate } from "../servicesUser";
 import { SignInReducer } from "../reducer/authReducer";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as Location from 'expo-location'
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { sendMetricsDD } from "../ddMetrics";
 
 export const AuthenticationContext = createContext()
 
@@ -48,14 +49,14 @@ export const AuthenticationContextProvider = ({children}) => {
                     if (isRegister || loginFederate) {
                         dispatchSignedIn({type:"SIGN_OUT"})
                         return
-                    } 
+                    }
                     AsyncStorage.getItem('fcmToken')
                     .then(deviceToken => {
                         GetToken()
                         .then(token => {
                             RegisterTokenDevice(token, deviceToken)
                             .then(response => console.log('Token device updated ', response.status))
-                            .catch(error => console.log('Error token device ', error.response.status))
+                            .catch(error => console.log('Error token device ', error.response))
                         })
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
@@ -70,14 +71,19 @@ export const AuthenticationContextProvider = ({children}) => {
     },[])
 
     const onLogin = (email, password) => {
+        const timeInit = Date.now()
         setIsLoading(true)
         setError(false)
         LoginAccount(email, password)
         .then((userCredential) => {
+            const timeLogin = Date.now() - timeInit
+            sendMetricsDD('users.login_time.hist','hist', `${timeLogin}.00`, [])
+            sendMetricsDD('users.login_success', 'incr', '1',[])
             dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
             setIsLoading(false)
         })
         .catch((error) => {
+            sendMetricsDD('user.login_failure', 'incr', '1',[])
             alert('Invalid username or password.\nPlease check your credentials and try again.')
             dispatchSignedIn({type: 'SIGN_OUT'})
             setError(true)
@@ -98,14 +104,16 @@ export const AuthenticationContextProvider = ({children}) => {
                 .then((token)=>{
                     GetMe(token)
                     .then(()=>{
+                        sendMetricsDD('users.login_success_federate', 'incr', '1',[])
                         setLoginFederate(false)
                         setIsLoading(false)
                         dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
                     })
                     .catch((error) => {
+                        sendMetricsDD('user.login_failure_federate', 'incr', '1',[])
                         console.error(error.response.status)
                         if (error.response.status === 502)
-                            alert('Services not available.\nPlease retry again later')
+                            alert('Services not available.\nPlease try again later')
                         else if (error.response.status === 404){
                             alert('User not found.\nPlease create account.')
                             DeleteUserFirebase();
@@ -125,7 +133,7 @@ export const AuthenticationContextProvider = ({children}) => {
         })
     }
 
-    const onRegister = (data, password, navigateTo) => {
+    const onRegister = (data, password,time, navigateTo) => {
         setIsLoading(true)
         setIsRegister(true)
         setError(false)
@@ -133,18 +141,21 @@ export const AuthenticationContextProvider = ({children}) => {
         .then((userCredential) => {
             postsUser(data, false)
             .then((response) => {
-                console.log("User created");
+                const timeRegister = Date.now() - time
+                sendMetricsDD('users.register_time.hist','hist', `${timeRegister}.00`,[])
+                sendMetricsDD('users.register_success', 'incr', '1',[])
                 dispatchSignedIn({type: 'SIGN_UP'})
+                setIsLoading(false)
                 navigateTo()
             })
             . catch((error) => {
                 console.error(error.response.status)
                 if (error.response.status === 502)
-                    alert('Services not available.\nPlease retry again later')
+                    alert('Services not available.\nPlease try again later')
                 deleteUser(auth.currentUser)
             })
-            setIsLoading(false)
         }).catch((error) => {
+            sendMetricsDD('users.register_failure', 'incr', '1',[])
             console.error('register', error.code);
             dispatchSignedIn({type: 'SIGN_OUT'})
             alert('Email already in use')
@@ -167,15 +178,16 @@ export const AuthenticationContextProvider = ({children}) => {
                 .then((token)=>{
                     GetMe(token)
                     .then((response) => {
+                        sendMetricsDD('users.register_failure_federate', 'incr', '1',[])
                         alert('User already exists.\nPlease sing in.')
                         onLogout()
                         setIsRegister(false)
                         setIsLoading(false)
                     })
                     .catch((error) => {
-                        console.error(error.response.status)
-                        if (error.response.status === 502){
-                            alert('Services not available.\nPlease retry again later')
+                        console.error('No users exists',error.response.status)
+                        if (error.response.status >= 500){
+                            alert('Services not available.\nPlease try again later')
                             DeleteUserFirebase()
                             onLogout()
                             setIsLoading(false)
@@ -199,6 +211,7 @@ export const AuthenticationContextProvider = ({children}) => {
                                 "birthdate": today.toISOString().substring(0,10),
                             }, token)
                             .then(() => {
+                                sendMetricsDD('users.register_success_federate', 'incr', '1',[])
                                 dispatchSignedIn({type: 'SIGN_UP'})
                                 navigateTo()
                                 setIsLoading(false)

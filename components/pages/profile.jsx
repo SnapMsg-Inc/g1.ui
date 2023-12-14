@@ -17,16 +17,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SnapShareScreen from '../profileComponents/profileNavigation/snapShareScreen';
 import { useTheme } from '../color/themeContext';
 
-const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+const URL_POST = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts'
 
 
 const Profile = ({ navigation }) => {
-	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+	const { userData, isLoadingUserData, countryLocate, locality } = useContext(LoggedUserContext)
 	const { theme } = useTheme()
-	const [coordinates, setCoordinates] = useState(userData.zone)
-	const [locality, setLocality] = useState('')
-    const [countryLocate, setCountryLocate] = useState('')
-	
+
 	const tabBar = props => (
 		<MaterialTabBar
 			{...props}
@@ -37,38 +34,6 @@ const Profile = ({ navigation }) => {
 			labelStyle={styles.label}
 		/>
 	);
-	
-	useEffect(()=>{
-        const setData = () => {
-			if (coordinates.latitude !== 0 && coordinates.longitude !== 0)
-				ReverseGeocode(coordinates)
-				.then((address) => {
-					const { city, country } = address[0]
-					setLocality(city)
-					setCountryLocate(country)
-				}).catch((error) => {
-					console.error(error)
-				})
-        }
-        GetPermission()
-        .then((location) => {
-            if (location.status !== 'granted')
-                Alert.alert(
-                    'Permission not granted',
-                    'Allow the app to use location service.',
-                    [{ text: 'OK' }],
-                    { cancelable: false }
-                );
-            else
-                setData()
-        })
-    }, [GetPermission])
-	
-	// useFocusEffect(
-    //     React.useCallback(() => {
-    //       	fetchUserDataFromApi()
-    //     }, [])
-    // );
 	
 	const scrollY = useRef(new Animated.Value(0)).current;
 	

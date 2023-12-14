@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Pressable, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
-import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { Octicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles/discover/discoverHeader';
@@ -17,9 +16,9 @@ export default function DiscoverHeader({ navigation }) {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-            <TouchableHighlight onPress={handleSearchPress}>
+            <TouchableOpacity onPress={handleSearchPress}>
                 <View style={styles.header}>
-                    <TouchableHighlight
+                    <TouchableOpacity
                         onPress={() => { 
                             navigation.dispatch(DrawerActions.openDrawer())
                         }}
@@ -27,7 +26,7 @@ export default function DiscoverHeader({ navigation }) {
                         <Octicons name="three-bars" size={22} 
                             color={colorApp} 
                         />
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                     <View style={{flexDirection:'row', justifyContent: 'center'}}>
                     
                         <Octicons name="search" size={22} 
@@ -41,7 +40,7 @@ export default function DiscoverHeader({ navigation }) {
                         {/* <Text style={styles.fontLogo}>SnapMsg</Text> */}
                     </View>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         </View>
     );
 }

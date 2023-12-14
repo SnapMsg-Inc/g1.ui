@@ -1,6 +1,6 @@
-import { Button, Text, View } from "react-native";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { Button, Text, TouchableOpacity, View } from "react-native";
 import stylesAccept from "../../styles/buttons/buttonAcept";
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 const AcceptButton = ({accept, text="Accept"})  => {
     return (

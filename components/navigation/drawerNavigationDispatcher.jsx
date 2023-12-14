@@ -5,6 +5,7 @@ import { Octicons } from '@expo/vector-icons';
 import styles from '../../styles/navigation/drawerNavDispatcher';
 import { colorApp } from '../../styles/appColors/appColors';
 import { useTheme } from '../color/themeContext';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 export function ProfileButton({ navigation }) {
@@ -87,6 +88,22 @@ export function MessagesButton({ navigation }) {
 		<View style={styles.container}>
 			<FontAwesome5 name="envelope" color={colorApp} size={24} />
 			<Text style={[styles.text, {color: theme.whiteColor}]}>Messages</Text>
+		</View>
+	</TouchableOpacity>
+	);
+}
+
+export function InsightsButton({ navigation }) {
+	const { theme } = useTheme()
+	const handleMessagesPress = () => {
+		navigation.navigate('Insights');
+	}
+
+	return (
+	<TouchableOpacity onPress={handleMessagesPress}>
+		<View style={styles.container}>
+			<Ionicons name="stats-chart" color={colorApp} size={24} />
+			<Text style={[styles.text, {color: theme.whiteColor}]}>Insights</Text>
 		</View>
 	</TouchableOpacity>
 	);

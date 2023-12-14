@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput,
-    TouchableHighlight, ScrollView, Alert, ActivityIndicator, } from 'react-native';
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -12,7 +12,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
 import styles from '../../../styles/profile/editPost';
@@ -210,25 +209,25 @@ const EditPost = ({ navigation }) => {
             <View style={[styles.header, { backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
-                <TouchableHighlight
+                <TouchableOpacity
                         style={styles.cancelButton}
                         onPress={() => { 
                             navigation.goBack()
                         }}
                     >
                         <Text style={[styles.cancelButtonLabel, { color: theme.whiteColor}]}>Cancel</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
                         <Text>{transferred} % Completed!</Text>
                         <ActivityIndicator size="large" color={colorApp} />
                     </View>
                     ) : (
-                    <TouchableHighlight
+                    <TouchableOpacity
                         style={styles.postButton}
                         onPress={submitPost}>
                         <Text style={styles.postButtonLabel}>Confirm edition</Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 )}
             </View>
 
@@ -241,14 +240,14 @@ const EditPost = ({ navigation }) => {
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
-                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} />
+                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
-                                        <FontAwesome5 name="lock" color={'red'} size={16} />
+                                        <FontAwesome5 name="lock" color={'red'} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             )
@@ -265,7 +264,7 @@ const EditPost = ({ navigation }) => {
                             textAlignVertical="top"
                             maxLength={300}
                         />
-                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10, fontSize: 18}}>{text.length} / 300</Text>
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}

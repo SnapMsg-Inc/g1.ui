@@ -6,7 +6,8 @@ import {
     Image,
     TouchableHighlight,
     Button, 
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
@@ -123,7 +124,7 @@ export default function ChatScreen({ navigation }) {
             console.log(token)
             SendNotificationMessage(token, data.uid, userData.alias, text)
             .then(response => console.log('Send notification message ', response.status))
-            .catch(error => console.log('Error send notification message ', error.response))
+            .catch(error => console.log('Error send notification message ', error?.response?.status))
         })
     }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
@@ -199,7 +200,7 @@ export default function ChatScreen({ navigation }) {
             <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 {/* <BackButton onPress={() => {navigation.goBack()}}/> */}
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {navigation.goBack()}}
                     style={{
                         position: 'absolute',
@@ -214,8 +215,8 @@ export default function ChatScreen({ navigation }) {
                     }}
                     >
                     <Feather name="chevron-left" color={theme.whiteColor} size={36} />
-                </TouchableHighlight>
-                <TouchableHighlight onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
                     <View  style={styles.userInfo}>
                         <Image source={(data.pic == 'none') || (data.pic === '') ? defaultImage : { uri: data.pic }} style={styles.image} />
                         <View>
@@ -223,7 +224,7 @@ export default function ChatScreen({ navigation }) {
                             <Text style={styles.nick}>{`@${data.nick}`}</Text>
                         </View>
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
             {/* MESSAGES */}
             <GiftedChat
