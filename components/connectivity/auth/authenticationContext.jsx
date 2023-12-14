@@ -27,7 +27,6 @@ export const AuthenticationContextProvider = ({children}) => {
         userToken:null,
     })
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false)
-    const [isVerificate, setIsVerificate] = useState(false)
 
     useEffect(() => {
         const CheckIfLocationEnabled = async () => {
@@ -57,7 +56,7 @@ export const AuthenticationContextProvider = ({children}) => {
                         .then(token => {
                             RegisterTokenDevice(token, deviceToken)
                             .then(response => console.log('Token device updated ', response.status))
-                            .catch(error => console.log('Error token device ', error.response.status))
+                            .catch(error => console.log('Error token device ', error.response))
                         })
                     });
                     dispatchSignedIn({type:"SIGN_IN", payload:"signed_in"})
@@ -72,19 +71,19 @@ export const AuthenticationContextProvider = ({children}) => {
     },[])
 
     const onLogin = (email, password) => {
-        const timeInit = Date.noew()
+        const timeInit = Date.now()
         setIsLoading(true)
         setError(false)
         LoginAccount(email, password)
         .then((userCredential) => {
             const timeLogin = Date.now() - timeInit
-            sendMetricsDD('user_login_time', 'login_user_time', `user_login_time:${timeLogin}`)
-            sendMetricsDD('user_login_failure', 'login_user_success', 'user_login_sucess')
+            sendMetricsDD('users.login_time.hist','hist', `${timeLogin}.00`, [])
+            sendMetricsDD('users.login_success', 'incr', '1',[])
             dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
             setIsLoading(false)
         })
         .catch((error) => {
-            sendMetricsDD('user_login_failure', 'login_user_failure', 'user_login_failure')
+            sendMetricsDD('user.login_failure', 'incr', '1',[])
             alert('Invalid username or password.\nPlease check your credentials and try again.')
             dispatchSignedIn({type: 'SIGN_OUT'})
             setError(true)
@@ -105,13 +104,13 @@ export const AuthenticationContextProvider = ({children}) => {
                 .then((token)=>{
                     GetMe(token)
                     .then(()=>{
-                        sendMetricsDD('user_login_federate_success', 'login_user_federate_success', 'user_login_federate_sucess')
+                        sendMetricsDD('users.login_success_federate', 'incr', '1',[])
                         setLoginFederate(false)
                         setIsLoading(false)
                         dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
                     })
                     .catch((error) => {
-                        sendMetricsDD('user_login_federate_failure', 'login_user_federate_failure', 'user_login_federate_failure')
+                        sendMetricsDD('user.login_failure_federate', 'incr', '1',[])
                         console.error(error.response.status)
                         if (error.response.status === 502)
                             alert('Services not available.\nPlease try again later')
@@ -143,8 +142,8 @@ export const AuthenticationContextProvider = ({children}) => {
             postsUser(data, false)
             .then((response) => {
                 const timeRegister = Date.now() - time
-                sendMetricsDD('user_register_time', 'register_time', `register_time_user:${timeRegister}`)
-                sendMetricsDD('user_register_success', 'register_success', 'register_success_user')
+                sendMetricsDD('users.register_time.hist','hist', `${timeRegister}.00`,[])
+                sendMetricsDD('users.register_success', 'incr', '1',[])
                 dispatchSignedIn({type: 'SIGN_UP'})
                 setIsLoading(false)
                 navigateTo()
@@ -156,7 +155,7 @@ export const AuthenticationContextProvider = ({children}) => {
                 deleteUser(auth.currentUser)
             })
         }).catch((error) => {
-            sendMetricsDD('user_register_failed', 'register_failed', 'register_failed_user')
+            sendMetricsDD('users.register_failure', 'incr', '1',[])
             console.error('register', error.code);
             dispatchSignedIn({type: 'SIGN_OUT'})
             alert('Email already in use')
@@ -179,7 +178,7 @@ export const AuthenticationContextProvider = ({children}) => {
                 .then((token)=>{
                     GetMe(token)
                     .then((response) => {
-                        sendMetricsDD('user_register_federate_failed', 'register_federate_failed', 'register_federate_failed_user')
+                        sendMetricsDD('users.register_failure_federate', 'incr', '1',[])
                         alert('User already exists.\nPlease sing in.')
                         onLogout()
                         setIsRegister(false)
@@ -212,7 +211,7 @@ export const AuthenticationContextProvider = ({children}) => {
                                 "birthdate": today.toISOString().substring(0,10),
                             }, token)
                             .then(() => {
-                                sendMetricsDD('user_register_federate_success', 'register_federate_success', 'register_federate_success_user')
+                                sendMetricsDD('users.register_success_federate', 'incr', '1',[])
                                 dispatchSignedIn({type: 'SIGN_UP'})
                                 navigateTo()
                                 setIsLoading(false)

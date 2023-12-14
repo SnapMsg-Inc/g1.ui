@@ -59,8 +59,8 @@ const ForYouScreen = ({searchQuery=null}) => {
 			let search = extractHashtagsAndWords(query, false)
 			let urlWithQueryParams;
 			query !== null ? 
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?${search}` :
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, 0);
             if (newPosts && newPosts.length > 0) {
@@ -96,9 +96,9 @@ const ForYouScreen = ({searchQuery=null}) => {
 			let search = extractHashtagsAndWords(searchQuery, false)
 			console.log('estoy buscando ', search)
 			searchQuery !== null ? 
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?${search}` :
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?${search}` :
 				// TODO: si search query == null entonces tengo que usar el endp de recommended users
-				urlWithQueryParams = `https://api-gateway-marioax.cloud.okteto.net/posts?`
+				urlWithQueryParams = `https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts?`
 
             const newPosts = await GetPosts(urlWithQueryParams, 10, currentPage);
             if (newPosts && newPosts.length > 0) {

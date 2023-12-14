@@ -1,27 +1,30 @@
 import axios from "axios"
-import Config from "react-native-config"
+import { auth } from "./firebase";
+import { getIdToken } from "firebase/auth";
 
-export const sendMetricsDD = async (title, text, agg_key) => {
-    const datadogApiUrl = 'https://api.us5.datadoghq.com/api/v1/events'
-    const tags =  ['app:snapmsg_android', 'env:prod']
+export const sendMetricsDD = async (metric, type, value, tags=[]) => {
+    const url = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/stats'
     const data = {
-        title,
-        text,
-        tags,
-        priority: 'normal', // Set priority to normal to potentially extend retention
-        aggregation_key : agg_key,    
-    };
-  
+        "metric": metric,
+        "type": type,
+        'tags': tags,
+        "value": `${value}`
+    }   
+
     try {
-      const response = await axios.post(datadogApiUrl, data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'DD-API-KEY': Config.DD_API_KEY,
-        },
-      });
-      if (response)
-        console.log('send metrics ', response.status)
+        const token = await getIdToken(auth.currentUser, false);
+        const response = await axios({
+            method: 'post',
+            url: url,
+            data: data,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (response)
+            console.log('send metrics ', response.status)
     } catch (error) {
-      console.error('Error submitting event to Datadog:', error.response);
+        console.error('Error submitting event to Datadog:', error?.response?.status);
     }
 };

@@ -12,6 +12,7 @@ import Preferences from "./preferences";
 import { GetToken, PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
 import { useTheme } from "../color/themeContext";
+import { sendMetricsDD } from "../connectivity/ddMetrics";
 
 function FinishSignUp({ navigation }) {
     const [countryLocate, setCountryLocate] = useState('')
@@ -27,6 +28,7 @@ function FinishSignUp({ navigation }) {
             PatchUser({"zone": coordinates,
                         "interests": interestsList}, token)
             .then((response) => {
+                sendMetricsDD('users.zone', 'incr', '1', [`zone:${locality}`])
                 navigation.navigate('Register')
             })
             .catch((error) => {

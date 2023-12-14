@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SnapShareScreen from '../profileComponents/profileNavigation/snapShareScreen';
 import { useTheme } from '../color/themeContext';
 
-const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+const URL_POST = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts'
 
 
 const Profile = ({ navigation }) => {
