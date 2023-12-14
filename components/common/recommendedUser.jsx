@@ -45,9 +45,10 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 	const navigation = useNavigation();
 	const { userData } = useContext(LoggedUserContext)
 	const [isFollowing, setIsFollowing] = useState(false);
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 
 	const fetchDataFromApi = async () => {
+		setLoading(true)
 		if (userData.uid !== uid) {
 			setLoading(true)
 			checkIfUserFollows(setIsFollowing, userData.uid, uid)
@@ -59,6 +60,7 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 				setLoading(false)
 			})
 		}
+		setLoading(false)
     }
 
 	useFocusEffect(
