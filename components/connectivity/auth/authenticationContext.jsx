@@ -10,8 +10,6 @@ import firebaseApp, { auth } from "../firebase";
 import { GetMe, GetToken, RegisterTokenDevice, postsUser, postsUserFederate } from "../servicesUser";
 import { SignInReducer } from "../reducer/authReducer";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import * as Location from 'expo-location'
-import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { sendMetricsDD } from "../ddMetrics";
 
@@ -20,6 +18,7 @@ export const AuthenticationContext = createContext()
 export const AuthenticationContextProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isRegister, setIsRegister] = useState(false)
+    const [isLogin, setIsLogin] = useState(false)
     const [loginFederate, setLoginFederate] = useState(false)
     const [isLoadingApp, setIsLoadingApp] = useState(false)
     const [error, setError] = useState(false)
@@ -29,24 +28,11 @@ export const AuthenticationContextProvider = ({children}) => {
     const [locationServiceEnabled, setLocationServiceEnabled] = useState(false)
 
     useEffect(() => {
-        const CheckIfLocationEnabled = async () => {
-            let enabled = await Location.hasServicesEnabledAsync();
-            if (!enabled)
-                Alert.alert(
-                    'Location Service not enabled',
-                    'Please enable your location services to continue',
-                    [{ text: 'OK' }],
-                    { cancelable: false }
-                ) 
-            else
-                setLocationServiceEnabled(enabled);
-        }
-
         const checkAuth = () => {
             setIsLoadingApp(true)
             getAuth(firebaseApp).onAuthStateChanged((currentUser) => {
                 if (currentUser) {
-                    if (isRegister || loginFederate) {
+                    if (isRegister || loginFederate || isLogin) {
                         dispatchSignedIn({type:"SIGN_OUT"})
                         return
                     }
@@ -65,7 +51,6 @@ export const AuthenticationContextProvider = ({children}) => {
                 setIsLoadingApp(false)
             })
         }
-        CheckIfLocationEnabled()
         checkAuth()
     },[])
 
@@ -73,13 +58,31 @@ export const AuthenticationContextProvider = ({children}) => {
         const timeInit = Date.now()
         setIsLoading(true)
         setError(false)
+        setIsLogin(true)
         LoginAccount(email, password)
-        .then((userCredential) => {
-            const timeLogin = Date.now() - timeInit
-            sendMetricsDD('users.login_time.hist','hist', `${timeLogin}.00`, [])
-            sendMetricsDD('users.login_success', 'incr', '1',[])
-            dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
-            setIsLoading(false)
+        .then(async (userCredential) => {
+            await GetToken()
+            .then(async token => {
+                await GetMe(token)
+                .then(response => {
+                    if (response.data.is_blocked) {
+                        onLogout()
+                        setIsLoading(false)
+                        sendMetricsDD('users.login_failure', 'incr', '1', [])
+                        alert('Your account is blocked.\nPlease contact with Admin.')
+                    } else {
+                        const timeLogin = Date.now() - timeInit
+                        sendMetricsDD('users.login_time.hist','hist', `${timeLogin}.00`, [])
+                        sendMetricsDD('users.login_success', 'incr', '1', [])
+                        dispatchSignedIn({type:"SIGN_IN", payload: "signed_in"})
+                        setIsLoading(false)
+                    }
+                })
+                .catch(error => console.log('Error in login', error?.response?.status))
+                .finally(() => setIsLogin(false))
+            })
+            .catch(error => console.log('Token error',error))
+            .finally(() => setIsLogin(false))
         })
         .catch((error) => {
             sendMetricsDD('user.login_failure', 'incr', '1',[])
@@ -87,6 +90,7 @@ export const AuthenticationContextProvider = ({children}) => {
             dispatchSignedIn({type: 'SIGN_OUT'})
             setError(true)
             setIsLoading(false)
+            setIsLogin(false)
         })
     }
     
@@ -108,6 +112,7 @@ export const AuthenticationContextProvider = ({children}) => {
                             setIsLoading(false);
                             setLoginFederate(false);
                             sendMetricsDD('users.login_failure_federate', 'incr', '1',[])
+                            alert('Your account is blocked.\nPlease contact with Admin.')
                         } else {
                             sendMetricsDD('users.login_success_federate', 'incr', '1',[])
                             setLoginFederate(false)
@@ -247,7 +252,7 @@ export const AuthenticationContextProvider = ({children}) => {
         <AuthenticationContext.Provider 
             value ={
                 {
-                    isAuthenticated: (signedIn.userToken === "signed_in") && !isRegister && !loginFederate,
+                    isAuthenticated: (signedIn.userToken === "signed_in") && !isRegister && !loginFederate && !isLogin,
                     signedIn,
                     isRegister,
                     loginFederate,
