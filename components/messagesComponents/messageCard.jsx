@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useTheme } from '../color/themeContext';
 
-const MAX_TEXT_LENGTH = 30;
+const MAX_TEXT_LENGTH = 20;
 
 const truncateText = (text) => {
 	if (text.length <= MAX_TEXT_LENGTH) {
@@ -13,8 +15,19 @@ const truncateText = (text) => {
 	}
 };
 
+const MAX_ALIAS_LENGTH = 12;
+
+const truncateAlias = (alias) => {
+	if (alias.length <= MAX_ALIAS_LENGTH) {
+		return alias;
+	} else {
+		return alias.slice(0, MAX_ALIAS_LENGTH) + '...';
+	}
+};
+
 const MessageCard = ({ data }) => {
 	const navigation = useNavigation();
+    const { theme } = useTheme()
     const [isLoading, setIsLoading] = useState(false)
 
 	const handleMessagePress = () => {
@@ -36,10 +49,14 @@ const MessageCard = ({ data }) => {
                                 </View>
                                 <View style={stylesMessages.textSection}>
                                     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                        <Text style={stylesMessages.alias}>{data.alias}</Text>
+                                        <Text style={[stylesMessages.alias, {color: theme.whiteColor}]}>{truncateAlias(data.alias)}</Text>
                                         <Text style={stylesMessages.text}>{data.messageTime}</Text>
                                     </View>
-                                    <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text>
+                                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text>
+                                        {!data.readByMe && <Icon name="circle" size={15} color={colorApp} />}
+                                    </View>
+                                    {/* <Text style={stylesMessages.text}>{truncateText(data.messageText)}</Text> */}
                                 </View>
                             </View>
                         </View>

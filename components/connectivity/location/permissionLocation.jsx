@@ -1,4 +1,7 @@
 import * as Location from 'expo-location';
+import { PermissionsAndroid } from 'react-native';
+
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 
 export const GetPermission = async () =>
     await Location.requestForegroundPermissionsAsync()

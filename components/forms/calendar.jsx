@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableHighlight, Text } from 'react-native';
+import { View, TouchableHighlight, Text, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import stylesCalendar from '../../styles/forms/calendar';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -56,11 +56,11 @@ export default function Calendar({ data, setData, error, setError }) {
     return (
         <View style={stylesCalendar.container}>
             <View style={stylesCalendar.calendarContainer}>
-                <TouchableHighlight onPress={onPressTouchable}>
+                <TouchableOpacity onPress={onPressTouchable}>
                     <Text style={stylesCalendar.text}>
                         {hasSelectedDate ? formatDate(data) : 'Date of Birth'}
                     </Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 {show && (
                     <DateTimePicker
                         value={data}

@@ -6,7 +6,8 @@ import {
     Image,
     TouchableHighlight,
     Button, 
-    ScrollView
+    ScrollView,
+    TouchableOpacity
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../styles/appColors/appColors';
@@ -15,46 +16,115 @@ import {Bubble, GiftedChat, Send, InputToolbar} from 'react-native-gifted-chat';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import {
+    collection,
+    addDoc,
+    orderBy,
+    query,
+    onSnapshot,
+    getDoc,
+    setDoc,
+    doc,
+    updateDoc,
+  } from 'firebase/firestore';
+import { database } from '../connectivity/firebase';
+import { useTheme } from '../color/themeContext';
+import { GetToken, SendNotificationMessage } from '../connectivity/servicesUser';
+
+const generateChatRoomUid = (uid1, uid2) => {
+    // Ordena los IDs de usuario para garantizar consistencia.
+    // Esto es necesario ya que el orden de los IDs de usuario  no
+    // debe afectar el chatRoomUid, que es igual para los dos users involucrados.
+    const sortedUserIds = [uid1, uid2].sort();
+
+    // Combina los IDs de usuario para formar el chatRoomUid.
+    const chatRoomUid = sortedUserIds.join('_');
+
+return chatRoomUid;
+};
 
 export default function ChatScreen({ navigation }) {
     const route = useRoute();
 	const { data } = route.params;
 	const { userData } = useContext(LoggedUserContext)
-    
+    const { theme } = useTheme()
     const defaultImage = require('../../assets/default_user_pic.png')
 
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
-        setMessages([
-        {
-            _id: 1,
-            text: 'Hello developer',
-            createdAt: new Date(),
-            user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: data.pic,
-            },
-        },
-        {
-            _id: 2,
-            text: 'Hello world',
-            createdAt: new Date(),
-            user: {
-            _id: 1,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-            },
-        },
-        ]);
-    }, []);
+    const checkAndCreateChatRoom = async () => {
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+        const chatRoomRef = doc(database, `chatrooms/${chatRoomUid}`);
+        const docSnap = await getDoc(chatRoomRef);
+        
+        // If the chatroom doesn't exist, create it
+        if (!docSnap.exists()) {
+            await setDoc(doc(database, "chatrooms", chatRoomUid), {
+                "chatRoomUid": chatRoomUid,
+                ["readBy_" + userData.uid]: true,
+                ["readBy_" + data.uid]: false,
+            });
+        }
 
-    const onSend = useCallback((messages = []) => {
-        setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, messages),
-        );
-    }, []);
+        // Update the readBy field of the chatroom
+        await updateDoc(chatRoomRef, {
+            ["readBy_" + userData.uid]: true,
+          });
+    };
+
+    useEffect(() => {
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+        checkAndCreateChatRoom();
+        
+        const collectionRef = collection(database, `chatrooms/${chatRoomUid}/messages`);
+        const q = query(collectionRef, orderBy('createdAt', 'desc'));
+        
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            setMessages(
+                querySnapshot.docs.map((doc) => ({
+                _id: doc.data()._id,
+                createdAt: doc.data().createdAt.toDate(),
+                text: doc.data().text,
+                user: doc.data().user,
+                }))
+            );
+        });
+        
+        return unsubscribe;
+    }, [database, generateChatRoomUid, userData.uid, data.uid]);
+
+    const onSend = useCallback(async (messages = []) => {
+        const { createdAt, text, user } = messages[0];
+        // The message ID must be unique so we use a timestamp
+        const _id = createdAt.getTime().toString();
+    
+        const chatRoomUid = generateChatRoomUid(userData.uid, data.uid);
+        
+        // Wait for the chatroom to be created before updating it
+        await checkAndCreateChatRoom();
+
+        // Add the message to the chatroom messages collection
+        addDoc(collection(database, `chatrooms/${chatRoomUid}/messages`), {
+            _id,
+            createdAt,
+            text,
+            user
+        });
+        
+        // Update the chatroom fields
+        updateDoc(doc(database, `chatrooms/${chatRoomUid}`), {
+            lastMessage: text,
+            lastMessageCreatedAt: createdAt,
+            ["readBy_" + data.uid]: false,
+        });
+        
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
+        GetToken()
+        .then(token => {
+            SendNotificationMessage(token, data.uid, userData.alias, text)
+            .catch(error => console.error('Error send notification message ', error?.response?.status))
+        })
+    }, [database, generateChatRoomUid, userData.uid, data.uid]);
 
     const renderSend = (props) => {
         return (
@@ -94,10 +164,10 @@ export default function ChatScreen({ navigation }) {
           <InputToolbar
             {...props}
             containerStyle={{
-                backgroundColor: colorBackground,
+                backgroundColor: theme.backgroundColor,
             }}
             primaryStyle={{ alignItems: 'center' }}
-            textInputStyle={{ color: colorWhite }}
+            textInputStyle={{ color: theme.whiteColor }}
           />
         );
       };
@@ -123,18 +193,18 @@ export default function ChatScreen({ navigation }) {
   	};
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor: theme.backgroundColor}]}>
             {/* HEADER */}
-            <View style={styles.header}>
+            <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 {/* <BackButton onPress={() => {navigation.goBack()}}/> */}
-                <TouchableHighlight
+                <TouchableOpacity
                     onPress={() => {navigation.goBack()}}
                     style={{
                         position: 'absolute',
                         top: 18,
                         left: 10,
-                        backgroundColor: '#00000099',
+                        backgroundColor: theme.backgroundColor,
                         height: 30,
                         width: 30,
                         borderRadius: 15,
@@ -142,17 +212,17 @@ export default function ChatScreen({ navigation }) {
                         justifyContent: 'center',
                     }}
                     >
-                    <Feather name="chevron-left" color={colorWhite} size={36} />
-                </TouchableHighlight>
-                <TouchableHighlight onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
+                    <Feather name="chevron-left" color={theme.whiteColor} size={36} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleProfilePress} style={{position: 'absolute', left: 0, top: 0}}>
                     <View  style={styles.userInfo}>
                         <Image source={(data.pic == 'none') || (data.pic === '') ? defaultImage : { uri: data.pic }} style={styles.image} />
                         <View>
-                            <Text style={styles.alias}>{data.alias}</Text>
+                            <Text style={[styles.alias, {color: theme.whiteColor}]}>{data.alias}</Text>
                             <Text style={styles.nick}>{`@${data.nick}`}</Text>
                         </View>
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
             {/* MESSAGES */}
             <GiftedChat
@@ -161,7 +231,8 @@ export default function ChatScreen({ navigation }) {
                 showUserAvatar={false}
                 onSend={(messages) => onSend(messages)}
                 user={{
-                    _id: 1,
+                    _id: userData.uid,
+                    pic: userData.pic,
                 }}
                 renderBubble={renderBubble}
                 alwaysShowSend

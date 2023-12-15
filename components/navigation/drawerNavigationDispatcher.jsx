@@ -4,23 +4,28 @@ import { FontAwesome5 } from 'react-native-vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import styles from '../../styles/navigation/drawerNavDispatcher';
 import { colorApp } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 export function ProfileButton({ navigation }) {
+	const { theme } = useTheme()
 	const handleProfilePress = () => {
 		navigation.navigate('Profile');
 	}
-
+	
 	return (
 		<TouchableOpacity onPress={handleProfilePress}>
 			<View style={styles.container}>
 				<FontAwesome5 name="user" color={colorApp} size={24} />
-				<Text style={styles.text}>Profile</Text>
+				<Text style={[styles.text, {color: theme.whiteColor}]}>Profile</Text>
 			</View>
 		</TouchableOpacity>
 	);
 }
 
 export function FeedButton({ navigation }) {
+	const { theme } = useTheme()
 	const handleFeedPress = () => {
 		navigation.navigate('Feed');
 	}
@@ -29,13 +34,14 @@ export function FeedButton({ navigation }) {
 		<TouchableOpacity onPress={handleFeedPress}>
 			<View style={styles.container}>
 				<Octicons name="home" color={colorApp} size={24} />
-				<Text style={styles.text}>Feed</Text>
+				<Text style={[styles.text, {color: theme.whiteColor}]}>Feed</Text>
 			</View>
 		</TouchableOpacity>
 	);
 }
 
 export function DiscoverButton({ navigation }) {
+	const { theme } = useTheme()
 	const handleDiscoverPress = () => {
 		navigation.navigate('Discover', {
 			screen: 'DiscoverScreen',
@@ -49,13 +55,14 @@ export function DiscoverButton({ navigation }) {
 		<TouchableOpacity onPress={handleDiscoverPress}>
 			<View style={styles.container}>
 				<Octicons name="search" color={colorApp} size={24} />
-				<Text style={styles.text}>Discover</Text>
+				<Text style={[styles.text, {color: theme.whiteColor}]}>Discover</Text>
 			</View>
 		</TouchableOpacity>
 	);
 }
 
 export function NotificationsButton({ navigation }) {
+	const { theme } = useTheme()
 	const handleNotificationsPress = () => {
 		navigation.navigate('Notifications');
 	}
@@ -64,13 +71,14 @@ export function NotificationsButton({ navigation }) {
 		<TouchableOpacity onPress={handleNotificationsPress}>
 			<View style={styles.container}>
 				<Octicons name="bell" color={colorApp} size={24} />
-				<Text style={styles.text}>Notifications</Text>
+				<Text style={[styles.text, {color: theme.whiteColor}]}>Notifications</Text>
 			</View>
 		</TouchableOpacity>
 	);
 }
 
 export function MessagesButton({ navigation }) {
+	const { theme } = useTheme()
 	const handleMessagesPress = () => {
 		navigation.navigate('Messages');
 	}
@@ -79,7 +87,23 @@ export function MessagesButton({ navigation }) {
 	<TouchableOpacity onPress={handleMessagesPress}>
 		<View style={styles.container}>
 			<FontAwesome5 name="envelope" color={colorApp} size={24} />
-			<Text style={styles.text}>Messages</Text>
+			<Text style={[styles.text, {color: theme.whiteColor}]}>Messages</Text>
+		</View>
+	</TouchableOpacity>
+	);
+}
+
+export function InsightsButton({ navigation }) {
+	const { theme } = useTheme()
+	const handleMessagesPress = () => {
+		navigation.navigate('Insights');
+	}
+
+	return (
+	<TouchableOpacity onPress={handleMessagesPress}>
+		<View style={styles.container}>
+			<Ionicons name="stats-chart" color={colorApp} size={24} />
+			<Text style={[styles.text, {color: theme.whiteColor}]}>Insights</Text>
 		</View>
 	</TouchableOpacity>
 	);

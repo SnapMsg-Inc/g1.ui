@@ -3,34 +3,35 @@ import { StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
-import { useRoute } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/discover/discover';
 import NotificationHeader from '../notificationComponents/notificationHeader';
-
-const tabBar = props => (
-	<MaterialTabBar
-		{...props}
-		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
-		style={styles.tabBar}
-		activeColor={colorApp}
-		inactiveColor={colorText} 
-		labelStyle={styles.label}
-	/>
-);
+import AllNotificationScreen from '../notificationComponents/notificationNavigation/allNotifications';
+import { useTheme } from '../color/themeContext';
+import MentionsScreen from '../notificationComponents/notificationNavigation/mentions';
 
 export default function Discover({ navigation }) {
-	const { fetchUserDataFromApi } = useContext(LoggedUserContext)
-
-	useFocusEffect(
-        React.useCallback(() => {              
-          	fetchUserDataFromApi()
-        }, [])
+    const { theme } = useTheme()
+    
+    const tabBar = props => (
+        <MaterialTabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
+            style={[styles.tabBar, {backgroundColor: theme.backgroundColor}]}
+            activeColor={colorApp}
+            inactiveColor={colorText} 
+            labelStyle={styles.label}
+        />
     );
+	// useFocusEffect(
+    //     React.useCallback(() => {              
+    //       	fetchUserDataFromApi()
+    //     }, [])
+    // );
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.Container
                 tabContainerStyle={styles.tabContainer}
                 renderHeader={() => (
@@ -41,12 +42,12 @@ export default function Discover({ navigation }) {
                 renderTabBar={tabBar}
                 >
 
-                <Tabs.Tab name="Trending" label="Trending">
-                    {/* <TrendingScreen/> */}
+                <Tabs.Tab name="All" label="All">
+                    <AllNotificationScreen/>
                 </Tabs.Tab>
 
                 <Tabs.Tab name="Mentions" label="Mentions">
-                    {/* <ForYouScreen searchQuery={searchQuery}/> */}
+                    <MentionsScreen/>
                 </Tabs.Tab>
             </Tabs.Container>
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />

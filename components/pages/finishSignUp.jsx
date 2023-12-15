@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import * as Location from 'expo-location';
 import { TouchableHighlight } from "react-native";
@@ -11,7 +11,8 @@ import LocationSetup from "./location";
 import Preferences from "./preferences";
 import { GetToken, PatchUser } from "../connectivity/servicesUser";
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../connectivity/location/permissionLocation";
-import { AuthenticationContext } from "../connectivity/auth/authenticationContext";
+import { useTheme } from "../color/themeContext";
+import { sendMetricsDD } from "../connectivity/ddMetrics";
 
 function FinishSignUp({ navigation }) {
     const [countryLocate, setCountryLocate] = useState('')
@@ -19,7 +20,7 @@ function FinishSignUp({ navigation }) {
     const [step, setStep] = useState(1); 
     const [interestsList, setInterestsList] = useState([])
     const [coordinates, setCoordinates] = useState({ 'latitude': 0, 'longitude': 0})
-    const { markRegisterComplete } = useContext(AuthenticationContext)
+    const { theme } = useTheme()
 
     const handleAccept = async() => {
         GetToken()
@@ -27,10 +28,11 @@ function FinishSignUp({ navigation }) {
             PatchUser({"zone": coordinates,
                         "interests": interestsList}, token)
             .then((response) => {
-                markRegisterComplete()
+                sendMetricsDD('users.zone', 'incr', '1', [`location:${locality}`])
+                navigation.navigate('Register')
             })
             .catch((error) => {
-                console.log(error)
+                console.error(error)
             }) 
         })
     }
@@ -39,8 +41,6 @@ function FinishSignUp({ navigation }) {
         if (step === 1)
             GeocodeWithLocalityAndCountry(locality, countryLocate, setCoordinates)
             .then((geocodeLocation)=> {
-                console.log(`geoLocation ${JSON.stringify(geocodeLocation)}`)
-                console.log('lenght ', geocodeLocation.length)
                 if (geocodeLocation.length === 0)
                     setCoordinates({ 'latitude': 0, 'longitude': 0})
                 else {
@@ -49,7 +49,7 @@ function FinishSignUp({ navigation }) {
                 }
             })
             .catch((error) => {
-                console.log(error)
+                console.error(error)
             })
         setStep(step + 1)
     };
@@ -63,16 +63,14 @@ function FinishSignUp({ navigation }) {
         ReverseGeocode(coordinates)
         .then((address)=> {
             const { city, country } = address[0]
-            console.log(`city ${city} country ${country}`)
             setLocality(city)
             setCountryLocate(country)
         }).catch((error) => {
-            console.log(error)
+            console.error(error)
         })
     }
     
     useEffect(() => {
-        console.log('useEffect')
         const setLocation = () => {
             CurrentPosition({
                 accuracy: Location.Accuracy.High,
@@ -81,7 +79,6 @@ function FinishSignUp({ navigation }) {
                 const { coords } = location
                 const { latitude, longitude} = coords
                 setCoordinates({'latitude': latitude, 'longitude': longitude})
-                console.log(`longitude ${JSON.stringify(coordinates)} `)
             })  
         }
         GetPermission()
@@ -99,7 +96,7 @@ function FinishSignUp({ navigation }) {
     },[GetPermission])
 
     return(
-        <View style={stylesSetup.container}>
+        <View style={[stylesSetup.container, {backgroundColor: theme.backgroundColor}]}>
             <View style={stylesSetup.header}>
                 <Logo/>
             </View>
@@ -113,7 +110,7 @@ function FinishSignUp({ navigation }) {
                 (<Preferences list={interestsList} setList={setInterestsList}/>) 
             }
             <View style={[stylesSetup.footer, step === 1 ? stylesSetup.footerFirst : null]}>
-                {step === 2 ? <TouchableHighlight onPress={handleBack}>
+                {step === 2 ? <TouchableHighlight onPress={handleBack} underlayColor={'transparent'}>
                     <View style={stylesSetup.buttonBack}>
                         <Icon name="chevron-left" color={colorText} size={20}/>
                         <Text style={stylesSetup.text}>Back</Text>

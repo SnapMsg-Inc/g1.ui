@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput,
-    TouchableHighlight, ScrollView, Alert, ActivityIndicator, } from 'react-native';
+    TouchableHighlight, ScrollView, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FloatingAction } from "react-native-floating-action";
 import { Octicons } from '@expo/vector-icons';
@@ -12,15 +12,15 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import { PatchPostData, createPost } from '../../connectivity/servicesUser';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { colorApp, colorBackground, colorText, colorWhite } from '../../../styles/appColors/appColors';
 import styles from '../../../styles/profile/editPost';
+import { useTheme } from '../../color/themeContext';
 
 const EditPost = ({ navigation }) => {
     const route = useRoute();
 	const { data } = route.params;
-
+    const { theme } = useTheme()
     const { userData } = useContext(LoggedUserContext)
 
     const [originalText, setOriginalText] = useState(data.content);
@@ -41,7 +41,6 @@ const EditPost = ({ navigation }) => {
         })
         .then((image) => {
             if (!image.cancelled) {
-                console.log(image);
                 const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
                 setImage(imageUri);
             }
@@ -148,15 +147,12 @@ const EditPost = ({ navigation }) => {
     
         setUploading(true);
         setTransferred(0);
-        console.log("file: ", filename)
+
         const storageRef = storage().ref(`photos/${filename}`);
         const task = storageRef.putFile(uploadUri);
     
         // Set transferred state
         task.on('state_changed', (taskSnapshot) => {
-        console.log(
-            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-        );
     
         setTransferred(
             Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
@@ -179,7 +175,7 @@ const EditPost = ({ navigation }) => {
         return url;
     
         } catch (e) {
-            console.log(e);
+            console.error(e);
         return null;
         }
     
@@ -209,29 +205,29 @@ const EditPost = ({ navigation }) => {
     }
 
 	return (
-		<View style={styles.container}>
-            <View style={styles.header}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+            <View style={[styles.header, { backgroundColor: theme.backgroundColor}]}>
                 {/* Back button */}
                 <BackButton onPress={() => {navigation.goBack()}}/>
-                <TouchableHighlight
+                <TouchableOpacity
                         style={styles.cancelButton}
                         onPress={() => { 
                             navigation.goBack()
                         }}
                     >
-                        <Text style={styles.cancelButtonLabel}>Cancel</Text>
-                </TouchableHighlight>
+                        <Text style={[styles.cancelButtonLabel, { color: theme.whiteColor}]}>Cancel</Text>
+                </TouchableOpacity>
                 {uploading ? (
                     <View style={styles.statusWrapper}>
                         <Text>{transferred} % Completed!</Text>
                         <ActivityIndicator size="large" color={colorApp} />
                     </View>
                     ) : (
-                    <TouchableHighlight
+                    <TouchableOpacity
                         style={styles.postButton}
                         onPress={submitPost}>
                         <Text style={styles.postButtonLabel}>Confirm edition</Text>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 )}
             </View>
 
@@ -243,15 +239,15 @@ const EditPost = ({ navigation }) => {
                             isPublic ? (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: colorApp, marginRight: 10}}>Public</Text>
-                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} />
+                                        <Text style={{color: colorApp, marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Public</Text>
+                                        <FontAwesome5 name="lock-open" color={colorApp} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity onPress={handleToggleIsPublic}>
                                     <View style={{flexDirection: 'row'}}>
-                                        <Text style={{color: 'red', marginRight: 10}}>Private</Text>
-                                        <FontAwesome5 name="lock" color={'red'} size={16} />
+                                        <Text style={{color: 'red', marginRight: 10, fontSize: 16, fontWeight: 'bold'}}>Private</Text>
+                                        <FontAwesome5 name="lock" color={'red'} size={16} style={{paddingVertical: 2}}/>
                                     </View>
                                 </TouchableOpacity>
                             )
@@ -262,11 +258,13 @@ const EditPost = ({ navigation }) => {
                             placeholder="What's happening?"
                             multiline
                             numberOfLines={5}
-                            style={styles.textInput}
+                            style={[styles.textInput, { color: theme.whiteColor}]}
                             placeholderTextColor={colorText}
                             autoFocus
                             textAlignVertical="top"
+                            maxLength={300}
                         />
+                        <Text style={{color: colorApp, alignSelf: 'flex-end', paddingHorizontal: 10}}>{text.length} / 300</Text>
                     </View>
                 </View>
                 {image != null ? <Image source={{uri: image}} style={styles.postImage}/> : null}

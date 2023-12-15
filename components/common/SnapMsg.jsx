@@ -11,6 +11,7 @@ import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/a
 import styles from '../../styles/common/snapMsg';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useTheme } from '../color/themeContext';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -47,7 +48,7 @@ function formatDateToDDMMYYYY(timestamp) {
 export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, reposts = 0, likes = 0, picUri, hashtags}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const navigation = useNavigation();
-
+	const { theme } = useTheme()
 	const defaultImage = require('../../assets/default_user_pic.png')
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -159,7 +160,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching other user data:', error);
+				console.error('Error fetching other user data:', error.response.status);
 				setIsLoading(false);
 			});
 		checkIfUserLiked(setIsLiked, pid)
@@ -167,7 +168,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user liked post:', error);
+			console.error('Error fetching data when checking if user liked post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserFaved(setIsFav, pid)
@@ -175,7 +176,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user faved post:', error);
+			console.error('Error fetching data when checking if user faved post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserSnapShared(setIsSnapshared, pid)
@@ -183,7 +184,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user snapshared post:', error);
+			console.error('Error fetching data when checking if user snapshared post:', error.response.status);
 			setIsLoading(false)
 		})
 	};
@@ -191,7 +192,6 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 	useFocusEffect(
 		React.useCallback(() => {
 			fetchDataFromApi();
-			console.log(pid);
 		}, [])
 	);
 
@@ -209,7 +209,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 						<View style={styles.container}>
 							<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 								<View style={{ flexDirection: 'row' }}>
-									<Text style={styles.nickname}>
+									<Text style={[styles.nickname, {color: theme.whiteColor}]}>
 										{truncateAlias(data.alias)}{' '}
 									</Text>
 									<Text style={styles.username}>
@@ -233,7 +233,7 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 							{/* <Text style={styles.text}>{content}</Text> */}
 							{/* <SnapMsgText text={content}/> */}
 							<TwitterTextView
-								style={styles.text}
+								style={[styles.text,{color: theme.whiteColor}]}
 								hashtagStyle={styles.hashtagStyle}
 								mentionStyle={styles.mentionStyle}
 								linkStyle={styles.linkStyle}
@@ -287,17 +287,17 @@ export default SnapMsg = ({ uid, pid, username, content, date, comments = 0, rep
 					>
 						<TouchableWithoutFeedback onPress={hideOptionsMenu}>
 							<View style={styles.optionsMenuContainer}>
-								<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175 }]}>
+								<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175, backgroundColor: theme.backgroundColor }]}>
 									<TouchableOpacity style={styles.optionItem} onPress={deleteSnap}>
 										<Text style={[styles.optionText, {color: 'red'}]}>Delete Post</Text>
 										<Feather name="trash-2" size={20} color="red" />
 									</TouchableOpacity>
 									<TouchableOpacity style={styles.optionItem} onPress={editPost}>
-										<Text style={styles.optionText}>Edit Post</Text>
-										<Feather name="edit" size={20} color={colorWhite} />
+										<Text style={[styles.optionText, { color: theme.whiteColor }]}>Edit Post</Text>
+										<Feather name="edit" size={20} color={theme.whiteColor} />
 									</TouchableOpacity>
 									<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
-										<Text style={styles.optionText}>Cancel</Text>
+										<Text style={[styles.optionText, { color: theme.whiteColor }]}>Cancel</Text>
 									</TouchableOpacity>
 								</View>
 							</View>
