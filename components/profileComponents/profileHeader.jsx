@@ -7,28 +7,28 @@ import ProfileInfo from './profileInfo';
 
 
 export default function ProfileHeader({ scrollY , navigation, data, location, headerButton }) {
-    return (
-       <Animated.View>
-            {/* Back button */}
-            <BackButton onPress={() => { 
-                navigation.dispatch(DrawerActions.openDrawer())
-                navigation.dispatch(
-                    CommonActions.reset({
-                      index: 0,
-                      routes: [
-                        {
-                          name: 'ProfileScreen',
-                        },
-                      ],
-                    })
-                )
-                }} />
+	return (
+	<Animated.View>
+			{/* Back button */}
+			<BackButton onPress={() => { 
+				navigation.dispatch(DrawerActions.openDrawer())
+				navigation.dispatch(
+					CommonActions.reset({
+					index: 0,
+					routes: [
+						{
+						name: 'ProfileScreen',
+						},
+					],
+					})
+				)
+				}} />
 
-            {/* Refresh arrow */}
-            {/* <RefreshArrow scrollY={scrollY} /> */}
-            
-            {/* Profile Info / Nav Bar */}
+			{/* Refresh arrow */}
+			{/* <RefreshArrow scrollY={scrollY} /> */}
+			
+			{/* Profile Info / Nav Bar */}
 			<ProfileInfo scrollY={scrollY} navigation={navigation} data={data} headerButton={headerButton} location={location}/>
-       	</Animated.View>
-    );
+		</Animated.View>
+	);
 }

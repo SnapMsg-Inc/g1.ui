@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { GetSnapSharedPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
 import SnapShare from '../../common/snapShare';
+import { Octicons } from '@expo/vector-icons';
+import { useTheme } from '../../color/themeContext';
 
 const SnapShareScreen = () => {
+    const { theme } = useTheme()
 	const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-
 	const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isLoadingMorePosts, setIsLoadingMorePosts] = useState(false);
+    const [isLoadingError, setIsLoadingError] = useState(false)
+    const [messageError, setMessageError] = useState([{message: ''}])
 
 	const fetchInitialPostsFromApi = async () => {
         setIsLoading(true);
@@ -30,7 +34,13 @@ const SnapShareScreen = () => {
             }
             setIsLoading(false);
         } catch (error) {
-            console.error('Error fetching initial posts:', error);
+            console.error('Error fetching initial posts in Snapshare screen:', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -50,7 +60,13 @@ const SnapShareScreen = () => {
             }
             setIsLoadingMorePosts(false);
         } catch (error) {
-            console.error('Error fetching more posts:', error);
+            console.error('Error fetching more posts in Snapshare Screen: ', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -60,7 +76,6 @@ const SnapShareScreen = () => {
         }
         setIsRefreshing(true);
         await fetchInitialPostsFromApi(null);
-
         setIsRefreshing(false);
     }
 
@@ -78,6 +93,27 @@ const SnapShareScreen = () => {
 
     return (
         <View style={styles.container}>
+            {isLoadingError ? 
+            <Tabs.FlatList
+                data={messageError}
+                renderItem={({item}) => 
+                    <View style={{ alignItems: 'center', paddingTop: 100}}>
+                        <Octicons name="alert" color={colorApp} size={30}/>
+                        <Text style={{color: theme.whiteColor }}>{item.message}</Text>
+                    </View>
+                }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={theme.progressColor}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={"large"}
+                    />
+                }
+            />
+            :
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
@@ -103,6 +139,7 @@ const SnapShareScreen = () => {
                     />
                 }
             />
+            }
         </View>
     )
 };

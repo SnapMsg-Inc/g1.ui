@@ -11,7 +11,7 @@ import { RefreshControl } from 'react-native-gesture-handler';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { useTheme } from '../../color/themeContext';
 
-export default function AllNotificationScreen({ navigation }) {
+export default function  MentionsScreen({ navigation }) {
     const { theme } = useTheme()
     const [notifications, setNotifications] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false)
@@ -19,7 +19,7 @@ export default function AllNotificationScreen({ navigation }) {
     const getNotifications = async () => {
         try {
             notifications.length > 0 ? setNotifications([]) : null;
-            const notificationsArray = await AsyncStorage.getItem('notifications');
+            const notificationsArray = await AsyncStorage.getItem('mentions');
             if (notificationsArray) {
                 const parsedNotifications = JSON.parse(notificationsArray);
                 setNotifications(parsedNotifications);

@@ -9,15 +9,19 @@ import CancelButton from "../buttons/buttonCancel"
 import AcceptButton from "../buttons/buttonAcept"
 import { ValidateForgot } from "../forms/validations";
 import { ResetPassword } from "../connectivity/authorization";
+import { useTheme } from "../color/themeContext";
+import { sendMetricsDD } from "../connectivity/ddMetrics";
 
 export default function ForgotPassword({navigation}) {
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState(null)
+    const { theme } = useTheme()
 
     const handleForgot = () => {
         if (ValidateForgot(email, setEmailError)) {
             ResetPassword(email)
             .then(() => {
+                //sendMetricsDD('users.forgot','incr','1')
                 Alert.alert(
                     'Congratulations!',
                     'Password reset link sent! Check your email',
@@ -37,7 +41,7 @@ export default function ForgotPassword({navigation}) {
     }
 
     return (
-        <View style={stylesForgot.container}>
+        <View style={[stylesForgot.container, { backgroundColor: theme.backgroundColor}]}>
             <View style={stylesForgot.header}>
                 <Logo/>
             </View>

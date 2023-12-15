@@ -4,26 +4,32 @@ import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Octicons } from '@expo/vector-icons';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
-import { GetFeedPosts, GetPosts, GetUserData } from '../connectivity/servicesUser';
+import { GetFeedPosts, GetFeedRecommendedPosts, GetPosts, GetRecommendedPosts, GetUserData } from '../connectivity/servicesUser';
 import { DrawerActions, CommonActions } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import styles from '../../styles/feed/feed';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import SnapMsg from '../common/SnapMsg';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
+import { useTheme } from '../color/themeContext';
 
 export default function Feed({ navigation }) {
-    const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+    const { handleUpdateData } = useContext(LoggedUserContext)
     const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLoadingError, setIsLoadingError] = useState(false)
+    const [messageError, setMessageError] = useState([{message: ''}])
+    const { theme } = useTheme()
+    const [noPosts, setNoPosts] = useState(false);
 
     const fetchInitialPostsFromApi = async () => {
         setIsLoading(true);
 		setCurrentPage(0);
         setAllDataLoaded(false)
+        setIsLoadingError(false)
         setFullPosts([]);
         try {
             const newPosts = await GetFeedPosts(10, 0);
@@ -31,15 +37,24 @@ export default function Feed({ navigation }) {
                 setFullPosts(newPosts);
                 setCurrentPage(1);
             } else {
+                const recommendedPosts = await GetFeedRecommendedPosts(10, 0);
+                if (recommendedPosts && recommendedPosts.length > 0) {
+                    setFullPosts(recommendedPosts);
+                    setCurrentPage(1);
+                } else {
+                    setNoPosts(true);
+                }
                 setAllDataLoaded(true);
             }
             setIsLoading(false);
         } catch (error) {
-            console.error(error.response.status)
-            if (error.response.status === 502)
-                alert('Services not available.\nPlease retry again later')
-
-            console.error('Error fetching initial posts:', error);
+            console.error('Error fetching initial posts in feed:', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false);
+            setIsLoadingError(true)
         }
     }
 
@@ -58,7 +73,13 @@ export default function Feed({ navigation }) {
             }
             setIsLoading(false);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -66,6 +87,8 @@ export default function Feed({ navigation }) {
         if (isRefreshing) {
             return;
         }
+        if (isLoadingError)
+            handleUpdateData()
         setIsRefreshing(true);
         await fetchInitialPostsFromApi(null);
         setIsRefreshing(false);
@@ -74,7 +97,6 @@ export default function Feed({ navigation }) {
     useFocusEffect(
         React.useCallback(() => {
             fetchInitialPostsFromApi();
-            fetchUserDataFromApi();
         }, [])
     );
 
@@ -85,12 +107,13 @@ export default function Feed({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             <View style={styles.header}>
                 <TouchableHighlight
                     onPress={() => {
                         navigation.dispatch(DrawerActions.openDrawer());
                     }}
+                    underlayColor={'transparent'}
                 >
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <Octicons name="home" size={22}
@@ -104,44 +127,79 @@ export default function Feed({ navigation }) {
                     <Icon name="envelope" color={colorApp} size={10} />
                 </View>
             </View>
+            {isLoadingError ? 
             <FlatList
-                data={fullPosts}
-                renderItem={({ item }) =>
-                    "post" in item ? (
-                        <SnapShare 
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            post={item.post}
-                            date={item.timestamp}
-                        />
-                    ) : (
-                        <SnapMsg
-                            key={item.pid}
-                            uid={item.uid}
-                            pid={item.pid}
-                            username={item.nick}
-                            content={item.text}
-                            date={item.timestamp}
-                            likes={item.likes}
-                            picUri={item.media_uri}
-                        />
-                    )
+                data={messageError}
+                renderItem={({item}) => 
+                    <View style={{ alignItems: 'center', paddingTop: 100}}>
+                        <Octicons name="alert" color={colorApp} size={30}/>
+                        <Text style={{color: theme.whiteColor }}>{item.message}</Text>
+                    </View>
                 }
-                onEndReached={fetchDataFromApi}
-                onEndReachedThreshold={0.10}
-                ListFooterComponent={renderLoader}
                 refreshControl={
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={"large"}
                     />
                 }
-            />
+            /> 
+            :
+            noPosts ? (
+                <View>
+                    <Text style={{color: theme.whiteColor, fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+                        Oops! It seem that there are not posts to show.
+                    </Text>
+                    <Text style={{color: colorText, fontSize: 16, marginLeft: 10}}>
+                        Select some interests to see recommended posts, or follow some users to see their posts on your feed! 
+                    </Text>
+                </View>
+            ): (
+                <FlatList
+                    data={fullPosts}
+                    renderItem={({ item }) =>
+                        "post" in item ? (
+                            <SnapShare 
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                post={item.post}
+                                date={item.timestamp}
+                            />
+                        ) : (
+                            <SnapMsg
+                                key={item.pid}
+                                uid={item.uid}
+                                pid={item.pid}
+                                username={item.nick}
+                                content={item.text}
+                                date={item.timestamp}
+                                reposts={item.snapshares}
+                                likes={item.likes}
+                                picUri={item.media_uri}
+                            />
+                        )
+                    }
+                    onEndReached={fetchDataFromApi}
+                    onEndReachedThreshold={0.10}
+                    ListFooterComponent={renderLoader}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isRefreshing}
+                            onRefresh={handleRefresh}
+                            progressBackgroundColor={theme.progressColor}
+                            colors={[colorApp]}
+                            tintColor={colorApp}
+                            size={"large"}
+                        />
+                    }
+                />
+            )
+            }
+
             <PostButton onPress={() => navigation.navigate('CreatePostScreen')} />
         </View>
     )

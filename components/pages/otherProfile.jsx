@@ -13,7 +13,7 @@ import styles from '../../styles/profile/otherProfile';
 import { colorApp, colorBackground, colorText } from '../../styles/appColors/appColors';
 import MediaScreen from '../profileComponents/profileNavigation/mediaScreen';
 
-const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+const URL_POST = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts'
 
 const tabBar = props => (
 	<MaterialTabBar
@@ -41,6 +41,7 @@ const OtherProfile = ({ navigation }) => {
         "nick": "",
         "followers": 0,
         "follows": 0,
+		is_admin: false,
     })
 
 	const fetchDataFromApi = async () => {

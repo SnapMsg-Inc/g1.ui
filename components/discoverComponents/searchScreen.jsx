@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableHighlight, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
 import FollowerCard from '../profileComponents/followerCard';
@@ -35,12 +35,11 @@ const SearchScreen = () => {
     }
 
 	const handleSearch = (query) => {
-		const text = query.replace(/\s/g, '')
+		const text = query //.replace(/\s/g, '')
 
 		setSearchQuery(text);
 		setShowFlatList(text.length > 0)
 
-		
 		const formattedQuery = text.toLowerCase();
 		
 		if (formattedQuery.length == 1) {
@@ -88,13 +87,13 @@ const SearchScreen = () => {
 						onSubmitEditing={handleSearchPress}
 					/>
 				</View>
-				<TouchableHighlight
+				<TouchableOpacity
                         onPress={() => { 
                             navigation.goBack()
                         }}
                     >
                         <Text style={styles.cancelButton}>Cancel</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
 			</View>
 			{
 				showFlatList ? <></> : (

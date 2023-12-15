@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     TouchableOpacity
   } from "react-native";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Input from "../../forms/input";
 import stylesEditProfile from "../../../styles/profile/setupProfile";
 import AcceptButton from "../../buttons/buttonAcept";
@@ -25,13 +25,15 @@ import { Octicons } from '@expo/vector-icons';
 import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseGeocode } from "../../connectivity/location/permissionLocation";
 import { ValidateEdit } from "../../forms/validations";
 import { colorApp, colorBackground, colorText, colorWhite } from "../../../styles/appColors/appColors";
-import { TouchableHighlight } from "react-native-gesture-handler";
 import Preferences from "../../pages/preferences";
+import { useTheme } from "../../color/themeContext";
+import { LoggedUserContext } from "../../connectivity/auth/loggedUserContext";
 
 function EditProfile({navigation}) {
     const route = useRoute();
 	const { data } = route.params;
-
+    const { theme } = useTheme()
+    const { handleUpdateData } = useContext(LoggedUserContext)
     const [image, setImage] = useState(data.pic)
     const [alias, setAlias] = useState(data.alias)
     const [aliasError, setAliasError] = useState(null)
@@ -151,6 +153,7 @@ function EditProfile({navigation}) {
                     PatchUser(data, token)
                     .then((response) => {
                         setTimeout(() => navigation.goBack(), 500)
+                        handleUpdateData()
                     })
                     .catch(() => {
                         Alert('Error in edit profile')
@@ -210,7 +213,7 @@ function EditProfile({navigation}) {
     }, [GetPermission])
 
     return (
-        <ScrollView style={stylesEditProfile.container}>
+        <ScrollView style={[stylesEditProfile.container, { backgroundColor: theme.backgroundColor }]}>
             <View style={stylesEditProfile.header}>
                 <Image source={{ uri: image }} style={stylesEditProfile.image}/>
                 <Pressable
@@ -319,7 +322,7 @@ function EditProfile({navigation}) {
                 <Text style={stylesEditProfile.fieldText}>
                     Interests
                 </Text>
-                <TouchableHighlight onPress={() => handleInterests()}>
+                <TouchableOpacity onPress={() => handleInterests()}>
                     <View style={stylesEditProfile.interestsButton}>
                         <Text style={stylesEditProfile.text}>
                             Edit interests
@@ -330,7 +333,7 @@ function EditProfile({navigation}) {
                             size={20} 
                         />
                     </View>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
 
             <View style={stylesEditProfile.footer}>
@@ -344,7 +347,7 @@ function EditProfile({navigation}) {
                 onReqestClose={() => setIsEditInterests(false)}
             >
                 <TouchableWithoutFeedback onPress={() => setIsEditInterests(false)}>
-                    <View style={stylesEditProfile.preferencesContainer}>
+                    <View style={[stylesEditProfile.preferencesContainer, { backgroundColor: theme.backgroundColor }]}>
                         <Preferences list={interestsList} setList={setInterestsList}/>
                         <View style={stylesEditProfile.footer}>
                             <AcceptButton onPress={() => setIsEditInterests(false)} text={'Accept'}/>

@@ -10,32 +10,33 @@ import { useRoute } from '@react-navigation/native';
 import PostButton from '../buttons/buttonPost';
 import { colorApp, colorText, colorBackground } from '../../styles/appColors/appColors';
 import styles from '../../styles/discover/discover';
-
-const tabBar = props => (
-	<MaterialTabBar
-		{...props}
-		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
-		style={styles.tabBar}
-		activeColor={colorApp}
-		inactiveColor={colorText} 
-		labelStyle={styles.label}
-	/>
-);
+import { useTheme } from '../color/themeContext';
 
 export default function Discover({ navigation }) {
-	const { isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
-
+    const { isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
+    const { theme } = useTheme()    
     const route = useRoute();
 	const searchQuery = route && route.params && route.params.searchQuery ? route.params.searchQuery : null;
-
-	useFocusEffect(
-        React.useCallback(() => {              
-          	fetchUserDataFromApi()
-        }, [])
+    
+    const tabBar = props => (
+        <MaterialTabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
+            style={[styles.tabBar, { backgroundColor: theme.backgroundColor }]}
+            activeColor={colorApp}
+            inactiveColor={colorText} 
+            labelStyle={styles.label}
+        />
     );
+	
+    // useFocusEffect(
+    //     React.useCallback(() => {              
+    //       	fetchUserDataFromApi()
+    //     }, [])
+    // );
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             <Tabs.Container
                 tabContainerStyle={styles.tabContainer}
                 renderHeader={() => (

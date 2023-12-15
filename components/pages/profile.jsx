@@ -15,56 +15,25 @@ import { CurrentPosition, GeocodeWithLocalityAndCountry, GetPermission, ReverseG
 import * as Location from 'expo-location'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SnapShareScreen from '../profileComponents/profileNavigation/snapShareScreen';
+import { useTheme } from '../color/themeContext';
 
-const URL_POST = 'https://api-gateway-marioax.cloud.okteto.net/posts'
+const URL_POST = 'https://gateway-api-api-gateway-marioax.cloud.okteto.net/posts'
 
-const tabBar = props => (
-	<MaterialTabBar
-		{...props}
-		indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
-		style={styles.tabBar}
-		activeColor={colorApp}
-		inactiveColor={colorText} 
-		labelStyle={styles.label}
-	/>
-);
 
 const Profile = ({ navigation }) => {
-	const { userData, isLoadingUserData, fetchUserDataFromApi } = useContext(LoggedUserContext)
-	const [coordinates, setCoordinates] = useState(userData.zone)
-	const [locality, setLocality] = useState('')
-    const [countryLocate, setCountryLocate] = useState('')
+	const { userData, isLoadingUserData, countryLocate, locality } = useContext(LoggedUserContext)
+	const { theme } = useTheme()
 
-	useEffect(()=>{
-        const setData = () => {
-            ReverseGeocode(coordinates)
-            .then((address) => {
-                const { city, country } = address[0]
-                setLocality(city)
-                setCountryLocate(country)
-            }).catch((error) => {
-                console.error(error)
-            })
-        }
-        GetPermission()
-        .then((location) => {
-            if (location.status !== 'granted')
-                Alert.alert(
-                    'Permission not granted',
-                    'Allow the app to use location service.',
-                    [{ text: 'OK' }],
-                    { cancelable: false }
-                );
-            else
-                setData()
-        })
-    }, [GetPermission])
-	
-	useFocusEffect(
-        React.useCallback(() => {
-          	fetchUserDataFromApi()
-        }, [])
-    );
+	const tabBar = props => (
+		<MaterialTabBar
+			{...props}
+			indicatorStyle={{ backgroundColor: colorApp, height: 3, }}
+			style={[styles.tabBar, {backgroundColor: theme.backgroundColor}]}
+			activeColor={colorApp}
+			inactiveColor={colorText} 
+			labelStyle={styles.label}
+		/>
+	);
 	
 	const scrollY = useRef(new Animated.Value(0)).current;
 	
@@ -75,14 +44,14 @@ const Profile = ({ navigation }) => {
 	return (
 		<>
 			{ isLoadingUserData ? (
-				<View style={styles.container}>
+				<View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
 					<ActivityIndicator size={'large'} color={colorApp}/>
 					</View> 
 				) : (
 				
-				<View style={styles.container}>
+				<View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
 					<Tabs.Container
-						tabContainerStyle={styles.tabContainer}
+						tabContainerStyle={[styles.tabBar, {backgroundColor: theme.backgroundColor}]}
 						renderHeader={() => (
 							<ProfileHeader scrollY={scrollY}
 											navigation={navigation}

@@ -11,6 +11,7 @@ import stylesForms from '../../styles/SignForms';
 import { ValidationsLogin } from '../forms/validations';
 import { AuthenticationContext } from '../connectivity/auth/authenticationContext';
 import { colorApp, colorText } from '../../styles/appColors/appColors';
+import { useTheme } from '../color/themeContext';
 
 function SignIn({ navigation }) {
     const [email, setEmail] = useState('')
@@ -19,6 +20,7 @@ function SignIn({ navigation }) {
     const [passwordError, setPasswordError] = useState(null);
     const [visible, setVisible] = useState(false)
     const { onLogin, onLoginFederate, isLoading } = useContext(AuthenticationContext)
+    const { theme } = useTheme()
 
     const handleSignIn = async () => {
         if (ValidationsLogin(email, password, setEmailError, setPasswordError)) {
@@ -31,7 +33,7 @@ function SignIn({ navigation }) {
     }  
         
     return (
-        <View style={stylesForms.container}>
+        <View style={[stylesForms.container, { backgroundColor: theme.backgroundColor }]}>
             <View style={stylesForms.header}>
                 <Logo/>
             </View>
@@ -69,7 +71,8 @@ function SignIn({ navigation }) {
                     error={passwordError} 
                 />
                 <View style={stylesForms.containerTextSugestion}>
-                    <TouchableHighlight onPress={() => {navigation.navigate('Forgot')}}>
+                    <TouchableHighlight onPress={() => {navigation.navigate('Forgot')}}
+                                        underlayColor={'transparent'}>
                         <Text style={stylesForms.textSugestion}>Forgot password?</Text>
                     </TouchableHighlight>
                 </View>

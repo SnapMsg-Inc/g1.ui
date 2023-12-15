@@ -11,6 +11,7 @@ import { colorApp, colorText, colorBackground, colorWhite } from '../../styles/a
 import styles from '../../styles/common/snapShare';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useTheme } from '../color/themeContext';
 
 const MAX_ALIAS_LENGTH = 12;
 const MAX_NICK_LENGTH = 7;
@@ -47,7 +48,7 @@ function formatDateToDDMMYYYY(timestamp) {
 export default SnapShare = ({ uid, pid, date, post}) => {
 	const { userData } = useContext(LoggedUserContext)
 	const navigation = useNavigation();
-
+	const { theme } = useTheme()
 	const defaultImage = require('../../assets/default_user_pic.png')
 
     // DATA OF AUTHOR OF SNAPSHARE
@@ -73,52 +74,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 		"follows": 0,
 	});
 
-	const [isOptionsMenuVisible, setIsOptionsMenuVisible] = useState(false);
-
-	// Agregar una referencia al botón de los tres puntos
-	const optionsButtonRef = useRef(null);
-	const [optionsPosition, setOptionsPosition] = useState({ x: 0, y: 0 });
-
-	const showOptionsMenu = () => {
-		// Obtener las coordenadas del botón de los tres puntos
-		optionsButtonRef.current.measure((fx, fy, width, height, px, py) => {
-			// Calcular la posición del menú de opciones
-			const menuX = px;
-			const menuY = py + height;
-			setOptionsPosition({ x: menuX, y: menuY });
-		});
-		setIsOptionsMenuVisible(true);
-	};
-
-	const hideOptionsMenu = () => {
-		setIsOptionsMenuVisible(false);
-	};
-
-	const editPost = () => {
-		// const postData = {
-		// 	pid: pid,
-		// 	content: content,
-		// 	picUri: picUri,
-		// }
-		// navigation.navigate('EditPost', {data:postData})
-		hideOptionsMenu();
-	};
-
-	const deleteSnap = () => {
-		// deletePost(pid)
-		// .then(() => {
-		// 	setIsLoading(false);
-		// 	hideOptionsMenu();
-		// })
-		// .catch((error) => {
-		// 	console.error('Error fetching other user data:', error);
-		// 	setIsLoading(false);
-		// });
-        hideOptionsMenu();
-	};
-
 	// Actions:
-
 	// FAV
 	const [isFav, setIsFav] = useState(false);
 	const favIcon = isFav ? (
@@ -174,7 +130,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching other user data:', error);
+				console.error('Error fetching other user data:', error.response.status);
 				setIsLoading(false);
 			});
 
@@ -184,7 +140,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching other user data:', error);
+				console.error('Error fetching other user data:', error.response.status);
 				setIsLoading(false);
 			});
 		checkIfUserLiked(setIsLiked, post.pid)
@@ -192,7 +148,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user liked post:', error);
+			console.error('Error fetching data when checking if user liked post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserFaved(setIsFav, post.pid)
@@ -200,7 +156,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user faved post:', error);
+			console.error('Error fetching data when checking if user faved post:', error.response.status);
 			setIsLoading(false)
 		})
 		checkIfUserSnapShared(setIsSnapshared, post.pid)
@@ -208,7 +164,7 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 			setIsLoading(false)
 		})
 		.catch((error) => {
-			console.error('Error fetching data when checking if user snapshared post:', error);
+			console.error('Error fetching data when checking if user snapshared post:', error.response.status);
 			setIsLoading(false)
 		})
 	};
@@ -239,31 +195,17 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                             <View style={styles.container}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.nickname}>
+                                        <Text style={[styles.nickname, { color: theme.whiteColor}]}>
                                             {truncateAlias(data.alias)}{' '}
                                         </Text>
                                         <Text style={styles.username}>
                                             @{truncateNick(data.nick)} · {formatDateToDDMMYYYY(date)}
                                         </Text>
-                                    </View>
-
-                                    {
-                                        uid === userData.uid ? (
-                                            <TouchableOpacity
-                                                ref={optionsButtonRef}
-                                                onPress={showOptionsMenu}
-                                            >
-                                                <Feather name="more-horizontal" size={24} color={colorText} />
-                                            </TouchableOpacity>
-                                        ) : <></>
-                                    }
-                                    
+                                    </View>               
                                 </View>
 
-                                {/* <Text style={styles.text}>{content}</Text> */}
-                                {/* <SnapMsgText text={content}/> */}
                                 <TwitterTextView
-                                    style={styles.text}
+                                    style={[styles.text, {color: theme.whiteColor}]}
                                     hashtagStyle={styles.hashtagStyle}
                                     mentionStyle={styles.mentionStyle}
                                     linkStyle={styles.linkStyle}
@@ -282,16 +224,11 @@ export default SnapShare = ({ uid, pid, date, post}) => {
 
                                 {/* Botones de acción */}
                                 <View style={styles.actionButtons}>
-                                    {/* <TouchableOpacity style={styles.actionButton}>
-                                        <MaterialCommunityIcon name="star-off-outline" size={28} color={colorText} />
-                                    </TouchableOpacity>
-                                    <Text style={styles.stats}>{comments}</Text> */}
-
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity style={styles.actionButton} onPress={handleToggleSnapShare}>
                                             {snapShareIcon}
                                         </TouchableOpacity>
-                                        <Text style={styles.stats}>{post.snapshares}</Text>
+                                        <Text style={styles.stats}>{snapShareAmount}</Text>
                                     </View>
                                     
                                     <View style={{flexDirection: 'row'}}>
@@ -308,31 +245,6 @@ export default SnapShare = ({ uid, pid, date, post}) => {
                             </View>
                         </View>
                     </View>
-
-					{/* Menú de opciones */}
-					<Modal
-						transparent={true}
-						visible={isOptionsMenuVisible}
-						onRequestClose={hideOptionsMenu}
-					>
-						<TouchableWithoutFeedback onPress={hideOptionsMenu}>
-							<View style={styles.optionsMenuContainer}>
-								<View style={[styles.optionsMenu, { top: optionsPosition.y, left: optionsPosition.x - 175 }]}>
-									<TouchableOpacity style={styles.optionItem} onPress={deleteSnap}>
-										<Text style={[styles.optionText, {color: 'red'}]}>Delete Post</Text>
-										<Feather name="trash-2" size={20} color="red" />
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.optionItem} onPress={editPost}>
-										<Text style={styles.optionText}>Edit Post</Text>
-										<Feather name="edit" size={20} color={colorWhite} />
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.optionItem} onPress={hideOptionsMenu}>
-										<Text style={styles.optionText}>Cancel</Text>
-									</TouchableOpacity>
-								</View>
-							</View>
-						</TouchableWithoutFeedback>
-					</Modal>
 					</>
 				)
 			}

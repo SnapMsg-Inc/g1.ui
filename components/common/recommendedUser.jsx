@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { LoggedUserContext } from '../connectivity/auth/loggedUserContext';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/common/recommendedUser';
+import { useTheme } from '../color/themeContext';
 
 const MAX_INTEREST_LENGTH = 60;
 const MAX_ALIAS_LENGTH = 14;
@@ -40,12 +41,14 @@ const truncateNick = (nick) => {
 };
 
 const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
+	const { theme } = useTheme()
 	const navigation = useNavigation();
 	const { userData } = useContext(LoggedUserContext)
 	const [isFollowing, setIsFollowing] = useState(false);
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 
 	const fetchDataFromApi = async () => {
+		setLoading(true)
 		if (userData.uid !== uid) {
 			setLoading(true)
 			checkIfUserFollows(setIsFollowing, userData.uid, uid)
@@ -57,6 +60,7 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 				setLoading(false)
 			})
 		}
+		setLoading(false)
     }
 
 	useFocusEffect(
@@ -98,7 +102,7 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 							style={styles.profileImage} />
 						<View style={styles.container}>
 							<View>
-								<Text style={styles.name}>{truncateAlias(alias)}</Text>
+								<Text style={[styles.name, { color: theme.whiteColor}]}>{truncateAlias(alias)}</Text>
 								<Text style={styles.nick}>{`@${truncateNick(nick)}`}</Text>
 							</View>
 							{	
@@ -115,7 +119,7 @@ const RecommendedUserCard = ({ uid, alias, nick, interests, pic }) => {
 								)
 							}
 						</View>
-						<Text style={styles.interests}>{truncateInterest(interests)}</Text>
+						<Text style={[styles.interests, { color: theme.whiteColor}]}>{truncateInterest(interests)}</Text>
 					</View>
 				</TouchableOpacity>
 			)

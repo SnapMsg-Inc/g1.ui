@@ -9,26 +9,29 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { GetTrendings } from '../../connectivity/servicesUser';
+import { useTheme } from '../../color/themeContext';
 
 const MOCK_TRENDIG = [ "#boca", "messi", "roman", "argentina", "#politica"]
 
 const TrendingScreen = () => {
 	const navigation = useNavigation();
-	const { userData } = useContext(LoggedUserContext)
+    const { theme } = useTheme()
+ 	const { userData } = useContext(LoggedUserContext)
 	const [coordinates, setCoordinates] = useState(userData.zone)
 	const [locality, setLocality] = useState('')
     const [countryLocate, setCountryLocate] = useState('')
 
 	useEffect(()=>{
         const setData = () => {
-            ReverseGeocode(coordinates)
-            .then((address) => {
-                const { city, country } = address[0]
-                setLocality(city)
-                setCountryLocate(country)
-            }).catch((error) => {
-                console.error(error)
-            })
+            if (coordinates.latitude !== 0 && coordinates.longitude !== 0)
+                ReverseGeocode(coordinates)
+                .then((address) => {
+                    const { city, country } = address[0]
+                    setLocality(city)
+                    setCountryLocate(country)
+                }).catch((error) => {
+                    console.error(error)
+                })
         }
         GetPermission()
         .then((location) => {
@@ -98,7 +101,6 @@ const TrendingScreen = () => {
         }
         setIsRefreshing(true);
         await fetchInitialTrendingsFromApi(null);
-
         setIsRefreshing(false);
     }
 
@@ -129,22 +131,36 @@ const TrendingScreen = () => {
 	};
 	
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
 			<Tabs.FlatList
                 data={fullTrendings}
 				ListHeaderComponent={
                     isLoading ? <></> : (
                         <View style={{flexDirection: 'row', paddingVertical: 10}}>
-                            <Text style={{color: colorWhite, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
-                                {`${countryLocate} trends`}
-                            </Text>
+                            {fullTrendings?.length > 0 ? (
+                                    <Text style={{color: theme.whiteColor, fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>
+                                        {`${countryLocate} trends`}
+                                    </Text>
+                                ) : (
+                                    <View>
+                                        <Text style={{color: theme.whiteColor, fontSize: 18, fontWeight: 'bold', marginLeft: 10}}>
+                                            {`Oops! It seem that there are no trending topics at ${countryLocate}.`}
+                                        </Text>
+                                        <Text style={{color: colorText, fontSize: 16, marginLeft: 10}}>
+                                            Post something to start a new trend!
+                                        </Text>
+                                    </View>
+                                )
+                            
+                            }
+                            
                         </View>	
                         )
 				}
                 renderItem={({ item, index }) => (
 					<TouchableOpacity onPress={() => handleItemPress(item.topic)}>
 						<View style={{ marginLeft: 10, padding: 5 }}>
-							<Text style={{ color: colorWhite, fontSize: 16 }}>
+							<Text style={{ color: theme.whiteColor, fontSize: 16 }}>
 								{index + 1} - Trending
 							</Text>
 							<Text style={{ color: colorApp, fontSize: 18 }}>

@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, FlatList } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import SnapMsg from '../../common/SnapMsg';
 import { GetPosts } from '../../connectivity/servicesUser';
 import { colorApp, colorText, colorBackground } from '../../../styles/appColors/appColors';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '../../color/themeContext';
+import { Octicons } from '@expo/vector-icons';
+import { LoggedUserContext } from '../../connectivity/auth/loggedUserContext';
 
 const MediaScreen = ({url}) => {
-  const [fullPosts, setFullPosts] = useState([]);
+    const { handleUpdateData } = useContext(LoggedUserContext)
+    const { theme } = useTheme()
+    const [fullPosts, setFullPosts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-
 	const [isLoading, setIsLoading] = useState(false);
     const [allDataLoaded, setAllDataLoaded] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isLoadingMorePosts, setIsLoadingMorePosts] = useState(false);
+    const [isLoadingError, setIsLoadingError] = useState(false)
+    const [messageError, setMessageError] = useState([{message: ''}])
 
 	const fetchInitialPostsFromApi = async () => {
         setIsLoading(true);
@@ -30,7 +36,13 @@ const MediaScreen = ({url}) => {
             }
             setIsLoading(false);
         } catch (error) {
-            console.error('Error fetching initial posts:', error.response.status);
+            console.error('Error fetching initial posts in MediaScreen:', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -51,6 +63,12 @@ const MediaScreen = ({url}) => {
             setIsLoadingMorePosts(false);
         } catch (error) {
             console.error('Error fetching more posts:', error.response.status);
+            if (error.response.status >= 400 && error.response.status < 500)
+                setMessageError([{message: 'An error has ocurred.\nPlease try again later'}])
+            if (error.response.status >= 500)
+                setMessageError([{message: 'Services not available.\nPlease try again later'}])
+            setIsLoading(false)
+            setIsLoadingError(true)
         }
     }
 
@@ -58,9 +76,10 @@ const MediaScreen = ({url}) => {
         if (isRefreshing) {
             return;
         }
+        if (isLoadingError) 
+            handleUpdateData()
         setIsRefreshing(true);
         await fetchInitialPostsFromApi(null);
-
         setIsRefreshing(false);
     }
 
@@ -77,7 +96,28 @@ const MediaScreen = ({url}) => {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+            {isLoadingError ? 
+            <Tabs.FlatList
+                data={messageError}
+                renderItem={({item}) => 
+                    <View style={{ alignItems: 'center', paddingTop: 100}}>
+                        <Octicons name="alert" color={colorApp} size={30}/>
+                        <Text style={{color: theme.whiteColor }}>{item.message}</Text>
+                    </View>
+                }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={handleRefresh}
+                        progressBackgroundColor={theme.progressColor}
+                        colors={[colorApp]}
+                        tintColor={colorApp}
+                        size={"large"}
+                    />
+                }
+            />
+            :
             <Tabs.FlatList
                 data={fullPosts}
                 renderItem={({ item }) =>
@@ -89,6 +129,7 @@ const MediaScreen = ({url}) => {
                           username={item.nick}
                           content={item.text}
                           date={item.timestamp}
+                          reposts={item.snapshares}
                           likes={item.likes}
                           picUri={item.media_uri}
                       />
@@ -101,13 +142,14 @@ const MediaScreen = ({url}) => {
                     <RefreshControl
                         refreshing={isRefreshing}
                         onRefresh={handleRefresh}
-                        progressBackgroundColor={'rgba(0, 0, 0, 0.2)'}
+                        progressBackgroundColor={theme.progressColor}
                         colors={[colorApp]}
                         tintColor={colorApp}
                         size={"large"}
                     />
                 }
             />
+            }
         </View>
     )
 };
