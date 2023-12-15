@@ -138,7 +138,6 @@ export default function RegisterPin ({ navigation }) {
             markRegisterComplete()
         } else {
             setCodeError(true)
-            sendMetricsDD('user_register_failed', 'register_failed', 'register_failed_user')
         } 
     }
 
