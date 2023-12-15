@@ -499,7 +499,7 @@ export async function unlikePost(pid) {
 export async function GetRecommendedPosts(setState, uid, maxResults, page) {
     const token = await getIdToken(auth.currentUser, false);
 
-    let url = `${URL_POST}/recommended?limit=${maxResults}&page=${page}`;
+    let url = `${URL_POST}/me/recommended?limit=${maxResults}&page=${page}`;
 
     await axios({
         method: 'get',
